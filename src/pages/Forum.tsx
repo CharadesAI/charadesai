@@ -129,7 +129,7 @@ interface ForumUser {
   posts: number;
   likes: number;
   solutions: number;
-  status: 'online' | 'away' | 'offline';
+  status: "online" | "away" | "offline";
   joinedDate: string;
   bio?: string;
   location?: string;
@@ -199,147 +199,218 @@ const useLocalStorage = <T,>(key: string, initialValue: T) => {
     }
   });
 
-  const setValue = useCallback((value: unknown | ((val: unknown) => unknown)) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.error(`Error setting localStorage key "${key}":`, error);
-    }
-  }, [key, storedValue]);
+  const setValue = useCallback(
+    (value: unknown | ((val: unknown) => unknown)) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      } catch (error) {
+        console.error(`Error setting localStorage key "${key}":`, error);
+      }
+    },
+    [key, storedValue]
+  );
 
   return [storedValue, setValue] as const;
 };
 
 const useForumData = () => {
-  const [threads, setThreads] = useLocalStorage<ForumThread[]>('forum_threads', [] as ForumThread[]);
-  const [bookmarks, setBookmarks] = useLocalStorage<ForumBookmark[]>('forum_bookmarks', []);
-  const [currentUser, setCurrentUser] = useLocalStorage<ForumUser | null>('forum_current_user', null);
-  const [userPreferences, setUserPreferences] = useLocalStorage('forum_user_preferences', {
-    theme: 'dark',
-    notifications: true,
-    emailUpdates: false,
-    viewMode: 'card', // 'card' | 'list'
-    sortBy: 'recent', // 'recent' | 'popular' | 'unanswered'
-  });
+  const [threads, setThreads] = useLocalStorage<ForumThread[]>(
+    "forum_threads",
+    [] as ForumThread[]
+  );
+  const [bookmarks, setBookmarks] = useLocalStorage<ForumBookmark[]>(
+    "forum_bookmarks",
+    []
+  );
+  const [currentUser, setCurrentUser] = useLocalStorage<ForumUser | null>(
+    "forum_current_user",
+    null
+  );
+  const [userPreferences, setUserPreferences] = useLocalStorage(
+    "forum_user_preferences",
+    {
+      theme: "dark",
+      notifications: true,
+      emailUpdates: false,
+      viewMode: "card", // 'card' | 'list'
+      sortBy: "recent", // 'recent' | 'popular' | 'unanswered'
+    }
+  );
 
   // Initialize with default user if none exists
   useEffect(() => {
     if (!currentUser) {
       const defaultUser: ForumUser = {
-        id: 'user_' + Date.now(),
-        name: 'You',
-        avatar: '/api/placeholder/32/32',
-        level: 'Beginner',
+        id: "user_" + Date.now(),
+        name: "You",
+        avatar: "/api/placeholder/32/32",
+        level: "Beginner",
         badges: [],
         posts: 0,
         likes: 0,
         solutions: 0,
-        status: 'online',
+        status: "online",
         joinedDate: new Date().toISOString(),
-        bio: 'New to the community!',
+        bio: "New to the community!",
       };
       setCurrentUser(defaultUser);
     }
   }, [currentUser, setCurrentUser]);
 
-  const createThread = useCallback((threadData: Omit<ForumThread, 'id' | 'replies' | 'views' | 'likes' | 'likedBy' | 'createdAt' | 'lastActivity'>) => {
-    const newThread: ForumThread = {
-      ...threadData,
-      id: 'thread_' + Date.now(),
-      replies: [],
-      views: 0,
-      likes: 0,
-      likedBy: [],
-      createdAt: new Date().toISOString(),
-      lastActivity: new Date().toISOString(),
-    };
-    setThreads(prev => [newThread, ...prev]);
-    return newThread;
-  }, [setThreads]);
+  const createThread = useCallback(
+    (
+      threadData: Omit<
+        ForumThread,
+        | "id"
+        | "replies"
+        | "views"
+        | "likes"
+        | "likedBy"
+        | "createdAt"
+        | "lastActivity"
+      >
+    ) => {
+      const newThread: ForumThread = {
+        ...threadData,
+        id: "thread_" + Date.now(),
+        replies: [],
+        views: 0,
+        likes: 0,
+        likedBy: [],
+        createdAt: new Date().toISOString(),
+        lastActivity: new Date().toISOString(),
+      };
+      setThreads((prev) => [newThread, ...prev]);
+      return newThread;
+    },
+    [setThreads]
+  );
 
-  const addReply = useCallback((threadId: string, replyData: Omit<ForumReply, 'id' | 'threadId' | 'timestamp' | 'likes' | 'likedBy'>) => {
-    const newReply: ForumReply = {
-      ...replyData,
-      id: 'reply_' + Date.now(),
-      threadId,
-      timestamp: new Date().toISOString(),
-      likes: 0,
-      likedBy: [],
-    };
+  const addReply = useCallback(
+    (
+      threadId: string,
+      replyData: Omit<
+        ForumReply,
+        "id" | "threadId" | "timestamp" | "likes" | "likedBy"
+      >
+    ) => {
+      const newReply: ForumReply = {
+        ...replyData,
+        id: "reply_" + Date.now(),
+        threadId,
+        timestamp: new Date().toISOString(),
+        likes: 0,
+        likedBy: [],
+      };
 
-    setThreads(prev => prev.map(thread => {
-      if (thread.id === threadId) {
-        return {
-          ...thread,
-          replies: [...thread.replies, newReply],
-          lastActivity: new Date().toISOString(),
-        };
-      }
-      return thread;
-    }));
+      setThreads((prev) =>
+        prev.map((thread) => {
+          if (thread.id === threadId) {
+            return {
+              ...thread,
+              replies: [...thread.replies, newReply],
+              lastActivity: new Date().toISOString(),
+            };
+          }
+          return thread;
+        })
+      );
 
-    return newReply;
-  }, [setThreads]);
+      return newReply;
+    },
+    [setThreads]
+  );
 
-  const toggleLike = useCallback((threadId: string, userId: string) => {
-    setThreads(prev => prev.map(thread => {
-      if (thread.id === threadId) {
-        const isLiked = thread.likedBy.includes(userId);
-        return {
-          ...thread,
-          likes: isLiked ? thread.likes - 1 : thread.likes + 1,
-          likedBy: isLiked
-            ? thread.likedBy.filter(id => id !== userId)
-            : [...thread.likedBy, userId],
-        };
-      }
-      return thread;
-    }));
-  }, [setThreads]);
+  const toggleLike = useCallback(
+    (threadId: string, userId: string) => {
+      setThreads((prev) =>
+        prev.map((thread) => {
+          if (thread.id === threadId) {
+            const isLiked = thread.likedBy.includes(userId);
+            return {
+              ...thread,
+              likes: isLiked ? thread.likes - 1 : thread.likes + 1,
+              likedBy: isLiked
+                ? thread.likedBy.filter((id) => id !== userId)
+                : [...thread.likedBy, userId],
+            };
+          }
+          return thread;
+        })
+      );
+    },
+    [setThreads]
+  );
 
-  const toggleBookmark = useCallback((threadId: string, userId: string) => {
-    setBookmarks(prev => {
-      const existing = prev.find(b => b.threadId === threadId && b.userId === userId);
-      if (existing) {
-        return prev.filter(b => !(b.threadId === threadId && b.userId === userId));
-      } else {
-        return [...prev, {
-          threadId,
-          userId,
-          timestamp: new Date().toISOString(),
-        }];
-      }
-    });
-  }, [setBookmarks]);
+  const toggleBookmark = useCallback(
+    (threadId: string, userId: string) => {
+      setBookmarks((prev) => {
+        const existing = prev.find(
+          (b) => b.threadId === threadId && b.userId === userId
+        );
+        if (existing) {
+          return prev.filter(
+            (b) => !(b.threadId === threadId && b.userId === userId)
+          );
+        } else {
+          return [
+            ...prev,
+            {
+              threadId,
+              userId,
+              timestamp: new Date().toISOString(),
+            },
+          ];
+        }
+      });
+    },
+    [setBookmarks]
+  );
 
-  const incrementViews = useCallback((threadId: string) => {
-    setThreads(prev => prev.map(thread => {
-      if (thread.id === threadId) {
-        return { ...thread, views: thread.views + 1 };
-      }
-      return thread;
-    }));
-  }, [setThreads]);
+  const incrementViews = useCallback(
+    (threadId: string) => {
+      setThreads((prev) =>
+        prev.map((thread) => {
+          if (thread.id === threadId) {
+            return { ...thread, views: thread.views + 1 };
+          }
+          return thread;
+        })
+      );
+    },
+    [setThreads]
+  );
 
-  const markAsSolved = useCallback((threadId: string) => {
-    setThreads(prev => prev.map(thread => {
-      if (thread.id === threadId) {
-        return { ...thread, solved: !thread.solved };
-      }
-      return thread;
-    }));
-  }, [setThreads]);
+  const markAsSolved = useCallback(
+    (threadId: string) => {
+      setThreads((prev) =>
+        prev.map((thread) => {
+          if (thread.id === threadId) {
+            return { ...thread, solved: !thread.solved };
+          }
+          return thread;
+        })
+      );
+    },
+    [setThreads]
+  );
 
-  const togglePin = useCallback((threadId: string) => {
-    setThreads(prev => prev.map(thread => {
-      if (thread.id === threadId) {
-        return { ...thread, pinned: !thread.pinned };
-      }
-      return thread;
-    }));
-  }, [setThreads]);
+  const togglePin = useCallback(
+    (threadId: string) => {
+      setThreads((prev) =>
+        prev.map((thread) => {
+          if (thread.id === threadId) {
+            return { ...thread, pinned: !thread.pinned };
+          }
+          return thread;
+        })
+      );
+    },
+    [setThreads]
+  );
 
   return {
     threads,
@@ -551,21 +622,23 @@ const Forum = () => {
   } = useForumData();
 
   // UI State
-  const [activeTab, setActiveTab] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState(userPreferences.sortBy);
   const [viewMode, setViewMode] = useState(userPreferences.viewMode);
   const [isCreateThreadOpen, setIsCreateThreadOpen] = useState(false);
   const [isReplyOpen, setIsReplyOpen] = useState<string | null>(null);
-  const [replyContent, setReplyContent] = useState('');
-  const [selectedThread, setSelectedThread] = useState<ForumThread | null>(null);
+  const [replyContent, setReplyContent] = useState("");
+  const [selectedThread, setSelectedThread] = useState<ForumThread | null>(
+    null
+  );
 
   // New thread form state
   const [newThread, setNewThread] = useState({
-    title: '',
-    content: '',
-    category: '',
+    title: "",
+    content: "",
+    category: "",
     tags: [] as string[],
   });
 
@@ -574,19 +647,20 @@ const Forum = () => {
     if (threads.length === 0) {
       const sampleThreads: ForumThread[] = [
         {
-          id: 'thread_1',
-          title: 'Welcome to CharadesAI Developer Forum!',
-          content: 'Welcome to our community forum! This is the place to discuss AI, share projects, get help, and connect with other developers working with CharadesAI.',
-          author: 'CharadesAI Team',
-          authorAvatar: '/api/placeholder/32/32',
-          authorLevel: 'Moderator',
-          authorBadge: 'Official',
-          category: 'General Discussion',
+          id: "thread_1",
+          title: "Welcome to CharadesAI Developer Forum!",
+          content:
+            "Welcome to our community forum! This is the place to discuss AI, share projects, get help, and connect with other developers working with CharadesAI.",
+          author: "CharadesAI Team",
+          authorAvatar: "/api/placeholder/32/32",
+          authorLevel: "Moderator",
+          authorBadge: "Official",
+          category: "General Discussion",
           replies: [],
           views: 245,
           likes: 67,
           likedBy: [],
-          tags: ['welcome', 'getting-started', 'community'],
+          tags: ["welcome", "getting-started", "community"],
           solved: false,
           pinned: true,
           featured: true,
@@ -595,19 +669,20 @@ const Forum = () => {
           lastActivity: new Date(Date.now() - 7200000).toISOString(),
         },
         {
-          id: 'thread_2',
-          title: 'API Rate Limits and Best Practices',
-          content: 'I\'m working on a high-traffic application and want to understand the API rate limits better. What are the best practices for handling rate limits gracefully?',
-          author: 'DevOps Team',
-          authorAvatar: '/api/placeholder/32/32',
-          authorLevel: 'Moderator',
-          authorBadge: 'Expert',
-          category: 'Technical Support',
+          id: "thread_2",
+          title: "API Rate Limits and Best Practices",
+          content:
+            "I'm working on a high-traffic application and want to understand the API rate limits better. What are the best practices for handling rate limits gracefully?",
+          author: "DevOps Team",
+          authorAvatar: "/api/placeholder/32/32",
+          authorLevel: "Moderator",
+          authorBadge: "Expert",
+          category: "Technical Support",
           replies: [],
           views: 4520,
           likes: 234,
           likedBy: [],
-          tags: ['api', 'rate-limits', 'best-practices'],
+          tags: ["api", "rate-limits", "best-practices"],
           solved: false,
           pinned: true,
           featured: true,
@@ -617,37 +692,50 @@ const Forum = () => {
         },
       ];
       // Note: This would normally use the createThread function, but for initialization we'll set directly
-      localStorage.setItem('forum_threads', JSON.stringify(sampleThreads));
+      localStorage.setItem("forum_threads", JSON.stringify(sampleThreads));
       window.location.reload(); // Refresh to load the new threads
     }
   }, [threads.length]);
 
   // Filter and sort threads
-  const filteredThreads = threads.filter(thread => {
-    const matchesSearch = thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         thread.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         thread.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'all' || thread.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  }).sort((a, b) => {
-    switch (sortBy) {
-      case 'popular':
-        return b.likes - a.likes;
-      case 'unanswered':
-        return a.replies.length - b.replies.length;
-      case 'recent':
-      default:
-        return new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime();
-    }
-  });
+  const filteredThreads = threads
+    .filter((thread) => {
+      const matchesSearch =
+        thread.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        thread.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        thread.tags.some((tag) =>
+          tag.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      const matchesCategory =
+        selectedCategory === "all" || thread.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "popular":
+          return b.likes - a.likes;
+        case "unanswered":
+          return a.replies.length - b.replies.length;
+        case "recent":
+        default:
+          return (
+            new Date(b.lastActivity).getTime() -
+            new Date(a.lastActivity).getTime()
+          );
+      }
+    });
 
   // Separate pinned and regular threads
-  const pinnedThreads = filteredThreads.filter(thread => thread.pinned);
-  const regularThreads = filteredThreads.filter(thread => !thread.pinned);
+  const pinnedThreads = filteredThreads.filter((thread) => thread.pinned);
+  const regularThreads = filteredThreads.filter((thread) => !thread.pinned);
 
   // Handle thread creation
   const handleCreateThread = () => {
-    if (!newThread.title.trim() || !newThread.content.trim() || !newThread.category) {
+    if (
+      !newThread.title.trim() ||
+      !newThread.content.trim() ||
+      !newThread.category
+    ) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields.",
@@ -659,10 +747,10 @@ const Forum = () => {
     const thread = createThread({
       title: newThread.title,
       content: newThread.content,
-      author: currentUser?.name || 'Anonymous',
-      authorAvatar: currentUser?.avatar || '/api/placeholder/32/32',
-      authorLevel: currentUser?.level || 'Beginner',
-      authorBadge: currentUser?.badges[0] || '',
+      author: currentUser?.name || "Anonymous",
+      authorAvatar: currentUser?.avatar || "/api/placeholder/32/32",
+      authorLevel: currentUser?.level || "Beginner",
+      authorBadge: currentUser?.badges[0] || "",
       category: newThread.category,
       tags: newThread.tags,
       solved: false,
@@ -671,7 +759,7 @@ const Forum = () => {
       locked: false,
     });
 
-    setNewThread({ title: '', content: '', category: '', tags: [] });
+    setNewThread({ title: "", content: "", category: "", tags: [] });
     setIsCreateThreadOpen(false);
     toast({
       title: "Thread Created!",
@@ -691,13 +779,13 @@ const Forum = () => {
     }
 
     addReply(threadId, {
-      author: currentUser?.name || 'Anonymous',
-      authorAvatar: currentUser?.avatar || '/api/placeholder/32/32',
-      authorLevel: currentUser?.level || 'Beginner',
+      author: currentUser?.name || "Anonymous",
+      authorAvatar: currentUser?.avatar || "/api/placeholder/32/32",
+      authorLevel: currentUser?.level || "Beginner",
       content: replyContent,
     });
 
-    setReplyContent('');
+    setReplyContent("");
     setIsReplyOpen(null);
     toast({
       title: "Reply Posted!",
@@ -744,10 +832,12 @@ const Forum = () => {
     const date = new Date(dateString);
     const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 60) return "Just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 604800)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
     return date.toLocaleDateString();
   };
 
@@ -774,11 +864,20 @@ const Forum = () => {
                 <Button
                   variant='outline'
                   size='sm'
-                  onClick={() => setViewMode(viewMode === 'card' ? 'list' : 'card')}
+                  onClick={() =>
+                    setViewMode(viewMode === "card" ? "list" : "card")
+                  }
                 >
-                  {viewMode === 'card' ? <ListIcon className='w-4 h-4' /> : <Grid3X3 className='w-4 h-4' />}
+                  {viewMode === "card" ? (
+                    <ListIcon className='w-4 h-4' />
+                  ) : (
+                    <Grid3X3 className='w-4 h-4' />
+                  )}
                 </Button>
-                <Dialog open={isCreateThreadOpen} onOpenChange={setIsCreateThreadOpen}>
+                <Dialog
+                  open={isCreateThreadOpen}
+                  onOpenChange={setIsCreateThreadOpen}
+                >
                   <DialogTrigger asChild>
                     <Button>
                       <Plus className='w-4 h-4 mr-2' />
@@ -789,7 +888,8 @@ const Forum = () => {
                     <DialogHeader>
                       <DialogTitle>Create New Thread</DialogTitle>
                       <DialogDescription>
-                        Share your thoughts, ask questions, or start a discussion with the community.
+                        Share your thoughts, ask questions, or start a
+                        discussion with the community.
                       </DialogDescription>
                     </DialogHeader>
                     <div className='space-y-4'>
@@ -799,18 +899,34 @@ const Forum = () => {
                           id='title'
                           placeholder='What would you like to discuss?'
                           value={newThread.title}
-                          onChange={(e) => setNewThread(prev => ({ ...prev, title: e.target.value }))}
+                          onChange={(e) =>
+                            setNewThread((prev) => ({
+                              ...prev,
+                              title: e.target.value,
+                            }))
+                          }
                         />
                       </div>
                       <div>
                         <Label htmlFor='category'>Category</Label>
-                        <Select value={newThread.category} onValueChange={(value) => setNewThread(prev => ({ ...prev, category: value }))}>
+                        <Select
+                          value={newThread.category}
+                          onValueChange={(value) =>
+                            setNewThread((prev) => ({
+                              ...prev,
+                              category: value,
+                            }))
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder='Select a category' />
                           </SelectTrigger>
                           <SelectContent>
-                            {forumCategories.map(category => (
-                              <SelectItem key={category.id} value={category.name}>
+                            {forumCategories.map((category) => (
+                              <SelectItem
+                                key={category.id}
+                                value={category.name}
+                              >
                                 {category.name}
                               </SelectItem>
                             ))}
@@ -824,7 +940,12 @@ const Forum = () => {
                           placeholder='Describe your question or share your thoughts...'
                           rows={6}
                           value={newThread.content}
-                          onChange={(e) => setNewThread(prev => ({ ...prev, content: e.target.value }))}
+                          onChange={(e) =>
+                            setNewThread((prev) => ({
+                              ...prev,
+                              content: e.target.value,
+                            }))
+                          }
                         />
                       </div>
                       <div>
@@ -832,16 +953,24 @@ const Forum = () => {
                         <Input
                           id='tags'
                           placeholder='Add tags separated by commas'
-                          value={newThread.tags.join(', ')}
-                          onChange={(e) => setNewThread(prev => ({
-                            ...prev,
-                            tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
-                          }))}
+                          value={newThread.tags.join(", ")}
+                          onChange={(e) =>
+                            setNewThread((prev) => ({
+                              ...prev,
+                              tags: e.target.value
+                                .split(",")
+                                .map((tag) => tag.trim())
+                                .filter(Boolean),
+                            }))
+                          }
                         />
                       </div>
                     </div>
                     <div className='flex justify-end gap-2 mt-6'>
-                      <Button variant='outline' onClick={() => setIsCreateThreadOpen(false)}>
+                      <Button
+                        variant='outline'
+                        onClick={() => setIsCreateThreadOpen(false)}
+                      >
                         Cancel
                       </Button>
                       <Button onClick={handleCreateThread}>
@@ -858,7 +987,8 @@ const Forum = () => {
                 Developer Forum
               </h1>
               <p className='text-xl text-muted-foreground max-w-2xl mx-auto mb-8'>
-                Connect with fellow developers, share knowledge, and get help with CharadesAI integration.
+                Connect with fellow developers, share knowledge, and get help
+                with CharadesAI integration.
               </p>
 
               {/* Search and Filters */}
@@ -872,13 +1002,16 @@ const Forum = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select
+                  value={selectedCategory}
+                  onValueChange={setSelectedCategory}
+                >
                   <SelectTrigger className='w-full md:w-48'>
                     <SelectValue placeholder='All Categories' />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value='all'>All Categories</SelectItem>
-                    {forumCategories.map(category => (
+                    {forumCategories.map((category) => (
                       <SelectItem key={category.id} value={category.name}>
                         {category.name}
                       </SelectItem>
@@ -900,12 +1033,17 @@ const Forum = () => {
               {/* Stats */}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto'>
                 <div className='text-center'>
-                  <div className='text-2xl font-bold text-primary'>{threads.length}</div>
+                  <div className='text-2xl font-bold text-primary'>
+                    {threads.length}
+                  </div>
                   <div className='text-sm text-muted-foreground'>Threads</div>
                 </div>
                 <div className='text-center'>
                   <div className='text-2xl font-bold text-primary'>
-                    {threads.reduce((acc, thread) => acc + thread.replies.length, 0)}
+                    {threads.reduce(
+                      (acc, thread) => acc + thread.replies.length,
+                      0
+                    )}
                   </div>
                   <div className='text-sm text-muted-foreground'>Replies</div>
                 </div>
@@ -917,7 +1055,7 @@ const Forum = () => {
                 </div>
                 <div className='text-center'>
                   <div className='text-2xl font-bold text-primary'>
-                    {threads.filter(thread => thread.solved).length}
+                    {threads.filter((thread) => thread.solved).length}
                   </div>
                   <div className='text-sm text-muted-foreground'>Solved</div>
                 </div>
@@ -929,7 +1067,11 @@ const Forum = () => {
         {/* Main Content */}
         <section className='py-16'>
           <div className='container mx-auto px-4'>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className='w-full'
+            >
               <TabsList className='grid w-full grid-cols-4 mb-8'>
                 <TabsTrigger value='all'>All Threads</TabsTrigger>
                 <TabsTrigger value='unanswered'>Unanswered</TabsTrigger>
@@ -945,19 +1087,37 @@ const Forum = () => {
                       <Pin className='w-5 h-5 text-primary' />
                       Pinned Threads
                     </h3>
-                    <div className={`grid gap-4 ${viewMode === 'card' ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-                      {pinnedThreads.map(thread => (
-                        <Card key={thread.id} className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary' onClick={() => handleViewThread(thread)}>
+                    <div
+                      className={`grid gap-4 ${
+                        viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                      }`}
+                    >
+                      {pinnedThreads.map((thread) => (
+                        <Card
+                          key={thread.id}
+                          className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary'
+                          onClick={() => handleViewThread(thread)}
+                        >
                           <CardHeader>
                             <div className='flex items-start justify-between'>
                               <div className='flex-1'>
-                                <CardTitle className='text-lg mb-2 line-clamp-2'>{thread.title}</CardTitle>
+                                <CardTitle className='text-lg mb-2 line-clamp-2'>
+                                  {thread.title}
+                                </CardTitle>
                                 <div className='flex items-center gap-2 mb-2'>
-                                  <Badge className={getCategoryColor(thread.category)}>
+                                  <Badge
+                                    className={getCategoryColor(
+                                      thread.category
+                                    )}
+                                  >
                                     {thread.category}
                                   </Badge>
-                                  {thread.solved && <CheckCircle className='w-4 h-4 text-green-500' />}
-                                  {thread.featured && <Star className='w-4 h-4 text-yellow-500' />}
+                                  {thread.solved && (
+                                    <CheckCircle className='w-4 h-4 text-green-500' />
+                                  )}
+                                  {thread.featured && (
+                                    <Star className='w-4 h-4 text-yellow-500' />
+                                  )}
                                 </div>
                               </div>
                               <DropdownMenu>
@@ -967,16 +1127,41 @@ const Forum = () => {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleBookmark(thread.id, currentUser?.id || ''); }}>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleBookmark(
+                                        thread.id,
+                                        currentUser?.id || ""
+                                      );
+                                    }}
+                                  >
                                     <Bookmark className='w-4 h-4 mr-2' />
-                                    {bookmarks.some(b => b.threadId === thread.id) ? 'Remove Bookmark' : 'Bookmark'}
+                                    {bookmarks.some(
+                                      (b) => b.threadId === thread.id
+                                    )
+                                      ? "Remove Bookmark"
+                                      : "Bookmark"}
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleLike(thread.id, currentUser?.id || ''); }}>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleLike(
+                                        thread.id,
+                                        currentUser?.id || ""
+                                      );
+                                    }}
+                                  >
                                     <ThumbsUp className='w-4 h-4 mr-2' />
                                     Like ({thread.likes})
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={(e) => { e.stopPropagation(); markAsSolved(thread.id); }}>
+                                  <DropdownMenuItem
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      markAsSolved(thread.id);
+                                    }}
+                                  >
                                     <CheckCircle className='w-4 h-4 mr-2' />
                                     Mark as Solved
                                   </DropdownMenuItem>
@@ -985,16 +1170,24 @@ const Forum = () => {
                             </div>
                           </CardHeader>
                           <CardContent>
-                            <p className='text-muted-foreground mb-4 line-clamp-3'>{thread.content}</p>
+                            <p className='text-muted-foreground mb-4 line-clamp-3'>
+                              {thread.content}
+                            </p>
                             <div className='flex items-center justify-between'>
                               <div className='flex items-center gap-3'>
                                 <Avatar className='w-8 h-8'>
                                   <AvatarImage src={thread.authorAvatar} />
-                                  <AvatarFallback>{thread.author[0]}</AvatarFallback>
+                                  <AvatarFallback>
+                                    {thread.author[0]}
+                                  </AvatarFallback>
                                 </Avatar>
                                 <div>
-                                  <div className='font-medium text-sm'>{thread.author}</div>
-                                  <div className='text-xs text-muted-foreground'>{formatTimeAgo(thread.createdAt)}</div>
+                                  <div className='font-medium text-sm'>
+                                    {thread.author}
+                                  </div>
+                                  <div className='text-xs text-muted-foreground'>
+                                    {formatTimeAgo(thread.createdAt)}
+                                  </div>
                                 </div>
                               </div>
                               <div className='flex items-center gap-4 text-sm text-muted-foreground'>
@@ -1020,19 +1213,35 @@ const Forum = () => {
                 )}
 
                 {/* Regular Threads */}
-                <div className={`grid gap-4 ${viewMode === 'card' ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-                  {regularThreads.map(thread => (
-                    <Card key={thread.id} className='hover:shadow-lg transition-shadow cursor-pointer' onClick={() => handleViewThread(thread)}>
+                <div
+                  className={`grid gap-4 ${
+                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
+                  {regularThreads.map((thread) => (
+                    <Card
+                      key={thread.id}
+                      className='hover:shadow-lg transition-shadow cursor-pointer'
+                      onClick={() => handleViewThread(thread)}
+                    >
                       <CardHeader>
                         <div className='flex items-start justify-between'>
                           <div className='flex-1'>
-                            <CardTitle className='text-lg mb-2 line-clamp-2'>{thread.title}</CardTitle>
+                            <CardTitle className='text-lg mb-2 line-clamp-2'>
+                              {thread.title}
+                            </CardTitle>
                             <div className='flex items-center gap-2 mb-2'>
-                              <Badge className={getCategoryColor(thread.category)}>
+                              <Badge
+                                className={getCategoryColor(thread.category)}
+                              >
                                 {thread.category}
                               </Badge>
-                              {thread.solved && <CheckCircle className='w-4 h-4 text-green-500' />}
-                              {thread.featured && <Star className='w-4 h-4 text-yellow-500' />}
+                              {thread.solved && (
+                                <CheckCircle className='w-4 h-4 text-green-500' />
+                              )}
+                              {thread.featured && (
+                                <Star className='w-4 h-4 text-yellow-500' />
+                              )}
                             </div>
                           </div>
                           <DropdownMenu>
@@ -1042,16 +1251,36 @@ const Forum = () => {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleBookmark(thread.id, currentUser?.id || ''); }}>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleBookmark(
+                                    thread.id,
+                                    currentUser?.id || ""
+                                  );
+                                }}
+                              >
                                 <Bookmark className='w-4 h-4 mr-2' />
-                                {bookmarks.some(b => b.threadId === thread.id) ? 'Remove Bookmark' : 'Bookmark'}
+                                {bookmarks.some((b) => b.threadId === thread.id)
+                                  ? "Remove Bookmark"
+                                  : "Bookmark"}
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toggleLike(thread.id, currentUser?.id || ''); }}>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleLike(thread.id, currentUser?.id || "");
+                                }}
+                              >
                                 <ThumbsUp className='w-4 h-4 mr-2' />
                                 Like ({thread.likes})
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); markAsSolved(thread.id); }}>
+                              <DropdownMenuItem
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markAsSolved(thread.id);
+                                }}
+                              >
                                 <CheckCircle className='w-4 h-4 mr-2' />
                                 Mark as Solved
                               </DropdownMenuItem>
@@ -1060,16 +1289,24 @@ const Forum = () => {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className='text-muted-foreground mb-4 line-clamp-3'>{thread.content}</p>
+                        <p className='text-muted-foreground mb-4 line-clamp-3'>
+                          {thread.content}
+                        </p>
                         <div className='flex items-center justify-between'>
                           <div className='flex items-center gap-3'>
                             <Avatar className='w-8 h-8'>
                               <AvatarImage src={thread.authorAvatar} />
-                              <AvatarFallback>{thread.author[0]}</AvatarFallback>
+                              <AvatarFallback>
+                                {thread.author[0]}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className='font-medium text-sm'>{thread.author}</div>
-                              <div className='text-xs text-muted-foreground'>{formatTimeAgo(thread.createdAt)}</div>
+                              <div className='font-medium text-sm'>
+                                {thread.author}
+                              </div>
+                              <div className='text-xs text-muted-foreground'>
+                                {formatTimeAgo(thread.createdAt)}
+                              </div>
                             </div>
                           </div>
                           <div className='flex items-center gap-4 text-sm text-muted-foreground'>
@@ -1095,8 +1332,13 @@ const Forum = () => {
                 {filteredThreads.length === 0 && (
                   <div className='text-center py-12'>
                     <MessageSquare className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                    <h3 className='text-xl font-semibold mb-2'>No threads found</h3>
-                    <p className='text-muted-foreground mb-4'>Try adjusting your search or filters, or create a new thread.</p>
+                    <h3 className='text-xl font-semibold mb-2'>
+                      No threads found
+                    </h3>
+                    <p className='text-muted-foreground mb-4'>
+                      Try adjusting your search or filters, or create a new
+                      thread.
+                    </p>
                     <Button onClick={() => setIsCreateThreadOpen(true)}>
                       <Plus className='w-4 h-4 mr-2' />
                       Create Thread
@@ -1106,139 +1348,220 @@ const Forum = () => {
               </TabsContent>
 
               <TabsContent value='unanswered'>
-                <div className={`grid gap-4 ${viewMode === 'card' ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-                  {threads.filter(thread => !thread.solved && thread.replies.length === 0).map(thread => (
-                    <Card key={thread.id} className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-orange-500' onClick={() => handleViewThread(thread)}>
-                      <CardHeader>
-                        <CardTitle className='text-lg'>{thread.title}</CardTitle>
-                        <div className='flex items-center gap-2'>
-                          <Badge className={getCategoryColor(thread.category)}>
-                            {thread.category}
-                          </Badge>
-                          <span className='text-sm text-muted-foreground'>No replies yet</span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className='text-muted-foreground mb-4 line-clamp-3'>{thread.content}</p>
-                        <div className='flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
-                            <Avatar className='w-8 h-8'>
-                              <AvatarImage src={thread.authorAvatar} />
-                              <AvatarFallback>{thread.author[0]}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className='font-medium text-sm'>{thread.author}</div>
-                              <div className='text-xs text-muted-foreground'>{formatTimeAgo(thread.createdAt)}</div>
-                            </div>
+                <div
+                  className={`grid gap-4 ${
+                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
+                  {threads
+                    .filter(
+                      (thread) => !thread.solved && thread.replies.length === 0
+                    )
+                    .map((thread) => (
+                      <Card
+                        key={thread.id}
+                        className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-orange-500'
+                        onClick={() => handleViewThread(thread)}
+                      >
+                        <CardHeader>
+                          <CardTitle className='text-lg'>
+                            {thread.title}
+                          </CardTitle>
+                          <div className='flex items-center gap-2'>
+                            <Badge
+                              className={getCategoryColor(thread.category)}
+                            >
+                              {thread.category}
+                            </Badge>
+                            <span className='text-sm text-muted-foreground'>
+                              No replies yet
+                            </span>
                           </div>
-                          <Button size='sm' onClick={(e) => { e.stopPropagation(); setIsReplyOpen(thread.id); }}>
-                            <Reply className='w-4 h-4 mr-2' />
-                            Reply
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardHeader>
+                        <CardContent>
+                          <p className='text-muted-foreground mb-4 line-clamp-3'>
+                            {thread.content}
+                          </p>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Avatar className='w-8 h-8'>
+                                <AvatarImage src={thread.authorAvatar} />
+                                <AvatarFallback>
+                                  {thread.author[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className='font-medium text-sm'>
+                                  {thread.author}
+                                </div>
+                                <div className='text-xs text-muted-foreground'>
+                                  {formatTimeAgo(thread.createdAt)}
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              size='sm'
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsReplyOpen(thread.id);
+                              }}
+                            >
+                              <Reply className='w-4 h-4 mr-2' />
+                              Reply
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
               </TabsContent>
 
               <TabsContent value='bookmarks'>
-                <div className={`grid gap-4 ${viewMode === 'card' ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-                  {threads.filter(thread => bookmarks.some(b => b.threadId === thread.id)).map(thread => (
-                    <Card key={thread.id} className='hover:shadow-lg transition-shadow cursor-pointer' onClick={() => handleViewThread(thread)}>
-                      <CardHeader>
-                        <CardTitle className='text-lg flex items-center gap-2'>
-                          <Bookmark className='w-4 h-4 text-primary' />
-                          {thread.title}
-                        </CardTitle>
-                        <Badge className={getCategoryColor(thread.category)}>
-                          {thread.category}
-                        </Badge>
-                      </CardHeader>
-                      <CardContent>
-                        <p className='text-muted-foreground mb-4 line-clamp-3'>{thread.content}</p>
-                        <div className='flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
-                            <Avatar className='w-8 h-8'>
-                              <AvatarImage src={thread.authorAvatar} />
-                              <AvatarFallback>{thread.author[0]}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className='font-medium text-sm'>{thread.author}</div>
-                              <div className='text-xs text-muted-foreground'>{formatTimeAgo(thread.createdAt)}</div>
+                <div
+                  className={`grid gap-4 ${
+                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
+                  {threads
+                    .filter((thread) =>
+                      bookmarks.some((b) => b.threadId === thread.id)
+                    )
+                    .map((thread) => (
+                      <Card
+                        key={thread.id}
+                        className='hover:shadow-lg transition-shadow cursor-pointer'
+                        onClick={() => handleViewThread(thread)}
+                      >
+                        <CardHeader>
+                          <CardTitle className='text-lg flex items-center gap-2'>
+                            <Bookmark className='w-4 h-4 text-primary' />
+                            {thread.title}
+                          </CardTitle>
+                          <Badge className={getCategoryColor(thread.category)}>
+                            {thread.category}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent>
+                          <p className='text-muted-foreground mb-4 line-clamp-3'>
+                            {thread.content}
+                          </p>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Avatar className='w-8 h-8'>
+                                <AvatarImage src={thread.authorAvatar} />
+                                <AvatarFallback>
+                                  {thread.author[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className='font-medium text-sm'>
+                                  {thread.author}
+                                </div>
+                                <div className='text-xs text-muted-foreground'>
+                                  {formatTimeAgo(thread.createdAt)}
+                                </div>
+                              </div>
+                            </div>
+                            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                              <span className='flex items-center gap-1'>
+                                <MessageSquare className='w-4 h-4' />
+                                {thread.replies.length}
+                              </span>
+                              <span className='flex items-center gap-1'>
+                                <Eye className='w-4 h-4' />
+                                {thread.views}
+                              </span>
                             </div>
                           </div>
-                          <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                            <span className='flex items-center gap-1'>
-                              <MessageSquare className='w-4 h-4' />
-                              {thread.replies.length}
-                            </span>
-                            <span className='flex items-center gap-1'>
-                              <Eye className='w-4 h-4' />
-                              {thread.views}
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
-                {threads.filter(thread => bookmarks.some(b => b.threadId === thread.id)).length === 0 && (
+                {threads.filter((thread) =>
+                  bookmarks.some((b) => b.threadId === thread.id)
+                ).length === 0 && (
                   <div className='text-center py-12'>
                     <Bookmark className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                    <h3 className='text-xl font-semibold mb-2'>No bookmarked threads</h3>
-                    <p className='text-muted-foreground'>Bookmark threads to find them easily later.</p>
+                    <h3 className='text-xl font-semibold mb-2'>
+                      No bookmarked threads
+                    </h3>
+                    <p className='text-muted-foreground'>
+                      Bookmark threads to find them easily later.
+                    </p>
                   </div>
                 )}
               </TabsContent>
 
               <TabsContent value='my-posts'>
-                <div className={`grid gap-4 ${viewMode === 'card' ? 'md:grid-cols-2' : 'grid-cols-1'}`}>
-                  {threads.filter(thread => thread.author === currentUser?.name).map(thread => (
-                    <Card key={thread.id} className='hover:shadow-lg transition-shadow cursor-pointer' onClick={() => handleViewThread(thread)}>
-                      <CardHeader>
-                        <CardTitle className='text-lg'>{thread.title}</CardTitle>
-                        <Badge className={getCategoryColor(thread.category)}>
-                          {thread.category}
-                        </Badge>
-                      </CardHeader>
-                      <CardContent>
-                        <p className='text-muted-foreground mb-4 line-clamp-3'>{thread.content}</p>
-                        <div className='flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
-                            <Avatar className='w-8 h-8'>
-                              <AvatarImage src={thread.authorAvatar} />
-                              <AvatarFallback>{thread.author[0]}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className='font-medium text-sm'>{thread.author}</div>
-                              <div className='text-xs text-muted-foreground'>{formatTimeAgo(thread.createdAt)}</div>
+                <div
+                  className={`grid gap-4 ${
+                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                  }`}
+                >
+                  {threads
+                    .filter((thread) => thread.author === currentUser?.name)
+                    .map((thread) => (
+                      <Card
+                        key={thread.id}
+                        className='hover:shadow-lg transition-shadow cursor-pointer'
+                        onClick={() => handleViewThread(thread)}
+                      >
+                        <CardHeader>
+                          <CardTitle className='text-lg'>
+                            {thread.title}
+                          </CardTitle>
+                          <Badge className={getCategoryColor(thread.category)}>
+                            {thread.category}
+                          </Badge>
+                        </CardHeader>
+                        <CardContent>
+                          <p className='text-muted-foreground mb-4 line-clamp-3'>
+                            {thread.content}
+                          </p>
+                          <div className='flex items-center justify-between'>
+                            <div className='flex items-center gap-3'>
+                              <Avatar className='w-8 h-8'>
+                                <AvatarImage src={thread.authorAvatar} />
+                                <AvatarFallback>
+                                  {thread.author[0]}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className='font-medium text-sm'>
+                                  {thread.author}
+                                </div>
+                                <div className='text-xs text-muted-foreground'>
+                                  {formatTimeAgo(thread.createdAt)}
+                                </div>
+                              </div>
+                            </div>
+                            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                              <span className='flex items-center gap-1'>
+                                <MessageSquare className='w-4 h-4' />
+                                {thread.replies.length}
+                              </span>
+                              <span className='flex items-center gap-1'>
+                                <Eye className='w-4 h-4' />
+                                {thread.views}
+                              </span>
+                              <span className='flex items-center gap-1'>
+                                <ThumbsUp className='w-4 h-4' />
+                                {thread.likes}
+                              </span>
                             </div>
                           </div>
-                          <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                            <span className='flex items-center gap-1'>
-                              <MessageSquare className='w-4 h-4' />
-                              {thread.replies.length}
-                            </span>
-                            <span className='flex items-center gap-1'>
-                              <Eye className='w-4 h-4' />
-                              {thread.views}
-                            </span>
-                            <span className='flex items-center gap-1'>
-                              <ThumbsUp className='w-4 h-4' />
-                              {thread.likes}
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                        </CardContent>
+                      </Card>
+                    ))}
                 </div>
-                {threads.filter(thread => thread.author === currentUser?.name).length === 0 && (
+                {threads.filter((thread) => thread.author === currentUser?.name)
+                  .length === 0 && (
                   <div className='text-center py-12'>
                     <User className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
                     <h3 className='text-xl font-semibold mb-2'>No posts yet</h3>
-                    <p className='text-muted-foreground mb-4'>Start a conversation by creating your first thread.</p>
+                    <p className='text-muted-foreground mb-4'>
+                      Start a conversation by creating your first thread.
+                    </p>
                     <Button onClick={() => setIsCreateThreadOpen(true)}>
                       <Plus className='w-4 h-4 mr-2' />
                       Create Thread
@@ -1252,19 +1575,32 @@ const Forum = () => {
 
         {/* Thread Detail Modal */}
         {selectedThread && (
-          <Dialog open={!!selectedThread} onOpenChange={() => setSelectedThread(null)}>
+          <Dialog
+            open={!!selectedThread}
+            onOpenChange={() => setSelectedThread(null)}
+          >
             <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
               <DialogHeader>
                 <div className='flex items-start justify-between'>
                   <div className='flex-1'>
-                    <DialogTitle className='text-2xl mb-2'>{selectedThread.title}</DialogTitle>
+                    <DialogTitle className='text-2xl mb-2'>
+                      {selectedThread.title}
+                    </DialogTitle>
                     <div className='flex items-center gap-2 mb-4'>
-                      <Badge className={getCategoryColor(selectedThread.category)}>
+                      <Badge
+                        className={getCategoryColor(selectedThread.category)}
+                      >
                         {selectedThread.category}
                       </Badge>
-                      {selectedThread.solved && <CheckCircle className='w-4 h-4 text-green-500' />}
-                      {selectedThread.featured && <Star className='w-4 h-4 text-yellow-500' />}
-                      {selectedThread.pinned && <Pin className='w-4 h-4 text-primary' />}
+                      {selectedThread.solved && (
+                        <CheckCircle className='w-4 h-4 text-green-500' />
+                      )}
+                      {selectedThread.featured && (
+                        <Star className='w-4 h-4 text-yellow-500' />
+                      )}
+                      {selectedThread.pinned && (
+                        <Pin className='w-4 h-4 text-primary' />
+                      )}
                     </div>
                   </div>
                   <DropdownMenu>
@@ -1274,16 +1610,31 @@ const Forum = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => toggleBookmark(selectedThread.id, currentUser?.id || '')}>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          toggleBookmark(
+                            selectedThread.id,
+                            currentUser?.id || ""
+                          )
+                        }
+                      >
                         <Bookmark className='w-4 h-4 mr-2' />
-                        {bookmarks.some(b => b.threadId === selectedThread.id) ? 'Remove Bookmark' : 'Bookmark'}
+                        {bookmarks.some((b) => b.threadId === selectedThread.id)
+                          ? "Remove Bookmark"
+                          : "Bookmark"}
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => toggleLike(selectedThread.id, currentUser?.id || '')}>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          toggleLike(selectedThread.id, currentUser?.id || "")
+                        }
+                      >
                         <ThumbsUp className='w-4 h-4 mr-2' />
                         Like ({selectedThread.likes})
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => markAsSolved(selectedThread.id)}>
+                      <DropdownMenuItem
+                        onClick={() => markAsSolved(selectedThread.id)}
+                      >
                         <CheckCircle className='w-4 h-4 mr-2' />
                         Mark as Solved
                       </DropdownMenuItem>
@@ -1301,22 +1652,34 @@ const Forum = () => {
                   </Avatar>
                   <div className='flex-1'>
                     <div className='flex items-center gap-2 mb-2'>
-                      <span className='font-semibold'>{selectedThread.author}</span>
-                      <Badge className={getLevelColor(selectedThread.authorLevel)}>
+                      <span className='font-semibold'>
+                        {selectedThread.author}
+                      </span>
+                      <Badge
+                        className={getLevelColor(selectedThread.authorLevel)}
+                      >
                         {selectedThread.authorLevel}
                       </Badge>
                       {selectedThread.authorBadge && (
-                        <Badge variant='secondary'>{selectedThread.authorBadge}</Badge>
+                        <Badge variant='secondary'>
+                          {selectedThread.authorBadge}
+                        </Badge>
                       )}
                     </div>
-                    <p className='text-muted-foreground mb-4'>{formatTimeAgo(selectedThread.createdAt)}</p>
+                    <p className='text-muted-foreground mb-4'>
+                      {formatTimeAgo(selectedThread.createdAt)}
+                    </p>
                     <div className='prose prose-sm max-w-none mb-4'>
                       {selectedThread.content}
                     </div>
                     {selectedThread.tags.length > 0 && (
                       <div className='flex flex-wrap gap-2 mb-4'>
-                        {selectedThread.tags.map(tag => (
-                          <Badge key={tag} variant='outline' className='text-xs'>
+                        {selectedThread.tags.map((tag) => (
+                          <Badge
+                            key={tag}
+                            variant='outline'
+                            className='text-xs'
+                          >
                             #{tag}
                           </Badge>
                         ))}
@@ -1326,8 +1689,14 @@ const Forum = () => {
                       <Button
                         variant='ghost'
                         size='sm'
-                        onClick={() => toggleLike(selectedThread.id, currentUser?.id || '')}
-                        className={selectedThread.likedBy.includes(currentUser?.id || '') ? 'text-primary' : ''}
+                        onClick={() =>
+                          toggleLike(selectedThread.id, currentUser?.id || "")
+                        }
+                        className={
+                          selectedThread.likedBy.includes(currentUser?.id || "")
+                            ? "text-primary"
+                            : ""
+                        }
                       >
                         <ThumbsUp className='w-4 h-4 mr-2' />
                         {selectedThread.likes}
@@ -1347,8 +1716,10 @@ const Forum = () => {
 
               {/* Replies */}
               <div className='space-y-4 mb-6'>
-                <h3 className='text-lg font-semibold'>{selectedThread.replies.length} Replies</h3>
-                {selectedThread.replies.map(reply => (
+                <h3 className='text-lg font-semibold'>
+                  {selectedThread.replies.length} Replies
+                </h3>
+                {selectedThread.replies.map((reply) => (
                   <div key={reply.id} className='border rounded-lg p-4'>
                     <div className='flex items-start gap-4'>
                       <Avatar className='w-10 h-10'>
@@ -1362,7 +1733,9 @@ const Forum = () => {
                             {reply.authorLevel}
                           </Badge>
                         </div>
-                        <p className='text-muted-foreground text-sm mb-2'>{formatTimeAgo(reply.timestamp)}</p>
+                        <p className='text-muted-foreground text-sm mb-2'>
+                          {formatTimeAgo(reply.timestamp)}
+                        </p>
                         <div className='prose prose-sm max-w-none mb-3'>
                           {reply.content}
                         </div>
@@ -1370,7 +1743,9 @@ const Forum = () => {
                           <Button
                             variant='ghost'
                             size='sm'
-                            onClick={() => {/* TODO: Implement reply like */}}
+                            onClick={() => {
+                              /* TODO: Implement reply like */
+                            }}
                           >
                             <ThumbsUp className='w-4 h-4 mr-2' />
                             {reply.likes}
@@ -1394,10 +1769,18 @@ const Forum = () => {
                     className='mb-4'
                   />
                   <div className='flex justify-end gap-2'>
-                    <Button variant='outline' onClick={() => { setIsReplyOpen(null); setReplyContent(''); }}>
+                    <Button
+                      variant='outline'
+                      onClick={() => {
+                        setIsReplyOpen(null);
+                        setReplyContent("");
+                      }}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={() => handleCreateReply(selectedThread.id)}>
+                    <Button
+                      onClick={() => handleCreateReply(selectedThread.id)}
+                    >
                       <Send className='w-4 h-4 mr-2' />
                       Post Reply
                     </Button>

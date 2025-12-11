@@ -49,7 +49,7 @@ export function Footer() {
                 <Zap className='w-5 h-5 text-primary-foreground' />
               </div>
               <span className='text-xl font-bold'>
-                Vision<span className='text-gradient'>AI</span>
+                Charades<span className='text-gradient'>AI</span>
               </span>
             </Link>
             <p className='text-sm text-muted-foreground mb-6 max-w-xs'>

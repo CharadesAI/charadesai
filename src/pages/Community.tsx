@@ -67,7 +67,6 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const communityChannels = [
- 
   {
     icon: Users,
     title: "Developer Forum",
@@ -146,7 +145,7 @@ const recentDiscussions = [
 
 const upcomingEvents = [
   {
-    title: "Vision AI Hackathon 2026",
+    title: "CharadesAI Hackathon 2026",
     date: "Jan 15-17, 2026",
     type: "Hackathon",
     description:
@@ -174,7 +173,7 @@ const upcomingEvents = [
     date: "Feb 22, 2026",
     type: "Workshop",
     description:
-      "Discuss responsible AI development and accessibility in vision AI",
+      "Discuss responsible AI development and accessibility in CharadesAI",
     attendees: 60,
     status: "Early Bird",
     location: "Virtual",
@@ -358,7 +357,7 @@ const Community = () => {
             <p className='text-lg text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed'>
               Join 25,000+ developers, researchers, and innovators building the
               future of accessible AI. Connect, learn, and contribute to
-              groundbreaking vision AI technology.
+              groundbreaking CharadesAI technology.
             </p>
             <div className='flex flex-wrap justify-center gap-4 mb-8'>
               <div className='flex items-center gap-2'>
@@ -377,7 +376,6 @@ const Community = () => {
               </div>
             </div>
             <div className='flex flex-wrap justify-center gap-4'>
-              
               <Button
                 variant='heroOutline'
                 size='lg'

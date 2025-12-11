@@ -160,7 +160,7 @@ const Features = () => {
                 Features
               </span>
               <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
-                Powerful <span className='text-gradient'>Vision AI</span>{" "}
+                Powerful <span className='text-gradient'>CharadesAI</span>{" "}
                 Capabilities
               </h1>
               <p className='text-lg text-muted-foreground max-w-2xl mx-auto mb-8'>

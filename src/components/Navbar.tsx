@@ -70,7 +70,7 @@ export function Navbar() {
                   </div>
                 </div>
                 <span className='text-lg font-bold hidden sm:block'>
-                  Vision<span className='text-gradient'>AI</span>
+                  Charades <span className='text-gradient'>AI</span>
                 </span>
               </Link>
             </div>

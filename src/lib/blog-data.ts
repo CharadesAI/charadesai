@@ -1,7 +1,7 @@
 export const blogPosts = [
   {
     id: "1",
-    slug: "introducing-vision-ai-2",
+    slug: "introducing-Charades-ai-2",
     title: "Introducing CharadesAI 2.0: 40% Faster Inference",
     excerpt:
       "We're excited to announce CharadesAI 2.0, featuring our new optimized models that deliver 40% faster inference times while maintaining industry-leading accuracy.",

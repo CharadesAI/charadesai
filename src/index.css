@@ -63,12 +63,16 @@
     --glow-violet: 0 0 40px hsl(270 100% 65% / 0.3);
     
     --gradient-ai: linear-gradient(135deg, hsl(217 100% 60%), hsl(270 100% 65%), hsl(185 100% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(220 30% 15%) 0%, hsl(230 35% 8%) 100%);
+    /* Hero gradient uses background and subtle primary/accent tones for an elegant feel in light mode */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--background) / 1) 0%, hsl(var(--primary) / 0.06) 50%, hsl(var(--accent) / 0.04) 100%);
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.1), hsl(0 0% 100% / 0.05));
     --gradient-button: linear-gradient(135deg, hsl(217 100% 60%), hsl(270 100% 65%));
     
     --glass-bg: hsl(0 0% 100% / 0.7);
     --glass-border: hsl(0 0% 100% / 0.2);
+    /* subtle overlay to help hero gradients look elegant in light mode */
+    --hero-overlay: rgba(255, 255, 255, 0.12); /* increased for readability in light mode */
+    --hero-text-shadow: 0 8px 28px rgba(0,0,0,0.14);
   }
 
   .dark {
@@ -127,12 +131,16 @@
     --glow-violet: 0 0 60px hsl(270 100% 65% / 0.4);
     
     --gradient-ai: linear-gradient(135deg, hsl(217 100% 60%), hsl(270 100% 65%), hsl(185 100% 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(230 55% 3%) 100%);
+    /* Dark mode hero uses deep tones while allowing neon accents to shine */
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(230 55% 3%) 60%, hsl(var(--neon-violet) / 0.02) 100%);
     --gradient-card: linear-gradient(135deg, hsl(0 0% 100% / 0.05), hsl(0 0% 100% / 0.02));
     --gradient-button: linear-gradient(135deg, hsl(217 100% 60%), hsl(270 100% 65%));
     
     --glass-bg: hsl(222 47% 10% / 0.8);
     --glass-border: hsl(0 0% 100% / 0.1);
+    /* slightly darker overlay for dark theme hero background */
+    --hero-overlay: rgba(0, 0, 0, 0.14);
+    --hero-text-shadow: 0 8px 26px rgba(0,0,0,0.34);
   }
 }
 
@@ -161,7 +169,43 @@
   }
 
   .bg-gradient-hero {
-    background-image: var(--gradient-hero);
+    /* Layered gradients for a refined hero background that adapts to theme tokens
+       - base: the project's gradient variable
+       - soft radial highlights using neon tokens for a soft glow
+       - subtle overlay to help readability on light/dark
+    */
+    background-image: 
+      linear-gradient(var(--hero-overlay), var(--hero-overlay)),
+      radial-gradient(800px 400px at 12% 22%, hsl(var(--neon-cyan) / 0.08), transparent 30%),
+      radial-gradient(700px 360px at 85% 72%, hsl(var(--neon-violet) / 0.06), transparent 28%),
+      var(--gradient-hero);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover, 60% 60%, 60% 60%, cover;
+    background-blend-mode: normal, screen, screen, normal;
+  }
+
+  /* Improve hero text visibility & readability for light/dark themes */
+  .bg-gradient-hero .text-gradient {
+    /* Add subtle shadow to make gradient headings read well in light mode */
+    text-shadow: var(--hero-text-shadow);
+  }
+
+  .bg-gradient-hero .hero-foreground,
+  .bg-gradient-hero h1,
+  .bg-gradient-hero h2,
+  .bg-gradient-hero p {
+    color: hsl(var(--foreground));
+    text-shadow: var(--hero-text-shadow);
+  }
+
+  /* also apply hero text shadow to sections that have the overlay element as a child (covers cases where overlay is an absolute child) */
+  section:has(.bg-gradient-hero) .text-gradient,
+  section:has(.bg-gradient-hero) h1,
+  section:has(.bg-gradient-hero) h2,
+  section:has(.bg-gradient-hero) p {
+    color: hsl(var(--foreground));
+    text-shadow: var(--hero-text-shadow);
   }
 
   .glass {

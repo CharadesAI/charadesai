@@ -149,7 +149,7 @@ print(result.transcription)`,
               API Reference
             </div>
             <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
-              Powerful <span className='text-gradient'>Vision AI</span> API
+              Powerful <span className='text-gradient'>CharadesAI</span> API
             </h1>
             <p className='text-lg text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed'>
               Integrate advanced lip-reading and gesture recognition into your
@@ -167,7 +167,7 @@ print(result.transcription)`,
                 Get Started in <span className='text-gradient'>3 Steps</span>
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
-                Integrate Vision AI into your application with just a few lines
+                Integrate CharadesAI into your application with just a few lines
                 of code
               </p>
             </div>
@@ -205,7 +205,7 @@ print(result.transcription)`,
                 </div>
                 <h3 className='text-xl font-semibold mb-2'>Start Building</h3>
                 <p className='text-muted-foreground'>
-                  Integrate Vision AI features into your application.
+                  Integrate CharadesAI features into your application.
                 </p>
               </div>
             </div>
@@ -232,7 +232,7 @@ print(result.transcription)`,
                 Core <span className='text-gradient'>API Endpoints</span>
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
-                Comprehensive endpoints for all your vision AI needs with
+                Comprehensive endpoints for all your CharadesAI needs with
                 detailed documentation
               </p>
             </div>
@@ -455,7 +455,7 @@ print(result.transcription)`,
             <div className='max-w-3xl mx-auto'>
               <h2 className='text-3xl md:text-4xl font-bold mb-6'>
                 Ready to Build with{" "}
-                <span className='text-gradient'>Vision AI</span>?
+                <span className='text-gradient'>CharadesAI</span>?
               </h2>
               <p className='text-muted-foreground mb-8 text-lg leading-relaxed'>
                 Join thousands of developers and businesses creating innovative

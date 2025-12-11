@@ -1,4 +1,4 @@
-# Synthia Vision Lab - Copilot Instructions
+# Charades AI Lab - Copilot Instructions
 
 ## Project Overview
 

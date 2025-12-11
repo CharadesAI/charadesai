@@ -134,7 +134,7 @@ const useCases = [
     icon: Car,
     title: "Automotive Industry",
     description:
-      "Driver assistance systems and in-car communication using advanced vision AI.",
+      "Driver assistance systems and in-car communication using advanced CharadesAI.",
     features: ["Driver monitoring", "Voice commands", "Safety alerts"],
     color: "from-teal-500 to-cyan-500",
     bgColor: "bg-teal-500/10",
@@ -193,7 +193,7 @@ const UseCases = () => {
             </div>
             <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
               Transform Industries with{" "}
-              <span className='text-gradient'>Vision AI</span>
+              <span className='text-gradient'>CharadesAI</span>
             </h1>
             <p className='text-lg text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed'>
               Discover how CharadesAI's advanced lip-reading and gesture
@@ -252,7 +252,7 @@ const UseCases = () => {
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
                 From accessibility tools to enterprise security, discover how
-                Vision AI is transforming the way we interact with technology
+                CharadesAI is transforming the way we interact with technology
                 and each other.
               </p>
             </div>
@@ -315,8 +315,8 @@ const UseCases = () => {
                 Why Choose <span className='text-gradient'>CharadesAI</span>?
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
-                Our advanced Vision AI technology delivers unparalleled accuracy
-                and reliability for your most demanding applications.
+                Our advanced CharadesAI technology delivers unparalleled
+                accuracy and reliability for your most demanding applications.
               </p>
             </div>
 
@@ -367,7 +367,7 @@ const UseCases = () => {
             <div className='max-w-3xl mx-auto'>
               <h2 className='text-3xl md:text-4xl font-bold mb-6'>
                 Ready to Build Your{" "}
-                <span className='text-gradient'>Vision AI</span> Solution?
+                <span className='text-gradient'>CharadesAI</span> Solution?
               </h2>
               <p className='text-muted-foreground mb-8 text-lg leading-relaxed'>
                 Join thousands of developers and businesses creating innovative
