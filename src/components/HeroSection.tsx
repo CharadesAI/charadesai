@@ -4,17 +4,17 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 export function HeroSection() {
   return (
-    <section className='relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5'>
+    <section className='relative min-h-[70vh] md:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5'>
       {/* Dynamic Background */}
       <div
-        className='absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20 dark:opacity-30'
+        className='absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30'
         style={{ backgroundImage: `url(${heroBg})` }}
       />
 
       {/* Animated Speech Waves */}
       <div className='absolute inset-0 overflow-hidden'>
         {/* Speech Wave Animation */}
-        <div className='absolute top-1/4 left-1/4 w-96 h-32 opacity-30'>
+        <div className='hidden md:block md:absolute md:top-1/4 md:left-1/4 md:w-96 md:h-32 md:opacity-30'>
           <svg viewBox='0 0 400 100' className='w-full h-full'>
             <path
               d='M0,50 Q50,20 100,50 T200,50 T300,50 T400,50'
@@ -49,7 +49,7 @@ export function HeroSection() {
         </div>
 
         {/* Gesture Recognition Circles */}
-        <div className='absolute top-1/3 right-1/4 w-64 h-64'>
+        <div className='hidden md:block md:absolute md:top-1/3 md:right-1/4 md:w-64 md:h-64'>
           <div
             className='absolute inset-0 rounded-full border-2 border-neon-cyan/20 animate-ping'
             style={{ animationDuration: "3s" }}
@@ -68,21 +68,23 @@ export function HeroSection() {
         </div>
 
         {/* Floating AI Processing Indicators */}
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className='absolute w-2 h-2 rounded-full bg-gradient-to-r from-neon-cyan to-neon-violet opacity-60 animate-float'
-            style={{
-              left: `${10 + Math.random() * 80}%`,
-              top: `${10 + Math.random() * 80}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${3 + Math.random() * 4}s`,
-            }}
-          />
-        ))}
+        <div className='hidden md:block'>
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className='absolute w-2 h-2 rounded-full bg-gradient-to-r from-neon-cyan to-neon-violet opacity-60 animate-float'
+              style={{
+                left: `${10 + Math.random() * 80}%`,
+                top: `${10 + Math.random() * 80}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${3 + Math.random() * 4}s`,
+              }}
+            />
+          ))}
+        </div>
 
         {/* Real-time Processing Text */}
-        <div className='absolute bottom-1/4 left-1/3 transform -translate-x-1/2'>
+        <div className='hidden md:block absolute bottom-1/4 left-1/3 transform -translate-x-1/2'>
           <div className='text-neon-cyan/60 text-sm font-mono animate-pulse'>
             Processing: "Hello World" → [H-E-L-L-O W-O-R-L-D]
           </div>
@@ -90,10 +92,10 @@ export function HeroSection() {
       </div>
 
       {/* Main Content */}
-      <div className='relative z-10 container mx-auto px-4 py-32 lg:py-40'>
+      <div className='relative z-10 container mx-auto px-4 py-20 md:py-32 lg:py-40'>
         <div className='max-w-5xl mx-auto text-center'>
           {/* Live Processing Badge */}
-          <div className='inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-8 animate-fade-in-up border border-neon-cyan/30'>
+          <div className='inline-flex items-center gap-2 px-3 sm:px-4 py-1 sm:py-2 rounded-full glass mb-8 animate-fade-in-up border border-neon-cyan/30'>
             <div className='w-2 h-2 rounded-full bg-neon-emerald animate-pulse' />
             <Zap className='w-4 h-4 text-neon-cyan' />
             <span className='text-sm font-medium text-foreground'>
@@ -140,7 +142,7 @@ export function HeroSection() {
             <Button
               variant='hero'
               size='xl'
-              className='group shadow-2xl shadow-neon-cyan/25'
+              className='group shadow-2xl shadow-neon-cyan/25 w-full sm:w-auto'
               onClick={() => {
                 const demoSection = document.getElementById("live-demo");
                 demoSection?.scrollIntoView({ behavior: "smooth" });
@@ -153,7 +155,7 @@ export function HeroSection() {
             <Button
               variant='heroOutline'
               size='xl'
-              className='group border-neon-cyan/50 hover:border-neon-cyan'
+              className='group border-neon-cyan/50 hover:border-neon-cyan w-full sm:w-auto'
               onClick={() => {
                 // Open video modal or external video link
                 window.open(

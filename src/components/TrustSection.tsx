@@ -154,7 +154,7 @@ export function TrustSection() {
   return (
     <section className='relative py-24 overflow-hidden'>
       {/* Full-width rounded background image */}
-      <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+      <div className='hidden md:block absolute inset-0 mx-4 mt-8 mb-8'>
         <img
           src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
           alt='Trust and validation background'
@@ -166,7 +166,7 @@ export function TrustSection() {
 
       <div className='container mx-auto px-4 relative z-10'>
         {/* Content overlay on top of image */}
-        <div className='grid lg:grid-cols-2 gap-12 items-center min-h-[600px]'>
+        <div className='grid lg:grid-cols-2 gap-12 items-center min-h-[420px] md:min-h-[600px]'>
           {/* Left Column - Testimonial Cards */}
           <motion.div
             className='space-y-8'

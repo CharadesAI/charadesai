@@ -82,10 +82,10 @@ export function LiveDemoSection() {
   return (
     <section
       id='live-demo'
-      className='py-24 bg-gradient-to-b from-background via-primary/5 to-secondary/20 relative overflow-hidden'
+      className='py-16 md:py-24 bg-gradient-to-b from-background via-primary/5 to-secondary/20 relative overflow-hidden'
     >
       {/* Background Neural Network Pattern */}
-      <div className='absolute inset-0 opacity-5'>
+      <div className='hidden md:block absolute inset-0 opacity-5'>
         <svg width='100%' height='100%' className='absolute inset-0'>
           <defs>
             <pattern
@@ -152,7 +152,7 @@ export function LiveDemoSection() {
         <div className='max-w-6xl mx-auto'>
           <div className='relative rounded-3xl overflow-hidden glass border border-border/50 shadow-2xl shadow-primary/10'>
             {/* Dynamic Header */}
-            <div className='flex items-center justify-between p-6 border-b border-border/50 bg-gradient-to-r from-background/80 to-primary/5'>
+            <div className='flex items-center justify-between p-4 md:p-6 border-b border-border/50 bg-gradient-to-r from-background/80 to-primary/5'>
               <div className='flex items-center gap-4'>
                 <div className='flex gap-2'>
                   <div className='w-3 h-3 rounded-full bg-destructive animate-pulse' />
@@ -188,11 +188,11 @@ export function LiveDemoSection() {
             </div>
 
             {/* Enhanced Demo Content */}
-            <div className='grid lg:grid-cols-5 gap-0'>
+            <div className='grid grid-cols-1 lg:grid-cols-5 gap-0'>
               {/* Advanced Camera Feed */}
               <div className='lg:col-span-2 relative aspect-square lg:aspect-auto bg-gradient-to-br from-background via-card/50 to-primary/10'>
                 {/* Neural Processing Overlay */}
-                <div className='absolute inset-0'>
+                <div className='hidden md:block absolute inset-0'>
                   {[...Array(12)].map((_, i) => (
                     <div
                       key={i}
@@ -208,7 +208,7 @@ export function LiveDemoSection() {
                 </div>
 
                 {/* Face Detection Grid */}
-                <div className='absolute inset-0 flex items-center justify-center p-8'>
+                <div className='absolute inset-0 flex items-center justify-center p-4 md:p-8'>
                   <div className='relative w-full max-w-sm aspect-square'>
                     {/* Face bounding box */}
                     <div className='absolute inset-4 border-2 border-neon-cyan/70 rounded-2xl animate-pulse'>
@@ -269,7 +269,7 @@ export function LiveDemoSection() {
                 </div>
 
                 {/* Camera Controls */}
-                <div className='absolute bottom-4 left-4 flex gap-2'>
+                <div className='hidden md:flex md:absolute md:bottom-4 md:left-4 gap-2'>
                   <div className='p-3 rounded-xl glass border border-neon-cyan/30 hover:border-neon-cyan/50 transition-colors'>
                     <Camera className='w-5 h-5 text-neon-cyan' />
                   </div>
@@ -279,7 +279,7 @@ export function LiveDemoSection() {
                 </div>
 
                 {/* Processing Indicator */}
-                <div className='absolute top-4 right-4 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30'>
+                <div className='hidden md:block md:absolute md:top-4 md:right-4 px-3 py-1.5 rounded-full bg-primary/20 border border-primary/30'>
                   <div className='flex items-center gap-2'>
                     <Brain className='w-3 h-3 text-primary animate-pulse' />
                     <span className='text-xs font-medium'>AI Active</span>
@@ -288,7 +288,7 @@ export function LiveDemoSection() {
               </div>
 
               {/* Enhanced Output Panel */}
-              <div className='lg:col-span-3 p-6 space-y-6'>
+              <div className='lg:col-span-3 p-4 md:p-6 space-y-6'>
                 {/* Lip Reading Output */}
                 <div className='p-6 rounded-2xl bg-gradient-to-r from-card to-card/80 border border-border/50 shadow-lg'>
                   <div className='flex items-center justify-between mb-4'>
@@ -338,7 +338,7 @@ export function LiveDemoSection() {
                 </div>
 
                 {/* Gesture Recognition */}
-                <div className='p-6 rounded-2xl bg-gradient-to-r from-card to-card/80 border border-border/50 shadow-lg'>
+                <div className='p-4 md:p-6 rounded-2xl bg-gradient-to-r from-card to-card/80 border border-border/50 shadow-lg'>
                   <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center gap-3'>
                       <div className='p-2 rounded-lg bg-neon-violet/20 border border-neon-violet/30'>
@@ -375,7 +375,7 @@ export function LiveDemoSection() {
                 </div>
 
                 {/* Advanced Metrics Grid */}
-                <div className='grid grid-cols-4 gap-4'>
+                <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
                   <div className='p-4 rounded-xl bg-gradient-to-br from-card to-card/80 border border-border/50 text-center group hover:border-neon-cyan/30 transition-colors'>
                     <div className='text-xs text-muted-foreground mb-1'>
                       Latency

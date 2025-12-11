@@ -65,9 +65,12 @@ export function APISection() {
   };
 
   return (
-    <section id='api' className='py-24 bg-background'>
+    <section
+      id='api'
+      className='py-16 md:py-24 bg-background overflow-x-hidden'
+    >
       <div className='container mx-auto px-4'>
-        <div className='grid lg:grid-cols-2 gap-12 items-center'>
+        <div className='max-w-5xl mx-auto grid lg:grid-cols-2 gap-12 items-center'>
           {/* Left Content */}
           <div>
             <span className='inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4'>
@@ -167,15 +170,15 @@ export function APISection() {
               </div>
 
               {/* Code Content */}
-              <pre className='p-6 overflow-x-auto'>
-                <code className='text-sm font-mono text-foreground/90 leading-relaxed'>
+              <pre className='p-6 overflow-x-auto w-full max-w-full whitespace-pre-wrap md:whitespace-pre'>
+                <code className='block text-sm font-mono text-foreground/90 leading-relaxed'>
                   {codeExamples[activeTab]}
                 </code>
               </pre>
             </div>
 
             {/* Decorative Glow */}
-            <div className='absolute -inset-4 bg-gradient-to-r from-neon-blue/20 via-neon-violet/20 to-neon-cyan/20 rounded-3xl blur-3xl -z-10 opacity-50' />
+            <div className='hidden md:block absolute -inset-4 bg-gradient-to-r from-neon-blue/20 via-neon-violet/20 to-neon-cyan/20 rounded-3xl blur-3xl -z-10 opacity-50' />
           </div>
         </div>
       </div>

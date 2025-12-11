@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/lib/AuthContext";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Features from "./pages/Features";
@@ -13,6 +14,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import Forgot from "./pages/Forgot";
 import UseCases from "./pages/UseCases";
 import API from "./pages/API";
 import Changelog from "./pages/Changelog";
@@ -25,12 +27,16 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
 import Checkout from "./pages/Checkout";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
+import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme='dark'>
+      <AuthProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -56,10 +62,17 @@ const App = () => (
             <Route path='/privacy' element={<Privacy />} />
             <Route path='/terms' element={<Terms />} />
             <Route path='/cookie-policy' element={<CookiePolicy />} />
+            <Route path='/signin' element={<Signin />} />
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/auth/login' element={<Signin />} />
+            <Route path='/auth/register' element={<Signup />} />
+            <Route path='/forgot' element={<Forgot />} />
+            <Route path='/account' element={<Account />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </AuthProvider>
     </ThemeProvider>
   </QueryClientProvider>
 );

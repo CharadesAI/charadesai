@@ -125,17 +125,17 @@ export function UseCasesSection() {
   return (
     <section
       id='use-cases'
-      className='py-24 bg-gradient-to-b from-background via-secondary/10 to-background relative overflow-hidden'
+      className='py-20 md:py-24 bg-gradient-to-b from-background via-secondary/10 to-background relative overflow-hidden'
     >
       {/* Background Pattern */}
-      <div className='absolute inset-0 opacity-5'>
+      <div className='hidden md:block absolute inset-0 opacity-5'>
         <div className='absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-neon-cyan/20 blur-3xl' />
         <div className='absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full bg-neon-violet/20 blur-3xl' />
       </div>
 
       <div className='container mx-auto px-4 relative z-10'>
         {/* Enhanced Section Header */}
-        <div className='text-center mb-20'>
+        <div className='text-center mb-12 md:mb-20'>
           <div className='inline-flex items-center gap-2 px-6 py-2 rounded-full glass mb-6 border border-neon-cyan/30'>
             <Target className='w-4 h-4 text-neon-cyan animate-pulse' />
             <span className='text-sm font-medium'>Real-World Applications</span>
@@ -254,8 +254,8 @@ export function UseCasesSection() {
         </div>
 
         {/* Call to Action */}
-        <div className='text-center mt-16'>
-          <div className='inline-flex items-center gap-4 px-8 py-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20'>
+        <div className='text-center mt-12'>
+          <div className='inline-flex items-center gap-4 px-4 sm:px-8 py-2 sm:py-4 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20'>
             <Eye className='w-5 h-5 text-primary' />
             <span className='text-sm font-medium'>
               Explore industry-specific implementations and case studies

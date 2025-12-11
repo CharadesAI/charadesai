@@ -18,26 +18,26 @@ export function CTASection() {
   };
 
   return (
-    <section className='py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/20 relative overflow-hidden'>
+    <section className='py-16 md:py-24 bg-gradient-to-br from-primary/10 via-background to-secondary/20 relative overflow-hidden'>
       {/* Neural Network Background Effects */}
       <div className='absolute inset-0 overflow-hidden'>
-        {/* Central Neural Hub */}
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-neon-cyan/30 via-neon-violet/20 to-transparent animate-pulse-ring' />
+        {/* Central Neural Hub (hidden on small) */}
+        <div className='hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gradient-radial from-neon-cyan/30 via-neon-violet/20 to-transparent animate-pulse-ring' />
 
-        {/* Neural Nodes */}
-        <div className='absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-neon-cyan/20 blur-xl animate-orbit' />
+        {/* Neural Nodes (hidden on small) */}
+        <div className='hidden md:block absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-neon-cyan/20 blur-xl animate-orbit' />
         <div
-          className='absolute top-3/4 right-1/4 w-24 h-24 rounded-full bg-neon-violet/20 blur-xl animate-orbit'
+          className='hidden md:block absolute top-3/4 right-1/4 w-24 h-24 rounded-full bg-neon-violet/20 blur-xl animate-orbit'
           style={{ animationDelay: "2s" }}
         />
         <div
-          className='absolute bottom-1/4 left-1/3 w-20 h-20 rounded-full bg-neon-pink/20 blur-xl animate-orbit'
+          className='hidden md:block absolute bottom-1/4 left-1/3 w-20 h-20 rounded-full bg-neon-pink/20 blur-xl animate-orbit'
           style={{ animationDelay: "4s" }}
         />
 
         {/* Connection Lines (simulated with gradients) */}
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-neon-cyan/30 to-transparent rotate-45' />
-        <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-neon-violet/30 to-transparent -rotate-45' />
+        <div className='hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-neon-cyan/30 to-transparent rotate-45' />
+        <div className='hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-px bg-gradient-to-r from-transparent via-neon-violet/30 to-transparent -rotate-45' />
       </div>
 
       <div className='container mx-auto px-4 relative z-10'>
@@ -63,7 +63,7 @@ export function CTASection() {
           </p>
 
           {/* Activation Metrics */}
-          <div className='grid grid-cols-3 gap-8 max-w-2xl mx-auto mb-12'>
+          <div className='grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto mb-12'>
             <div className='text-center'>
               <div className='flex items-center justify-center gap-2 mb-2'>
                 <Brain className='w-5 h-5 text-neon-cyan' />
@@ -109,7 +109,7 @@ export function CTASection() {
               type='submit'
               variant='hero'
               size='lg'
-              className='group relative overflow-hidden'
+              className='group relative overflow-hidden w-full sm:w-auto'
             >
               <span className='relative z-10 flex items-center gap-2'>
                 <Zap className='w-4 h-4' />
