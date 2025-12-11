@@ -23,6 +23,7 @@ import {
   Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 const mainFeatures = [
   {
@@ -134,46 +135,73 @@ const additionalFeatures = [
 ];
 
 const Features = () => {
+  const navigate = useNavigate();
+
   return (
     <div className='min-h-screen bg-background'>
       <Navbar />
       <main>
-        {/* Hero */}
-        <section className='pt-32 pb-20 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
-            <span className='inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4'>
-              Features
-            </span>
-            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
-              Powerful <span className='text-gradient'>Vision AI</span>{" "}
-              Capabilities
-            </h1>
-            <p className='text-lg text-muted-foreground max-w-2xl mx-auto mb-8'>
-              Everything you need to build intelligent, accessible applications
-              with computer vision. Enterprise-grade accuracy and performance.
-            </p>
-            <div className='flex flex-wrap justify-center gap-4'>
-              <Button variant='hero' size='lg'>
-                Start Free Trial <ArrowRight className='w-4 h-4' />
-              </Button>
-              <Button variant='heroOutline' size='lg'>
-                View API Docs
-              </Button>
+        {/* Hero with Full-Width Background */}
+        <section className='relative py-48 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-20 mb-8'>
+            <img
+              src='https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1920&h=1080&fit=crop&crop=center'
+              alt='AI and computer vision technology background'
+              className='w-full h-full object-cover rounded-3xl'
+            />
+            {/* Overlay for better text readability */}
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10'>
+            <div className='text-center'>
+              <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>
+                Features
+              </span>
+              <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
+                Powerful <span className='text-gradient'>Vision AI</span>{" "}
+                Capabilities
+              </h1>
+              <p className='text-lg text-muted-foreground max-w-2xl mx-auto mb-8'>
+                Everything you need to build intelligent, accessible
+                applications with computer vision. Enterprise-grade accuracy and
+                performance.
+              </p>
+              <div className='flex flex-wrap justify-center gap-4'>
+                <Button
+                  variant='hero'
+                  size='lg'
+                  className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
+                  onClick={() => navigate("/pricing")}
+                >
+                  Start Free Trial <ArrowRight className='w-4 h-4' />
+                </Button>
+                <Button
+                  variant='heroOutline'
+                  size='lg'
+                  className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
+                  onClick={() => navigate("/contact")}
+                >
+                  View API Docs
+                </Button>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Technical Specs Bar */}
-        <section className='py-8 bg-card border-y border-border'>
+        {/* Technical Specs Bar - Redesigned */}
+        <section className='py-16'>
           <div className='container mx-auto px-4'>
             <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
               {technicalSpecs.map((spec) => (
-                <div key={spec.label} className='text-center'>
-                  <spec.icon className='w-6 h-6 mx-auto mb-2 text-primary' />
-                  <div className='text-2xl font-bold text-gradient'>
-                    {spec.value}
-                  </div>
-                  <div className='text-sm font-medium'>{spec.label}</div>
+                <div
+                  key={spec.label}
+                  className='text-center p-6 rounded-2xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300'
+                >
+                  <spec.icon className='w-8 h-8 mx-auto mb-3 text-neon-cyan' />
+                  <div className='text-3xl font-bold mb-1'>{spec.value}</div>
+                  <div className='text-sm font-medium mb-1'>{spec.label}</div>
                   <div className='text-xs text-muted-foreground'>
                     {spec.description}
                   </div>
@@ -183,64 +211,55 @@ const Features = () => {
           </div>
         </section>
 
-        {/* Main Features */}
+        {/* Main Features - Redesigned Grid */}
         <section className='py-24'>
           <div className='container mx-auto px-4'>
-            <div className='space-y-24'>
-              {mainFeatures.map((feature, index) => (
+            <div className='text-center mb-16'>
+              <h2 className='text-3xl md:text-4xl font-bold mb-4'>
+                Core <span className='text-gradient'>AI Capabilities</span>
+              </h2>
+              <p className='text-muted-foreground max-w-2xl mx-auto'>
+                Advanced computer vision technologies powering the next
+                generation of intelligent applications.
+              </p>
+            </div>
+
+            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+              {mainFeatures.map((feature) => (
                 <div
                   key={feature.title}
-                  className={cn(
-                    "grid lg:grid-cols-2 gap-12 items-center",
-                    index % 2 === 1 && "lg:flex-row-reverse"
-                  )}
+                  className='group p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105'
                 >
-                  <div className={cn(index % 2 === 1 && "lg:order-2")}>
-                    <div
-                      className={cn(
-                        "w-14 h-14 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br",
-                        feature.gradient
-                      )}
-                    >
-                      <feature.icon className='w-7 h-7 text-primary-foreground' />
-                    </div>
-                    <h2 className='text-3xl font-bold mb-4'>{feature.title}</h2>
-                    <p className='text-muted-foreground mb-6 leading-relaxed'>
-                      {feature.description}
-                    </p>
-                    <ul className='space-y-3'>
-                      {feature.highlights.map((highlight) => (
-                        <li key={highlight} className='flex items-center gap-3'>
-                          <div className='w-5 h-5 rounded-full bg-neon-emerald/20 flex items-center justify-center'>
-                            <Check className='w-3 h-3 text-neon-emerald' />
-                          </div>
-                          <span className='text-sm'>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
                   <div
                     className={cn(
-                      "aspect-video rounded-2xl bg-card border border-border flex items-center justify-center",
-                      index % 2 === 1 && "lg:order-1"
+                      "w-16 h-16 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br",
+                      feature.gradient
                     )}
                   >
-                    <div
-                      className={cn(
-                        "w-24 h-24 rounded-full bg-gradient-to-br opacity-20 blur-xl",
-                        feature.gradient
-                      )}
-                    />
-                    <feature.icon className='w-16 h-16 text-muted-foreground/50 absolute' />
+                    <feature.icon className='w-8 h-8 text-primary-foreground' />
                   </div>
+                  <h3 className='text-xl font-bold mb-4'>{feature.title}</h3>
+                  <p className='text-muted-foreground mb-6 leading-relaxed'>
+                    {feature.description}
+                  </p>
+                  <ul className='space-y-3'>
+                    {feature.highlights.map((highlight) => (
+                      <li key={highlight} className='flex items-center gap-3'>
+                        <div className='w-5 h-5 rounded-full bg-neon-emerald/20 flex items-center justify-center'>
+                          <Check className='w-3 h-3 text-neon-emerald' />
+                        </div>
+                        <span className='text-sm'>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Additional Features Grid */}
-        <section className='py-24 bg-secondary/30'>
+        {/* Additional Features Grid - Redesigned */}
+        <section className='py-24'>
           <div className='container mx-auto px-4'>
             <div className='text-center mb-16'>
               <h2 className='text-3xl md:text-4xl font-bold mb-4'>
@@ -254,9 +273,9 @@ const Features = () => {
               {additionalFeatures.map((feature) => (
                 <div
                   key={feature.title}
-                  className='p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors'
+                  className='group p-6 rounded-2xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105'
                 >
-                  <feature.icon className='w-8 h-8 text-primary mb-4' />
+                  <feature.icon className='w-8 h-8 text-neon-cyan mb-4 group-hover:scale-110 transition-transform duration-300' />
                   <h3 className='font-semibold mb-2'>{feature.title}</h3>
                   <p className='text-sm text-muted-foreground'>
                     {feature.description}
@@ -267,9 +286,14 @@ const Features = () => {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className='py-24 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
+        {/* CTA - Redesigned */}
+        <section className='relative py-24 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10 text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
               Ready to Get Started?
             </h2>
@@ -277,7 +301,12 @@ const Features = () => {
               Start building with CharadesAI today. Free tier includes 1,000 API
               calls per month.
             </p>
-            <Button variant='hero' size='xl'>
+            <Button
+              variant='hero'
+              size='xl'
+              className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
+              onClick={() => navigate("/pricing")}
+            >
               Start Free Trial <ArrowRight className='w-5 h-5' />
             </Button>
           </div>

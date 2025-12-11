@@ -121,7 +121,11 @@ export function APISection() {
             </div>
 
             <div className='mt-8'>
-              <Button variant='hero' size='lg'>
+              <Button
+                variant='hero'
+                size='lg'
+                onClick={() => (window.location.href = "/docs")}
+              >
                 View Full Documentation
               </Button>
             </div>

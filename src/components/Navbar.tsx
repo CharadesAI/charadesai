@@ -33,7 +33,11 @@ export function Navbar() {
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4",
-        isScrolled ? "bg-background/80 backdrop-blur-xl" : "bg-transparent"
+        isMobileMenuOpen
+          ? "bg-black"
+          : isScrolled
+          ? "bg-background/80 backdrop-blur-xl"
+          : "bg-transparent"
       )}
     >
       <div className='container mx-auto px-4'>
@@ -117,7 +121,7 @@ export function Navbar() {
 
       {/* Full Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className='fixed inset-x-0 top-[88px] bottom-0 bg-background/95 backdrop-blur-xl border-t border-border animate-fade-in z-40'>
+        <div className='fixed inset-x-0 top-[75px] bottom-0 bg-background/95 backdrop-blur-xl border-t border-border animate-fade-in z-50'>
           <div className='container mx-auto px-4 py-8'>
             <div className='flex flex-col gap-2'>
               {navLinks.map((link, index) => (
@@ -143,10 +147,13 @@ export function Navbar() {
                 className='flex items-center gap-4 pt-6 animate-slide-up'
                 style={{ animationDelay: `${(navLinks.length + 1) * 0.05}s` }}
               >
-                <Button variant='ghost' size='lg' className='flex-1 max-w-xs'>
+                <Button
+                  variant='heroOutline'
+                  size='lg'
+                  className='flex-1 max-w-xs'
+                >
                   Sign In
                 </Button>
-                <ThemeToggle />
               </div>
             </div>
           </div>

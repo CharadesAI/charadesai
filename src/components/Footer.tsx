@@ -5,31 +5,28 @@ import { Input } from "@/components/ui/input";
 
 const footerLinks = {
   product: [
-    { label: "Features", href: "#features" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Use Cases", href: "#use-cases" },
-    { label: "API Reference", href: "#api" },
-    { label: "Changelog", href: "#" },
+    { label: "Features", href: "/features" },
+    { label: "Pricing", href: "/pricing" },
+    { label: "Use Cases", href: "/use-cases" },
+    { label: "API Reference", href: "/api" },
+    { label: "Changelog", href: "/changelog" },
   ],
   developers: [
-    { label: "Documentation", href: "#" },
-    { label: "API Status", href: "#" },
-    { label: "SDKs & Libraries", href: "#" },
-    { label: "Code Examples", href: "#" },
-    { label: "Community", href: "#" },
+    { label: "Documentation", href: "/docs" },
+    { label: "API Status", href: "/status" },
+    { label: "Code Examples", href: "/examples" },
+    { label: "Community", href: "/community" },
   ],
   company: [
-    { label: "About Us", href: "#" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press Kit", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "About Us", href: "/about" },
+    { label: "Blog", href: "/blog" },
+    { label: "Press Kit", href: "/press-kit" },
+    { label: "Contact", href: "/contact" },
   ],
   legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Cookie Policy", href: "#" },
-    { label: "Security", href: "#" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "Cookie Policy", href: "/cookie-policy" },
   ],
 };
 
@@ -79,12 +76,12 @@ export function Footer() {
             <ul className='space-y-2'>
               {footerLinks.product.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className='text-sm text-muted-foreground hover:text-foreground transition-colors'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -95,12 +92,12 @@ export function Footer() {
             <ul className='space-y-2'>
               {footerLinks.developers.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className='text-sm text-muted-foreground hover:text-foreground transition-colors'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -111,12 +108,12 @@ export function Footer() {
             <ul className='space-y-2'>
               {footerLinks.company.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className='text-sm text-muted-foreground hover:text-foreground transition-colors'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -127,12 +124,12 @@ export function Footer() {
             <ul className='space-y-2'>
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
+                  <Link
+                    to={link.href}
                     className='text-sm text-muted-foreground hover:text-foreground transition-colors'
                   >
                     {link.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
