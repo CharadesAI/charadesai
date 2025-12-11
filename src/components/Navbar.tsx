@@ -427,18 +427,12 @@ export function Navbar() {
               </div>
               <div className='flex items-center gap-3'>
                 <Link to='/signin' onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button
-                    variant='heroOutline'
-                    className='rounded-xl'
-                  >
+                  <Button variant='heroOutline' className='rounded-xl'>
                     Sign In
                   </Button>
                 </Link>
                 <Link to='/signup' onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button
-                    variant='hero'
-                    className='rounded-xl'
-                  >
+                  <Button variant='hero' className='rounded-xl'>
                     Start Free Trial
                     <ArrowRight className='w-4 h-4 ml-2' />
                   </Button>

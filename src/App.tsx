@@ -24,6 +24,7 @@ import PressKit from "./pages/PressKit";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import CookiePolicy from "./pages/CookiePolicy";
+import Checkout from "./pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path='/' element={<Index />} />
             <Route path='/features' element={<Features />} />
             <Route path='/pricing' element={<Pricing />} />
+            <Route path='/checkout' element={<Checkout />} />
             <Route path='/about' element={<About />} />
             <Route path='/blog' element={<Blog />} />
             <Route path='/blog/:slug' element={<BlogPost />} />

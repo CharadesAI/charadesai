@@ -124,11 +124,13 @@ const Pricing = () => {
 
   const calculatePrice = () => {
     // Base pricing tiers that match the plans
-    if (calculatorValues.apiCalls <= 1000) {
-      return 0; // Free tier
+    if (calculatorValues.apiCalls <= 5000) {
+      // Basic tier - $29/month
+      const basePrice = 29;
+      return isYearly ? basePrice * 12 : basePrice;
     } else if (calculatorValues.apiCalls <= 50000) {
-      // Pro tier pricing
-      const basePrice = 99; // Monthly base
+      // Pro tier pricing - $99/month base
+      const basePrice = 99;
 
       // Multipliers based on features
       const resolutionMultiplier =
@@ -154,11 +156,19 @@ const Pricing = () => {
           languageMultiplier *
           supportMultiplier
       );
-      return isYearly ? Math.round(monthlyPrice * 12 * 0.8) : monthlyPrice; // 20% yearly discount
+      return isYearly ? monthlyPrice * 12 : monthlyPrice;
     } else {
       // Enterprise tier - custom pricing
       return null; // Custom pricing
     }
+  };
+
+  const getRecommendedPlan = () => {
+    if (calculatorValues.apiCalls <= 5000)
+      return { name: "Basic", slug: "basic", monthlyPrice: 29 };
+    if (calculatorValues.apiCalls <= 50000)
+      return { name: "Pro", slug: "pro", monthlyPrice: 99 };
+    return { name: "Enterprise", slug: "enterprise", monthlyPrice: null };
   };
 
   if (loading) {
@@ -451,6 +461,28 @@ const Pricing = () => {
                                   ? "bg-gradient-ai"
                                   : "bg-card/80 border-border text-card-foreground hover:border-neon-cyan"
                               )}
+                              onClick={() => {
+                                if (plan.name === "Enterprise") {
+                                  navigate("/contact");
+                                } else {
+                                  const monthlyPrice = plan.monthlyPrice;
+                                  const price = isYearly
+                                    ? monthlyPrice * 12
+                                    : monthlyPrice;
+                                  const features = plan.features
+                                    .map((f) => f.text)
+                                    .join("|");
+                                  navigate(
+                                    `/checkout?plan=${encodeURIComponent(
+                                      plan.name.toLowerCase()
+                                    )}&name=${encodeURIComponent(
+                                      plan.name
+                                    )}&price=${price}&interval=${
+                                      isYearly ? "yearly" : "monthly"
+                                    }&features=${encodeURIComponent(features)}`
+                                  );
+                                }
+                              }}
                             >
                               {plan.cta}
                             </Button>
@@ -463,24 +495,20 @@ const Pricing = () => {
                     {[
                       {
                         category: "API Calls",
-                        features: ["1,000/month", "50,000/month", "Unlimited"],
+                        features: ["5,000/month", "50,000/month", "Unlimited"],
                       },
                       {
                         category: "Video Resolution",
                         features: ["720p", "1080p", "4K"],
                       },
-                      { category: "Languages", features: ["1", "10", "40+"] },
+                      { category: "Languages", features: ["3", "10", "40+"] },
                       {
                         category: "Latency",
                         features: ["Standard", "<50ms", "Ultra-low"],
                       },
                       {
                         category: "Support",
-                        features: [
-                          "Community",
-                          "Priority Email",
-                          "24/7 Dedicated",
-                        ],
+                        features: ["Email", "Priority Email", "24/7 Dedicated"],
                       },
                       {
                         category: "Analytics",
@@ -541,12 +569,12 @@ const Pricing = () => {
                   {
                     icon: Play,
                     title: "Get Started",
-                    plan: "Free",
-                    description: "Perfect for testing and learning",
+                    plan: "Basic",
+                    description: "Perfect for small projects",
                     color: "from-blue-500 to-cyan-500",
                     features: [
-                      "1K API calls",
-                      "Basic support",
+                      "5K API calls",
+                      "Email support",
                       "Core features",
                     ],
                   },
@@ -642,23 +670,24 @@ const Pricing = () => {
 
                 {[
                   {
-                    title: "Mobile App Startup",
-                    description: "Small team building a lip-reading feature",
-                    apiCalls: 15000,
+                    title: "Small Project",
+                    description: "Indie developer or small startup",
+                    apiCalls: 3000,
                     resolution: "720p",
-                    languages: 3,
+                    languages: 2,
                     support: "basic",
-                    estimatedPrice: isYearly ? 79 : 99,
+                    estimatedPrice: isYearly ? 29 * 12 : 29,
+                    plan: "basic",
                   },
                   {
-                    title: "E-commerce Platform",
-                    description:
-                      "Large online store with accessibility features",
-                    apiCalls: 75000,
+                    title: "Mobile App Startup",
+                    description: "Growing team building a lip-reading feature",
+                    apiCalls: 25000,
                     resolution: "1080p",
-                    languages: 10,
+                    languages: 5,
                     support: "priority",
-                    estimatedPrice: isYearly ? 950 : 1188,
+                    estimatedPrice: isYearly ? 99 * 12 : 99,
+                    plan: "pro",
                   },
                   {
                     title: "Enterprise Solution",
@@ -668,6 +697,7 @@ const Pricing = () => {
                     languages: 25,
                     support: "enterprise",
                     estimatedPrice: null, // Custom pricing
+                    plan: "enterprise",
                   },
                 ].map((scenario, index) => (
                   <Card
@@ -854,17 +884,19 @@ const Pricing = () => {
                   <div className='p-6 rounded-2xl bg-gradient-to-r from-neon-cyan/10 to-neon-violet/10 border border-neon-cyan/20'>
                     <div className='text-center'>
                       <div className='text-4xl font-bold text-card-foreground mb-2'>
-                        ${calculatePrice()}
+                        {calculatePrice() !== null
+                          ? `$${calculatePrice()}`
+                          : "Custom"}
                       </div>
                       <p className='text-sm text-muted-foreground mb-4'>
-                        Estimated monthly cost
+                        Estimated {isYearly ? "yearly" : "monthly"} cost
                       </p>
                       <Badge
                         variant='secondary'
                         className='mb-4 bg-neon-cyan/20 text-neon-cyan border-neon-cyan/30'
                       >
-                        {calculatorValues.apiCalls <= 1000
-                          ? "Free Plan"
+                        {calculatorValues.apiCalls <= 5000
+                          ? "Basic Plan"
                           : calculatorValues.apiCalls <= 50000
                           ? "Pro Plan"
                           : "Enterprise Plan"}
@@ -873,7 +905,51 @@ const Pricing = () => {
                         variant='hero'
                         size='sm'
                         className='w-full'
-                        onClick={() => navigate("/contact")}
+                        onClick={() => {
+                          const recommended = getRecommendedPlan();
+                          const computedPrice = calculatePrice();
+                          // If price is custom (enterprise) or null -> go to contact
+                          if (
+                            computedPrice === null ||
+                            recommended.slug === "enterprise"
+                          ) {
+                            navigate("/contact");
+                            return;
+                          }
+
+                          // Build a features string from user-selected values
+                          const features = `${
+                            calculatorValues.apiCalls
+                          } API calls/month|${
+                            calculatorValues.resolution
+                          } video resolution|${
+                            calculatorValues.languages
+                          } languages|${
+                            calculatorValues.support === "basic"
+                              ? "Email support"
+                              : calculatorValues.support === "priority"
+                              ? "Priority email support"
+                              : "24/7 dedicated support"
+                          }`;
+
+                          navigate(
+                            `/checkout?plan=${
+                              recommended.slug
+                            }&name=${encodeURIComponent(
+                              recommended.name
+                            )}&price=${computedPrice}&interval=${
+                              isYearly ? "yearly" : "monthly"
+                            }&apiCalls=${
+                              calculatorValues.apiCalls
+                            }&resolution=${encodeURIComponent(
+                              calculatorValues.resolution
+                            )}&languages=${
+                              calculatorValues.languages
+                            }&support=${encodeURIComponent(
+                              calculatorValues.support
+                            )}&features=${encodeURIComponent(features)}`
+                          );
+                        }}
                       >
                         Get Started
                       </Button>
@@ -944,7 +1020,17 @@ const Pricing = () => {
                 variant='hero'
                 size='lg'
                 className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/60'
-                onClick={() => navigate("/contact")}
+                onClick={() => {
+                  const monthlyPrice = 99;
+                  const price = isYearly ? monthlyPrice * 12 : monthlyPrice;
+                  const features =
+                    "50,000 API calls/month|1080p video resolution|Priority email support|Advanced analytics|Multi-language (10)|Low latency (<50ms)|Webhook integrations|Custom model training|99.9% SLA";
+                  navigate(
+                    `/checkout?plan=pro&name=Pro&price=${price}&interval=${
+                      isYearly ? "yearly" : "monthly"
+                    }&features=${encodeURIComponent(features)}`
+                  );
+                }}
               >
                 Start Free Trial <ArrowRight className='w-4 h-4' />
               </Button>
@@ -970,22 +1056,22 @@ export default Pricing;
 
 const fallbackPlans = [
   {
-    name: "Free",
-    description: "Perfect for testing and small projects",
-    monthlyPrice: 0,
-    yearlyPrice: 0,
+    name: "Basic",
+    description: "Perfect for small projects and startups",
+    monthlyPrice: 29,
+    yearlyPrice: 24,
     features: [
-      { text: "1,000 API calls/month", included: true },
+      { text: "5,000 API calls/month", included: true },
       { text: "720p video resolution", included: true },
-      { text: "Community support", included: true },
+      { text: "Email support", included: true },
       { text: "Basic analytics", included: true },
-      { text: "Single language", included: true },
+      { text: "3 languages", included: true },
       { text: "Standard latency", included: true },
       { text: "Webhook integrations", included: false },
       { text: "Custom model training", included: false },
       { text: "SLA guarantee", included: false },
     ],
-    cta: "Start Free",
+    cta: "Start Basic",
     popular: false,
   },
   {
