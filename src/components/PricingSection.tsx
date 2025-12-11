@@ -52,7 +52,7 @@ const computeTiers = [
       "Custom model fine-tuning",
       "Multi-language support",
     ],
-    cta: "Start Pro Trial",
+    cta: "Start Pro Plan",
     popular: true,
     icon: Brain,
     color: "text-neon-violet",

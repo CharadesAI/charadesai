@@ -175,7 +175,7 @@ const Features = () => {
                   className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
                   onClick={() => navigate("/pricing")}
                 >
-                  Start Free Trial <ArrowRight className='w-4 h-4' />
+                  Get Started <ArrowRight className='w-4 h-4' />
                 </Button>
                 <Button
                   variant='heroOutline'
@@ -307,7 +307,7 @@ const Features = () => {
               className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
               onClick={() => navigate("/pricing")}
             >
-              Start Free Trial <ArrowRight className='w-5 h-5' />
+              Get Started <ArrowRight className='w-5 h-5' />
             </Button>
           </div>
         </section>

@@ -44,11 +44,6 @@ import { Input } from "@/components/ui/input";
 
 const faqs = [
   {
-    question: "How does the free trial work?",
-    answer:
-      "Start with 1,000 free API calls per month, no credit card required. Upgrade anytime to unlock more calls and features.",
-  },
-  {
     question: "Can I change plans anytime?",
     answer:
       "Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate your billing.",
@@ -1032,7 +1027,7 @@ const Pricing = () => {
                   );
                 }}
               >
-                Start Free Trial <ArrowRight className='w-4 h-4' />
+                Get Started <ArrowRight className='w-4 h-4' />
               </Button>
               <Button
                 variant='heroOutline'
@@ -1090,7 +1085,7 @@ const fallbackPlans = [
       { text: "Custom model training", included: true },
       { text: "99.9% SLA", included: true },
     ],
-    cta: "Start Pro Trial",
+    cta: "Start Pro Plan",
     popular: true,
   },
   {

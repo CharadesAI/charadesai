@@ -261,7 +261,12 @@ export function Navbar() {
             {!auth?.user ? (
               <>
                 <Link to='/signin' className='hidden md:inline'>
-                  <Button variant='outline' className='h-12 px-5 rounded-xl mr-2'>Sign in</Button>
+                  <Button
+                    variant='outline'
+                    className='h-12 px-5 rounded-xl mr-2'
+                  >
+                    Sign in
+                  </Button>
                 </Link>
               </>
             ) : (
@@ -272,21 +277,37 @@ export function Navbar() {
                 >
                   <div className='w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-semibold overflow-hidden'>
                     {auth.user?.avatar ? (
-                      <img src={auth.user.avatar} alt={auth.user.first_name || auth.user.username} className='w-full h-full object-cover' />
+                      <img
+                        src={auth.user.avatar}
+                        alt={auth.user.first_name || auth.user.username}
+                        className='w-full h-full object-cover'
+                      />
                     ) : (
-                      <span>{(auth.user?.first_name || auth.user?.username || "U").charAt(0).toUpperCase()}</span>
+                      <span>
+                        {(auth.user?.first_name || auth.user?.username || "U")
+                          .charAt(0)
+                          .toUpperCase()}
+                      </span>
                     )}
                   </div>
-                  <span className='text-sm font-medium'>{auth.user?.first_name ?? auth.user?.username}</span>
+                  <span className='text-sm font-medium'>
+                    {auth.user?.first_name ?? auth.user?.username}
+                  </span>
                 </button>
                 {showProfileMenu && (
                   <div className='absolute right-0 mt-2 w-48 bg-card rounded-xl shadow-lg border border-border z-50 p-2'>
-                    <Link to='/account' onClick={() => setShowProfileMenu(false)} className='block px-3 py-2 rounded-md hover:bg-accent/40'>Account</Link>
+                    <Link
+                      to='/account'
+                      onClick={() => setShowProfileMenu(false)}
+                      className='block px-3 py-2 rounded-md hover:bg-accent/40'
+                    >
+                      Account
+                    </Link>
                     <button
                       onClick={async () => {
                         await auth.logout();
                         setShowProfileMenu(false);
-                        navigate('/');
+                        navigate("/");
                       }}
                       className='block w-full text-left px-3 py-2 rounded-md hover:bg-accent/40'
                     >
@@ -302,7 +323,7 @@ export function Navbar() {
                 variant='hero'
                 className='h-12 px-6 rounded-xl font-semibold'
               >
-                <span className='hidden sm:inline'>Start Free Trial</span>
+                <span className='hidden sm:inline'>Get Started</span>
                 <span className='sm:hidden'>Start</span>
               </Button>
             </Link>
@@ -422,17 +443,23 @@ export function Navbar() {
                 <div className='flex flex-col gap-3'>
                   {!auth?.user ? (
                     <>
-                      <Link to='/signup' onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link
+                        to='/signup'
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
                         <Button
                           variant='hero'
                           size='lg'
                           className='w-full rounded-xl'
                         >
-                          Start Free Trial
+                          Get Started
                           <ArrowRight className='w-4 h-4 ml-2' />
                         </Button>
                       </Link>
-                      <Link to='/signin' onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link
+                        to='/signin'
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
                         <Button
                           variant='heroOutline'
                           size='lg'
@@ -444,18 +471,33 @@ export function Navbar() {
                     </>
                   ) : (
                     <>
-                      <Link to='/account' onClick={() => setIsMobileMenuOpen(false)}>
-                        <Button variant='outline' size='lg' className='w-full rounded-xl'>Account</Button>
+                      <Link
+                        to='/account'
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Button
+                          variant='outline'
+                          size='lg'
+                          className='w-full rounded-xl'
+                        >
+                          Account
+                        </Button>
                       </Link>
                       <button
                         onClick={async () => {
                           await auth.logout();
                           setIsMobileMenuOpen(false);
-                          navigate('/');
+                          navigate("/");
                         }}
                         className='w-full'
                       >
-                        <Button variant='heroOutline' size='lg' className='w-full rounded-xl'>Sign Out</Button>
+                        <Button
+                          variant='heroOutline'
+                          size='lg'
+                          className='w-full rounded-xl'
+                        >
+                          Sign Out
+                        </Button>
                       </button>
                     </>
                   )}
@@ -493,25 +535,44 @@ export function Navbar() {
               <div className='flex items-center gap-3'>
                 {!auth?.user ? (
                   <>
-                    <Link to='/signin' onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link
+                      to='/signin'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
                       <Button variant='heroOutline' className='rounded-xl'>
                         Sign In
                       </Button>
                     </Link>
-                    <Link to='/signup' onClick={() => setIsMobileMenuOpen(false)}>
+                    <Link
+                      to='/signup'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
                       <Button variant='hero' className='rounded-xl'>
-                        Start Free Trial
+                        Get Started
                         <ArrowRight className='w-4 h-4 ml-2' />
                       </Button>
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Link to='/account' onClick={() => setIsMobileMenuOpen(false)}>
-                      <Button variant='outline' className='rounded-xl'>Account</Button>
+                    <Link
+                      to='/account'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button variant='outline' className='rounded-xl'>
+                        Account
+                      </Button>
                     </Link>
-                    <button onClick={async () => { await auth.logout(); setIsMobileMenuOpen(false); navigate('/'); }}>
-                      <Button variant='heroOutline' className='rounded-xl'>Sign Out</Button>
+                    <button
+                      onClick={async () => {
+                        await auth.logout();
+                        setIsMobileMenuOpen(false);
+                        navigate("/");
+                      }}
+                    >
+                      <Button variant='heroOutline' className='rounded-xl'>
+                        Sign Out
+                      </Button>
                     </button>
                   </>
                 )}

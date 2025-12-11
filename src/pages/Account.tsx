@@ -7,7 +7,7 @@ export default function Account() {
   const navigate = useNavigate();
 
   if (!auth.user) {
-    navigate('/signin');
+    navigate("/signin");
     return null;
   }
 
@@ -19,9 +19,17 @@ export default function Account() {
           <div className='col-span-1 flex items-center justify-center'>
             <div className='w-28 h-28 rounded-full bg-muted overflow-hidden flex items-center justify-center'>
               {auth.user?.avatar ? (
-                <img src={auth.user.avatar} alt={auth.user?.first_name || auth.user?.username} className='w-full h-full object-cover' />
+                <img
+                  src={auth.user.avatar}
+                  alt={auth.user?.first_name || auth.user?.username}
+                  className='w-full h-full object-cover'
+                />
               ) : (
-                <span className='text-3xl font-bold'>{(auth.user?.first_name || auth.user?.username || "U").charAt(0).toUpperCase()}</span>
+                <span className='text-3xl font-bold'>
+                  {(auth.user?.first_name || auth.user?.username || "U")
+                    .charAt(0)
+                    .toUpperCase()}
+                </span>
               )}
             </div>
           </div>
@@ -30,11 +38,23 @@ export default function Account() {
               <h3 className='text-xl font-semibold'>
                 {auth.user?.first_name} {auth.user?.last_name}
               </h3>
-              <div className='text-sm text-muted-foreground'>{auth.user?.email}</div>
+              <div className='text-sm text-muted-foreground'>
+                {auth.user?.email}
+              </div>
             </div>
             <div className='flex gap-2'>
-              <Button variant='outline' onClick={() => navigate('/pricing')}>Manage Plan</Button>
-              <Button variant='ghost' onClick={async () => { await auth.logout(); navigate('/'); }}>Logout</Button>
+              <Button variant='outline' onClick={() => navigate("/pricing")}>
+                Manage Plan
+              </Button>
+              <Button
+                variant='ghost'
+                onClick={async () => {
+                  await auth.logout();
+                  navigate("/");
+                }}
+              >
+                Logout
+              </Button>
             </div>
           </div>
         </div>

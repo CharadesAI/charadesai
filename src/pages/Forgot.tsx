@@ -22,14 +22,19 @@ export default function Forgot() {
   };
 
   return (
-    <AuthLayout title="Reset your password" subtitle="We will send a password reset link to your email">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <AuthLayout
+      title='Reset your password'
+      subtitle='We will send a password reset link to your email'
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
         <div>
-          <label className="text-sm font-medium">Email</label>
-          <Input type="email" {...register("email")} />
+          <label className='text-sm font-medium'>Email</label>
+          <Input type='email' {...register("email")} />
         </div>
-        <div className="flex justify-end">
-          <Button type="submit" variant="hero">Send Reset Link</Button>
+        <div className='flex justify-end'>
+          <Button type='submit' variant='hero'>
+            Send Reset Link
+          </Button>
         </div>
       </form>
     </AuthLayout>
