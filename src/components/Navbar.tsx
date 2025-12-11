@@ -297,6 +297,13 @@ export function Navbar() {
                 {showProfileMenu && (
                   <div className='absolute right-0 mt-2 w-48 bg-card rounded-xl shadow-lg border border-border z-50 p-2'>
                     <Link
+                      to='/dashboard'
+                      onClick={() => setShowProfileMenu(false)}
+                      className='block px-3 py-2 rounded-md hover:bg-accent/40 font-medium'
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
                       to='/account'
                       onClick={() => setShowProfileMenu(false)}
                       className='block px-3 py-2 rounded-md hover:bg-accent/40'
@@ -309,7 +316,7 @@ export function Navbar() {
                         setShowProfileMenu(false);
                         navigate("/");
                       }}
-                      className='block w-full text-left px-3 py-2 rounded-md hover:bg-accent/40'
+                      className='block w-full text-left px-3 py-2 rounded-md hover:bg-accent/40 text-red-500'
                     >
                       Logout
                     </button>

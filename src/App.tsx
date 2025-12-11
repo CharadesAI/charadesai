@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/lib/AuthContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Features from "./pages/Features";
@@ -30,6 +31,14 @@ import Checkout from "./pages/Checkout";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import Account from "./pages/Account";
+
+// Dashboard pages
+import Dashboard from "./pages/Dashboard";
+import DashboardProfile from "./pages/dashboard/Profile";
+import DashboardBilling from "./pages/dashboard/Billing";
+import DashboardAnalytics from "./pages/dashboard/Analytics";
+import DashboardResults from "./pages/dashboard/Results";
+import DashboardSettings from "./pages/dashboard/Settings";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +77,57 @@ const App = () => (
               <Route path='/auth/register' element={<Signup />} />
               <Route path='/forgot' element={<Forgot />} />
               <Route path='/account' element={<Account />} />
+
+              {/* Protected Dashboard Routes */}
+              <Route
+                path='/dashboard'
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/dashboard/profile'
+                element={
+                  <ProtectedRoute>
+                    <DashboardProfile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/dashboard/billing'
+                element={
+                  <ProtectedRoute>
+                    <DashboardBilling />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/dashboard/analytics'
+                element={
+                  <ProtectedRoute>
+                    <DashboardAnalytics />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/dashboard/results'
+                element={
+                  <ProtectedRoute>
+                    <DashboardResults />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path='/dashboard/settings'
+                element={
+                  <ProtectedRoute>
+                    <DashboardSettings />
+                  </ProtectedRoute>
+                }
+              />
+
               <Route path='*' element={<NotFound />} />
             </Routes>
           </BrowserRouter>
