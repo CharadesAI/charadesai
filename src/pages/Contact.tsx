@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { AIChatWidget } from "@/components/AIChatWidget";
@@ -16,9 +17,11 @@ import {
   Headphones,
   ArrowRight,
   Check,
+  Map,
 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import { useEffect } from "react";
 
 const contactSchema = z.object({
   name: z
@@ -53,19 +56,16 @@ const contactOptions = [
     icon: MessageSquare,
     title: "Sales Inquiry",
     description: "Talk to our sales team about enterprise solutions.",
-    email: "sales@CharadesAI.app",
   },
   {
     icon: Headphones,
     title: "Technical Support",
     description: "Get help with API integration and troubleshooting.",
-    email: "support@CharadesAI.app",
   },
   {
     icon: FileText,
     title: "Partnerships",
     description: "Explore partnership and integration opportunities.",
-    email: "partners@CharadesAI.app",
   },
 ];
 
@@ -88,6 +88,7 @@ const offices = [
 ];
 
 const Contact = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -98,6 +99,51 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [mapData, setMapData] = useState<Record<string, string>>({});
+  const [mapLoading, setMapLoading] = useState(true);
+
+  useEffect(() => {
+    fetchMapData();
+  }, []);
+
+  const fetchMapData = async () => {
+    try {
+      const response = await fetch("https://api.charadesai.com/maps/pin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`,
+        },
+        body: JSON.stringify({
+          locations: [
+            {
+              name: "San Francisco Office",
+              address: "100 Market Street, Suite 300, San Francisco, CA 94105",
+            },
+            {
+              name: "London Office",
+              address: "1 Canada Square, Canary Wharf, London, EC2A 1PQ",
+            },
+            {
+              name: "Singapore Office",
+              address: "1 Raffles Place, Tower 2, Singapore 048616",
+            },
+          ],
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMapData(data);
+      } else {
+        console.error("Failed to fetch map data");
+      }
+    } catch (error) {
+      console.error("Error fetching map data:", error);
+    } finally {
+      setMapLoading(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -128,38 +174,74 @@ const Contact = () => {
 
     setIsSubmitting(true);
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const response = await fetch("https://api.charadesai.com/mail/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company || undefined,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    toast.success("Message sent successfully! We'll get back to you soon.");
+      if (response.ok) {
+        const result = await response.json();
+        setIsSubmitted(true);
+        toast.success("Message sent successfully! We'll get back to you soon.");
 
-    setFormData({
-      name: "",
-      email: "",
-      company: "",
-      subject: "",
-      message: "",
-    });
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        toast.error(
+          errorData.message || "Failed to send message. Please try again."
+        );
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Network error. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className='min-h-screen bg-background'>
       <Navbar />
       <main>
-        {/* Hero */}
-        <section className='pt-32 pb-20 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
-            <span className='inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4'>
-              Contact
+        {/* Hero with Full-Width Background */}
+        <section className='relative py-48 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-20 mb-8'>
+            <img
+              src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
+              alt='Contact us background'
+              className='w-full h-full object-cover rounded-3xl'
+            />
+            {/* Overlay for better text readability */}
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10 text-center'>
+            <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>
+              Contact Us
             </span>
-            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
+            <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-card-foreground'>
               Get in <span className='text-gradient'>Touch</span>
             </h1>
             <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-              Have questions? We'd love to hear from you. Send us a message and
-              we'll respond as soon as possible.
+              Have questions about CharadesAI? We'd love to hear from you. Send
+              us a message and we'll respond as soon as possible.
             </p>
           </div>
         </section>
@@ -167,23 +249,24 @@ const Contact = () => {
         {/* Contact Options */}
         <section className='py-16'>
           <div className='container mx-auto px-4'>
-            <div className='grid md:grid-cols-3 gap-6 max-w-4xl mx-auto'>
+            <h2 className='text-3xl font-bold mb-12 text-center'>
+              How Can We Help?
+            </h2>
+            <div className='grid md:grid-cols-3 gap-8 max-w-5xl mx-auto'>
               {contactOptions.map((option) => (
                 <div
                   key={option.title}
-                  className='p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors text-center'
+                  className='group p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl text-center'
                 >
-                  <option.icon className='w-10 h-10 text-primary mx-auto mb-4' />
-                  <h3 className='font-semibold mb-2'>{option.title}</h3>
-                  <p className='text-sm text-muted-foreground mb-4'>
+                  <div className='w-16 h-16 rounded-2xl bg-gradient-ai flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300'>
+                    <option.icon className='w-8 h-8 text-primary-foreground' />
+                  </div>
+                  <h3 className='text-xl font-bold mb-4 text-card-foreground group-hover:text-neon-cyan transition-colors'>
+                    {option.title}
+                  </h3>
+                  <p className='text-muted-foreground mb-6 leading-relaxed'>
                     {option.description}
                   </p>
-                  <a
-                    href={`mailto:${option.email}`}
-                    className='text-sm text-primary hover:underline'
-                  >
-                    {option.email}
-                  </a>
                 </div>
               ))}
             </div>
@@ -191,19 +274,21 @@ const Contact = () => {
         </section>
 
         {/* Contact Form & Info */}
-        <section className='py-16 bg-secondary/30'>
+        <section className='py-16'>
           <div className='container mx-auto px-4'>
             <div className='grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto'>
               {/* Form */}
-              <div className='p-8 rounded-2xl bg-card border border-border'>
-                <h2 className='text-2xl font-bold mb-6'>Send us a Message</h2>
+              <div className='p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border'>
+                <h2 className='text-2xl font-bold mb-6 text-card-foreground'>
+                  Send us a Message
+                </h2>
 
                 {isSubmitted ? (
                   <div className='text-center py-12'>
                     <div className='w-16 h-16 rounded-full bg-neon-emerald/20 flex items-center justify-center mx-auto mb-4'>
                       <Check className='w-8 h-8 text-neon-emerald' />
                     </div>
-                    <h3 className='text-xl font-semibold mb-2'>
+                    <h3 className='text-xl font-semibold mb-2 text-card-foreground'>
                       Message Sent!
                     </h3>
                     <p className='text-muted-foreground mb-6'>
@@ -213,6 +298,7 @@ const Contact = () => {
                     <Button
                       variant='outline'
                       onClick={() => setIsSubmitted(false)}
+                      className='bg-card/80 backdrop-blur-md border-border text-card-foreground hover:bg-card/90'
                     >
                       Send Another Message
                     </Button>
@@ -221,25 +307,27 @@ const Contact = () => {
                   <form onSubmit={handleSubmit} className='space-y-6'>
                     <div className='grid md:grid-cols-2 gap-4'>
                       <div>
-                        <label className='block text-sm font-medium mb-2'>
-                          Name <span className='text-destructive'>*</span>
+                        <label className='block text-sm font-medium mb-2 text-card-foreground'>
+                          Name <span className='text-red-400'>*</span>
                         </label>
                         <Input
                           name='name'
                           value={formData.name}
                           onChange={handleChange}
                           placeholder='Your name'
-                          className={errors.name ? "border-destructive" : ""}
+                          className={`bg-card/80 border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan ${
+                            errors.name ? "border-red-400" : ""
+                          }`}
                         />
                         {errors.name && (
-                          <p className='text-xs text-destructive mt-1'>
+                          <p className='text-xs text-red-400 mt-1'>
                             {errors.name}
                           </p>
                         )}
                       </div>
                       <div>
-                        <label className='block text-sm font-medium mb-2'>
-                          Email <span className='text-destructive'>*</span>
+                        <label className='block text-sm font-medium mb-2 text-card-foreground'>
+                          Email <span className='text-red-400'>*</span>
                         </label>
                         <Input
                           name='email'
@@ -247,10 +335,12 @@ const Contact = () => {
                           value={formData.email}
                           onChange={handleChange}
                           placeholder='you@company.com'
-                          className={errors.email ? "border-destructive" : ""}
+                          className={`bg-card/80 border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan ${
+                            errors.email ? "border-red-400" : ""
+                          }`}
                         />
                         {errors.email && (
-                          <p className='text-xs text-destructive mt-1'>
+                          <p className='text-xs text-red-400 mt-1'>
                             {errors.email}
                           </p>
                         )}
@@ -258,7 +348,7 @@ const Contact = () => {
                     </div>
 
                     <div>
-                      <label className='block text-sm font-medium mb-2'>
+                      <label className='block text-sm font-medium mb-2 text-card-foreground'>
                         Company
                       </label>
                       <Input
@@ -266,30 +356,33 @@ const Contact = () => {
                         value={formData.company}
                         onChange={handleChange}
                         placeholder='Your company name'
+                        className='bg-card/80 border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan'
                       />
                     </div>
 
                     <div>
-                      <label className='block text-sm font-medium mb-2'>
-                        Subject <span className='text-destructive'>*</span>
+                      <label className='block text-sm font-medium mb-2 text-card-foreground'>
+                        Subject <span className='text-red-400'>*</span>
                       </label>
                       <Input
                         name='subject'
                         value={formData.subject}
                         onChange={handleChange}
                         placeholder='How can we help?'
-                        className={errors.subject ? "border-destructive" : ""}
+                        className={`bg-card/80 border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan ${
+                          errors.subject ? "border-red-400" : ""
+                        }`}
                       />
                       {errors.subject && (
-                        <p className='text-xs text-destructive mt-1'>
+                        <p className='text-xs text-red-400 mt-1'>
                           {errors.subject}
                         </p>
                       )}
                     </div>
 
                     <div>
-                      <label className='block text-sm font-medium mb-2'>
-                        Message <span className='text-destructive'>*</span>
+                      <label className='block text-sm font-medium mb-2 text-card-foreground'>
+                        Message <span className='text-red-400'>*</span>
                       </label>
                       <Textarea
                         name='message'
@@ -297,10 +390,12 @@ const Contact = () => {
                         onChange={handleChange}
                         placeholder='Tell us more about your project...'
                         rows={5}
-                        className={errors.message ? "border-destructive" : ""}
+                        className={`bg-card/80 border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan ${
+                          errors.message ? "border-red-400" : ""
+                        }`}
                       />
                       {errors.message && (
-                        <p className='text-xs text-destructive mt-1'>
+                        <p className='text-xs text-red-400 mt-1'>
                           {errors.message}
                         </p>
                       )}
@@ -329,44 +424,50 @@ const Contact = () => {
               {/* Contact Info */}
               <div className='space-y-8'>
                 <div>
-                  <h2 className='text-2xl font-bold mb-6'>
+                  <h2 className='text-2xl font-bold mb-6 text-card-foreground'>
                     Contact Information
                   </h2>
                   <div className='space-y-4'>
                     <div className='flex items-start gap-4'>
-                      <div className='w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center'>
-                        <Mail className='w-5 h-5 text-primary' />
+                      <div className='w-10 h-10 rounded-lg bg-gradient-ai flex items-center justify-center'>
+                        <Mail className='w-5 h-5 text-primary-foreground' />
                       </div>
                       <div>
-                        <div className='font-medium'>Email</div>
+                        <div className='font-medium text-card-foreground'>
+                          Email
+                        </div>
                         <a
-                          href='mailto:hello@CharadesAI.app'
-                          className='text-muted-foreground hover:text-primary'
+                          href='mailto:hello@CharadesAI.com'
+                          className='text-muted-foreground hover:text-neon-cyan transition-colors'
                         >
-                          hello@CharadesAI.app
+                          hello@CharadesAI.com
                         </a>
                       </div>
                     </div>
                     <div className='flex items-start gap-4'>
-                      <div className='w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center'>
-                        <Phone className='w-5 h-5 text-primary' />
+                      <div className='w-10 h-10 rounded-lg bg-gradient-ai flex items-center justify-center'>
+                        <Phone className='w-5 h-5 text-primary-foreground' />
                       </div>
                       <div>
-                        <div className='font-medium'>Phone</div>
+                        <div className='font-medium text-card-foreground'>
+                          Phone
+                        </div>
                         <a
                           href='tel:+1-800-VISION'
-                          className='text-muted-foreground hover:text-primary'
+                          className='text-muted-foreground hover:text-neon-cyan transition-colors'
                         >
                           +1 (800) VISION-AI
                         </a>
                       </div>
                     </div>
                     <div className='flex items-start gap-4'>
-                      <div className='w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center'>
-                        <Clock className='w-5 h-5 text-primary' />
+                      <div className='w-10 h-10 rounded-lg bg-gradient-ai flex items-center justify-center'>
+                        <Clock className='w-5 h-5 text-primary-foreground' />
                       </div>
                       <div>
-                        <div className='font-medium'>Business Hours</div>
+                        <div className='font-medium text-card-foreground'>
+                          Business Hours
+                        </div>
                         <p className='text-muted-foreground'>
                           Mon - Fri: 9:00 AM - 6:00 PM (PST)
                         </p>
@@ -376,16 +477,20 @@ const Contact = () => {
                 </div>
 
                 <div>
-                  <h3 className='text-xl font-bold mb-4'>Our Offices</h3>
+                  <h3 className='text-xl font-bold mb-4 text-card-foreground'>
+                    Our Offices
+                  </h3>
                   <div className='space-y-4'>
                     {offices.map((office) => (
                       <div
                         key={office.city}
-                        className='flex items-start gap-4 p-4 rounded-xl bg-card border border-border'
+                        className='flex items-start gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'
                       >
-                        <MapPin className='w-5 h-5 text-primary mt-0.5' />
+                        <MapPin className='w-5 h-5 text-neon-cyan mt-0.5' />
                         <div>
-                          <div className='font-medium'>{office.city}</div>
+                          <div className='font-medium text-card-foreground'>
+                            {office.city}
+                          </div>
                           <p className='text-sm text-muted-foreground'>
                             {office.address}
                             <br />
@@ -401,10 +506,80 @@ const Contact = () => {
           </div>
         </section>
 
+        {/* Maps Section */}
+        <section className='py-16'>
+          <div className='container mx-auto px-4'>
+            <div className='text-center mb-12'>
+              <h2 className='text-3xl font-bold mb-4 text-card-foreground'>
+                Find Us
+              </h2>
+              <p className='text-muted-foreground max-w-2xl mx-auto'>
+                Visit our offices around the world or connect with us virtually.
+              </p>
+            </div>
+
+            {mapLoading ? (
+              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className='aspect-video rounded-2xl bg-card/80 backdrop-blur-md border border-border animate-pulse'
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+                {offices.map((office) => (
+                  <div key={office.city} className='space-y-4'>
+                    <div className='p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'>
+                      <div className='flex items-center gap-3 mb-3'>
+                        <Map className='w-5 h-5 text-neon-cyan' />
+                        <h3 className='font-semibold text-card-foreground'>
+                          {office.city}
+                        </h3>
+                      </div>
+                      <p className='text-sm text-muted-foreground'>
+                        {office.address}
+                        <br />
+                        {office.country}
+                      </p>
+                    </div>
+                    {mapData[`${office.city} Office`] && (
+                      <div className='aspect-video rounded-2xl overflow-hidden border border-border'>
+                        <iframe
+                          src={mapData[`${office.city} Office`]}
+                          width='100%'
+                          height='100%'
+                          style={{ border: 0 }}
+                          allowFullScreen
+                          loading='lazy'
+                          referrerPolicy='no-referrer-when-downgrade'
+                          title={`${office.city} Office Location`}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
         {/* FAQ CTA */}
-        <section className='py-24 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
-            <h2 className='text-3xl md:text-4xl font-bold mb-6'>
+        <section className='relative py-24 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+            <img
+              src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop&crop=center'
+              alt='Get help and support background'
+              className='w-full h-full object-cover rounded-3xl'
+            />
+            {/* Overlay for better text readability */}
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10 text-center'>
+            <h2 className='text-3xl md:text-4xl font-bold mb-6 text-card-foreground'>
               Looking for Quick Answers?
             </h2>
             <p className='text-muted-foreground mb-8 max-w-xl mx-auto'>
@@ -412,10 +587,20 @@ const Contact = () => {
               assistance.
             </p>
             <div className='flex flex-wrap justify-center gap-4'>
-              <Button variant='hero' size='lg'>
+              <Button
+                variant='hero'
+                size='lg'
+                className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground'
+                onClick={() => navigate("/features")}
+              >
                 View Documentation <ArrowRight className='w-4 h-4' />
               </Button>
-              <Button variant='heroOutline' size='lg'>
+              <Button
+                variant='heroOutline'
+                size='lg'
+                className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground'
+                onClick={() => navigate("/pricing")}
+              >
                 Pricing FAQ
               </Button>
             </div>
