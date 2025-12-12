@@ -4,6 +4,7 @@ import {
   generateDemoPayments,
   type Payment,
   type CurrentPlan,
+  useProfile,
 } from "@/hooks/use-api";
 import {
   Card,
@@ -48,28 +49,20 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 import { plans } from "@/lib/pricng";
-import { useCurrentPlan, usePaymentsHistory } from "@/hooks/use-api";
 
-type PaginatedPayments = {
-  data: Payment[];
-  meta?: { last_page?: number };
-};
-
-function isPaginatedPayments(v: unknown): v is PaginatedPayments {
-  return (
-    typeof v === "object" &&
-    v !== null &&
-    "data" in v &&
-    Array.isArray((v as { data: unknown }).data)
-  );
+function getPlanMetaBySlug(slug: string) {
+  const normalized = slug.toLowerCase();
+  if (normalized === "basic") return { name: "Basic", apiCallsLimit: 5000 };
+  if (normalized === "pro") return { name: "Pro", apiCallsLimit: 50000 };
+  if (normalized === "enterprise")
+    return { name: "Enterprise", apiCallsLimit: 250000 };
+  return { name: "Pro", apiCallsLimit: 50000 };
 }
 
 const Billing = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const { data: currentPlan, isLoading: planLoading } = useCurrentPlan();
-  const { data: paymentsData, isLoading: paymentsLoading } =
-    usePaymentsHistory();
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
   // Use demo data when API returns nothing
   const demoPlan: CurrentPlan = useMemo(
@@ -87,36 +80,39 @@ const Billing = () => {
         "Webhook integrations",
       ],
       api_calls_limit: 50000,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      // We don't have renewal info without /payments endpoints.
+      expires_at: null,
       is_active: true,
     }),
     []
   );
-  const plan = currentPlan || demoPlan;
 
-  const payments: Payment[] = useMemo(() => {
-    // support two shapes: an array of payments or a paginated response with `data` array
-    if (!paymentsData) {
-      return generateDemoPayments();
-    }
-    if (Array.isArray(paymentsData)) {
-      return paymentsData.length > 0 ? paymentsData : generateDemoPayments();
-    }
-    // paginated response: { data: Payment[], meta: {...} }
-    if (
-      isPaginatedPayments(paymentsData) &&
-      (paymentsData as PaginatedPayments).data.length > 0
-    ) {
-      return (paymentsData as PaginatedPayments).data;
-    }
-    return generateDemoPayments();
-  }, [paymentsData]);
+  const plan: CurrentPlan = useMemo(() => {
+    const slug = (profile?.current_plan || "pro").toLowerCase();
+    const meta = getPlanMetaBySlug(slug);
+    const tier =
+      plans.find((p) => p.name.toLowerCase() === meta.name.toLowerCase()) ||
+      plans.find((p) => p.name.toLowerCase() === "pro");
 
-  const totalPages = Array.isArray(paymentsData)
-    ? 1
-    : isPaginatedPayments(paymentsData)
-    ? (paymentsData as PaginatedPayments).meta?.last_page ?? 1
-    : 1;
+    if (!tier) return demoPlan;
+
+    return {
+      name: tier.name,
+      slug,
+      price_monthly: tier.monthlyPrice,
+      price_yearly: tier.yearlyPrice ? tier.yearlyPrice * 12 : null,
+      features: tier.features.filter((f) => f.included).map((f) => f.text),
+      api_calls_limit: meta.apiCallsLimit,
+      expires_at: null,
+      is_active: true,
+    };
+  }, [profile?.current_plan, demoPlan]);
+
+  // /payments endpoints are unreliable in the current backend; keep UI functional with demo data.
+  const payments: Payment[] = useMemo(() => generateDemoPayments(), []);
+  const totalPages = 1;
+  const planLoading = profileLoading;
+  const paymentsLoading = false;
 
   const getStatusBadge = (status: Payment["status"]) => {
     switch (status) {

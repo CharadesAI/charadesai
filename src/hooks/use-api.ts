@@ -105,8 +105,6 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
 export const queryKeys = {
   user: ["user"] as const,
   profile: ["profile"] as const,
-  payments: ["payments"] as const,
-  currentPlan: ["currentPlan"] as const,
   usage: ["usage"] as const,
   results: ["results"] as const,
 };
@@ -117,7 +115,12 @@ export function useProfile() {
   return useQuery({
     queryKey: queryKeys.profile,
     queryFn: () =>
-      fetchApi<ApiResponse<UserProfile>>("/user").then((res) => res.data),
+      fetchApi<ApiResponse<UserProfile | { user: UserProfile }>>("/user").then(
+        (res) => {
+          const data = res.data;
+          return (data as { user?: UserProfile }).user ?? (data as UserProfile);
+        }
+      ),
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
   });
@@ -135,31 +138,6 @@ export function useUpdateProfile() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.profile });
     },
-  });
-}
-// Get the users current subscription plan from backend API
-export function useCurrentPlan() {
-  return useQuery({
-    queryKey: queryKeys.currentPlan,
-    queryFn: () =>
-      fetchApi<ApiResponse<CurrentPlan>>("/payments/last-plan").then(
-        (res) => res.data
-      ),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
-  });
-}
-
-// Payment history listing
-export function usePaymentsHistory() {
-  return useQuery({
-    queryKey: queryKeys.payments,
-    queryFn: () =>
-      fetchApi<ApiResponse<{ payments: Payment[] }>>("/payments").then(
-        (res) => res.data.payments
-      ),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    retry: 1,
   });
 }
 

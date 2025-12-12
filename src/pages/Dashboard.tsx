@@ -2,8 +2,8 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { useAuth } from "@/lib/AuthContext";
 import {
   useUsageStats,
-  useCurrentPlan,
   useAIResults,
+  useProfile,
   generateDemoUsageStats,
   generateDemoResults,
   type UsageStats,
@@ -42,8 +42,15 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const { data: usageStatsRaw, isLoading: usageLoading } = useUsageStats();
-  const { data: currentPlan, isLoading: planLoading } = useCurrentPlan();
+  const { data: profile, isLoading: planLoading } = useProfile();
   const { data: resultsRaw, isLoading: resultsLoading } = useAIResults(5);
+
+  const currentPlanName = useMemo(() => {
+    const slug = (profile?.current_plan || "pro").toLowerCase();
+    if (slug === "basic") return "Basic";
+    if (slug === "enterprise") return "Enterprise";
+    return "Pro";
+  }, [profile?.current_plan]);
 
   // Use demo data if API returns nothing (creative way to show demo without saying "demo")
   const usageStats: UsageStats = useMemo(
@@ -179,7 +186,7 @@ const Dashboard = () => {
                 <>
                   <div className='flex items-center gap-2'>
                     <span className='text-2xl font-bold'>
-                      {currentPlan?.name || "Pro"}
+                      {currentPlanName}
                     </span>
                     <Badge
                       variant='secondary'
