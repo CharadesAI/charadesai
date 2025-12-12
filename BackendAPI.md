@@ -20,27 +20,27 @@ Note: For local development you can avoid configuring DNS or host entries by ena
 
 | Method             | URI                              | Description                               | Auth |
 | ------------------ | -------------------------------- | ----------------------------------------- | ---- |
-| GET                | `/api/ping`                      | Health check                              | No   |
+| GET                | `/ping`                      | Health check                              | No   |
 | **Authentication** |                                  |                                           |      |
-| POST               | `/api/auth/register`             | Register new user                         | No   |
-| POST               | `/api/auth/login`                | Login with email/password                 | No   |
-| POST               | `/api/auth/logout`               | Logout (revoke token)                     | Yes  |
-| GET                | `/api/auth/google/redirect`      | Redirect to Google OAuth                  | No   |
-| GET                | `/api/auth/google/callback`      | Google OAuth callback                     | No   |
-| POST               | `/api/auth/google/token`         | Exchange Google code/credential for token | No   |
-| GET                | `/api/auth/github/redirect`      | Redirect to GitHub OAuth                  | No   |
-| GET                | `/api/auth/github/callback`      | GitHub OAuth callback                     | No   |
-| POST               | `/api/auth/github/token`         | Exchange GitHub code/token for API token  | No   |
-| POST               | `/api/auth/password/forgot`      | Request password reset email              | No   |
-| POST               | `/api/auth/password/reset`       | Reset password with token                 | No   |
-| POST               | `/api/auth/password/change`      | Change password (authenticated)           | Yes  |
-| POST               | `/api/auth/verify/send`          | Send/resend verification email            | No   |
-| GET                | `/api/auth/verify/{token}`       | Verify email with token                   | No   |
-| GET                | `/api/auth/link/google/redirect` | Link Google account                       | Yes  |
-| GET                | `/api/auth/link/google/callback` | Google link callback                      | Yes  |
-| GET                | `/api/auth/link/github/redirect` | Link GitHub account                       | Yes  |
-| GET                | `/api/auth/link/github/callback` | GitHub link callback                      | Yes  |
-| POST               | `/api/auth/unlink`               | Unlink OAuth provider                     | Yes  |
+| POST               | `/auth/register`             | Register new user                         | No   |
+| POST               | `/auth/login`                | Login with email/password                 | No   |
+| POST               | `/auth/logout`               | Logout (revoke token)                     | Yes  |
+| GET                | `/auth/google/redirect`      | Redirect to Google OAuth                  | No   |
+| GET                | `/auth/google/callback`      | Google OAuth callback                     | No   |
+| POST               | `/auth/google/token`         | Exchange Google code/credential for token | No   |
+| GET                | `/auth/github/redirect`      | Redirect to GitHub OAuth                  | No   |
+| GET                | `/auth/github/callback`      | GitHub OAuth callback                     | No   |
+| POST               | `/auth/github/token`         | Exchange GitHub code/token for API token  | No   |
+| POST               | `/auth/password/forgot`      | Request password reset email              | No   |
+| POST               | `/auth/password/reset`       | Reset password with token                 | No   |
+| POST               | `/auth/password/change`      | Change password (authenticated)           | Yes  |
+| POST               | `/auth/verify/send`          | Send/resend verification email            | No   |
+| GET                | `/auth/verify/{token}`       | Verify email with token                   | No   |
+| GET                | `/auth/link/google/redirect` | Link Google account                       | Yes  |
+| GET                | `/auth/link/google/callback` | Google link callback                      | Yes  |
+| GET                | `/auth/link/github/redirect` | Link GitHub account                       | Yes  |
+| GET                | `/auth/link/github/callback` | GitHub link callback                      | Yes  |
+| POST               | `/auth/unlink`               | Unlink OAuth provider                     | Yes  |
 | **User Profile**   |                                  |                                           |      |
 
 > Note: The browser redirect/callback OAuth routes require the server session so Socialite can maintain the OAuth state parameter. These routes are registered with the `web` (session) middleware in the API, which makes browser-based OAuth redirects work correctly. Because your frontend is on the root domain and the API is on a subdomain, set session cookie options in `.env` so cookies are shared across subdomains.
@@ -54,39 +54,39 @@ SESSION_SECURE_COOKIE=true    # only in production with HTTPS
 SESSION_SAME_SITE=lax         # allows top-level navigation redirects to set cookie
 ```
 
-> If your frontend is on an entirely different top-level domain (e.g., frontend.com and api.example.com) you can't share cookies — use the token-exchange endpoints (`POST /api/auth/google/token`, `POST /api/auth/github/token`) for stateless API-only flows or `Socialite::stateless()` with your own CSRF/state protection.
+> If your frontend is on an entirely different top-level domain (e.g., frontend.com and api.example.com) you can't share cookies — use the token-exchange endpoints (`POST /auth/google/token`, `POST /auth/github/token`) for stateless API-only flows or `Socialite::stateless()` with your own CSRF/state protection.
 
-> If your frontend is on a different top-level domain and cannot share cookies, prefer using the token-exchange endpoints (`POST /api/auth/google/token`, `POST /api/auth/github/token`) for API-only flows or use `Socialite::stateless()` after adding custom CSRF/state protection.
-> | GET | `/api/user` | Get current user profile | Yes |
-> | PUT | `/api/user` | Update user profile | Yes |
-> | DELETE | `/api/user` | Delete user account | Yes |
-> | POST | `/api/user/avatar` | Upload avatar image | Yes |
-> | GET | `/api/users/{id}/public` | Get public profile | No |
+> If your frontend is on a different top-level domain and cannot share cookies, prefer using the token-exchange endpoints (`POST /auth/google/token`, `POST /auth/github/token`) for API-only flows or use `Socialite::stateless()` after adding custom CSRF/state protection.
+> | GET | `/user` | Get current user profile | Yes |
+> | PUT | `/user` | Update user profile | Yes |
+> | DELETE | `/user` | Delete user account | Yes |
+> | POST | `/user/avatar` | Upload avatar image | Yes |
+> | GET | `/users/{id}/public` | Get public profile | No |
 > | **Mail** | | | |
-> | POST | `/api/mail/contact` | Send contact message | No |
-> | POST | `/api/mail/newsletter` | Subscribe to newsletter | No |
-> | GET | `/api/mail/newsletter/verify/{token}` | Verify newsletter subscription | No |
-> | GET | `/api/mail/newsletter/unsubscribe/{token}` | Unsubscribe from newsletter | No |
-> | POST | `/api/mail/password-reset` | Send password reset email | No |
+> | POST | `/mail/contact` | Send contact message | No |
+> | POST | `/mail/newsletter` | Subscribe to newsletter | No |
+> | GET | `/mail/newsletter/verify/{token}` | Verify newsletter subscription | No |
+> | GET | `/mail/newsletter/unsubscribe/{token}` | Unsubscribe from newsletter | No |
+> | POST | `/mail/password-reset` | Send password reset email | No |
 > | **AI / Gorq** | | | |
-> | POST | `/api/ai/generate` | Generate AI response | No |
-> | GET | `/api/ai/jobs/{id}/status` | Get async AI job status | No |
+> | POST | `/ai/generate` | Generate AI response | No |
+> | GET | `/ai/jobs/{id}/status` | Get async AI job status | No |
 > | **Maps** | | | |
-> | POST | `/api/maps/pin` | Generate Google Maps embed URL | No |
+> | POST | `/maps/pin` | Generate Google Maps embed URL | No |
 > | **Plans** | | | |
-> | GET | `/api/subscription-plans` | List all plans | No |
-> | GET | `/api/subscription-plans/{slug}` | Get plan by slug | No |
+> | GET | `/subscription-plans` | List all plans | No |
+> | GET | `/subscription-plans/{slug}` | Get plan by slug | No |
 > | **Payments** | | | |
-> | POST | `/api/subscriptions` | Pay for a plan (purchase) | Yes |
-> | POST | `/api/payments/process` | Process one-time payment | Yes |
-> | GET | `/api/payments` | List payment history | Yes |
-> | GET | `/api/payments/last-plan` | Get last purchased plan | Yes |
-> | GET | `/api/payments/{transactionId}` | Verify/get payment details | Yes |
-> | POST | `/api/payments/refund/{transactionId}` | Request refund | Yes |
-> | POST | `/api/payments/revert-plan` | Revert/clear current plan | Yes |
-> | POST | `/api/payments/webhook` | Payment webhook handler | No |
+> | POST | `/subscriptions` | Pay for a plan (purchase) | Yes |
+> | POST | `/payments/process` | Process one-time payment | Yes |
+> | GET | `/payments` | List payment history | Yes |
+> | GET | `/payments/last-plan` | Get last purchased plan | Yes |
+> | GET | `/payments/{transactionId}` | Verify/get payment details | Yes |
+> | POST | `/payments/refund/{transactionId}` | Request refund | Yes |
+> | POST | `/payments/revert-plan` | Revert/clear current plan | Yes |
+> | POST | `/payments/webhook` | Payment webhook handler | No |
 > | **Admin/Dev Tools** | | | |
-> | POST | `/api/admin/migrate` | Run migrations via HTTP | Token |
+> | POST | `/admin/migrate` | Run migrations via HTTP | Token |
 
 ## Developer tools
 
@@ -154,7 +154,7 @@ For a full guide on configuring Google Cloud credentials, Socialite server usage
 
 #### Credential-based register & login
 
-- POST /api/auth/register (or POST /auth/register if `API_DOMAIN` is set)
+- POST /auth/register (or POST /auth/register if `API_DOMAIN` is set)
 
   - Request body (application/json):
     - username (string, required, unique)
@@ -170,7 +170,7 @@ For a full guide on configuring Google Cloud credentials, Socialite server usage
   Example request (register):
 
   ```json
-  POST /api/auth/register
+  POST /auth/register
   Content-Type: application/json
 
   {
@@ -213,11 +213,11 @@ For a full guide on configuring Google Cloud credentials, Socialite server usage
 Authorization: Bearer <your-plain-text-token-here>
 ```
 
-- POST /api/auth/login (or POST /auth/login if `API_DOMAIN` is set)
+- POST /auth/login (or POST /auth/login if `API_DOMAIN` is set)
   Example request (login):
 
   ```json
-  POST /api/auth/login
+  POST /auth/login
   Content-Type: application/json
 
   {
@@ -253,16 +253,16 @@ Authorization: Bearer <your-plain-text-token-here>
 
 #### Logout (token & cookie aware)
 
-- POST /api/auth/logout (or POST /auth/logout if `API_DOMAIN` is set)
+- POST /auth/logout (or POST /auth/logout if `API_DOMAIN` is set)
   - Behavior: API clients get JSON + token revocation; browser requests (Accept HTML) revoke tokens, clear the `api_token` cookie, and 302 redirect to `${FRONTEND_URL}/auth/logout`.
 
 #### Google OAuth (browser redirect flow)
 
-- GET /api/auth/google/redirect (or GET /auth/google/redirect if `API_DOMAIN` is set)
+- GET /auth/google/redirect (or GET /auth/google/redirect if `API_DOMAIN` is set)
 
   - Redirects to Google OAuth consent page using Laravel Socialite. This endpoint issues an HTTP redirect (302) that should be followed by the browser or frontend app. If your frontend needs the direct URL instead, call this endpoint and read the Location header of the response.
 
-- GET /api/auth/google/callback (or GET /auth/google/callback if `API_DOMAIN` is set)
+- GET /auth/google/callback (or GET /auth/google/callback if `API_DOMAIN` is set)
 
   - OAuth callback — handled with Laravel Socialite.
   - Behavior:
@@ -281,7 +281,7 @@ Authorization: Bearer <your-plain-text-token-here>
     - { status: 'success', message: 'Authenticated via Google', data: { user: {...}, token: '<plain-text-token>' } }
     - To get JSON, use one of: `?format=json` query param, `X-Requested-With: XMLHttpRequest` header, or `Accept: application/json` (without `text/html` or `*/*`).
 
-- POST /api/auth/google/token (API-only token exchange)
+- POST /auth/google/token (API-only token exchange)
 
   - Body (JSON):
     - `code` (string) — authorization code received from Google OAuth (required if `credential` missing)
@@ -299,13 +299,13 @@ Authorization: Bearer <your-plain-text-token-here>
 
 #### Password reset
 
-- POST /api/auth/password/forgot (or POST /auth/password/forgot if `API_DOMAIN` is set)
+- POST /auth/password/forgot (or POST /auth/password/forgot if `API_DOMAIN` is set)
 
   - Body: { email }
   - Behavior: server will create a password reset token stored in `password_reset_tokens` (valid for ~2 hours) and email the frontend password-reset link to the user if the account exists. The response does not reveal whether the account exists.
   - Success (200): { status: 'success', message: 'Password reset link sent if account exists' }
 
-- POST /api/auth/password/reset (or POST /auth/password/reset if `API_DOMAIN` is set)
+- POST /auth/password/reset (or POST /auth/password/reset if `API_DOMAIN` is set)
 
   - Body: { email, token, password_hash, password_hash_confirmation }
   - Note: password_hash must be a 64-character SHA-256 hex hash of the new password
@@ -314,21 +314,21 @@ Authorization: Bearer <your-plain-text-token-here>
 
 #### Email verification
 
-- POST /api/auth/verify/send (or POST /auth/verify/send if `API_DOMAIN` is set)
+- POST /auth/verify/send (or POST /auth/verify/send if `API_DOMAIN` is set)
 
   - Body: { email } or (authenticated) send to current user
   - Behavior: **Resend verification email** for users who missed or lost the original email sent during registration. Creates/updates an email verification token stored in `email_verification_tokens` and sends a verification email. For security, the response does not reveal whether the email exists if unregistered.
   - Success (200): { status: 'success', message: 'Verification email sent' } or 'Email already verified' if already verified
 
-- GET /api/auth/verify/{token} (or GET /auth/verify/{token} if `API_DOMAIN` is set)
+- GET /auth/verify/{token} (or GET /auth/verify/{token} if `API_DOMAIN` is set)
 
   - Behavior: verifies the token, sets `email_verified_at` for the user, deletes the token, and either returns JSON (API clients) or redirects the browser to `${FRONTEND_URL}/auth/verified`.
   - Success (200 or 302): JSON { status: 'success', message: 'Email verified', data: { user } } or 302 redirect to frontend verified page.
 
 ### GitHub OAuth (browser redirect flow)
 
-    -   GET /api/auth/github/redirect — Redirects the browser to GitHub's OAuth consent page (via Socialite). If your SPA needs the URL to redirect itself, call this endpoint and read the Location header.
-    -   GET /api/auth/github/callback — OAuth callback endpoint which handles the GitHub response and returns a token in JSON (for API clients) or redirects to `${FRONTEND_URL}/auth/complete?token=<token>` for browser flows.
+    -   GET /auth/github/redirect — Redirects the browser to GitHub's OAuth consent page (via Socialite). If your SPA needs the URL to redirect itself, call this endpoint and read the Location header.
+    -   GET /auth/github/callback — OAuth callback endpoint which handles the GitHub response and returns a token in JSON (for API clients) or redirects to `${FRONTEND_URL}/auth/complete?token=<token>` for browser flows.
 
 #### GitHub OAuth behavior
 
@@ -338,7 +338,7 @@ Authorization: Bearer <your-plain-text-token-here>
     -   If a user already exists with the same email, the code attaches `provider` fields to that existing user rather than creating a new one.
     -   Returns JSON with `user` and `token` in API flows, and redirects with token in query param on browser flows.
 
-- POST /api/auth/github/token (API-only token exchange)
+- POST /auth/github/token (API-only token exchange)
 
   - Body (JSON):
     - `code` (string) — authorization code returned by GitHub's OAuth authorize endpoint (required if `access_token` missing)
@@ -386,7 +386,7 @@ Authorization: Bearer <your-plain-text-token-here>
     Example request (GET /user):
 
     ```http
-    GET /api/user
+    GET /user
     Authorization: Bearer <token>
     Accept: application/json
     ```
@@ -411,7 +411,7 @@ Authorization: Bearer <your-plain-text-token-here>
     }
     ```
 
-    -   POST /api/auth/password/change (or POST /auth/password/change if `API_DOMAIN` is set)
+    -   POST /auth/password/change (or POST /auth/password/change if `API_DOMAIN` is set)
 
         -   Body: { current_password_hash, password_hash, password_hash_confirmation }
         -   Note: All password fields must be 64-character SHA-256 hex hashes
@@ -421,14 +421,14 @@ Authorization: Bearer <your-plain-text-token-here>
             - 401 Unauthenticated — missing or invalid token
             - 422 Validation failed — wrong current password hash or invalid new password hash/confirmation
 
-    -   DELETE /api/user (or DELETE /user if `API_DOMAIN` is set)
+    -   DELETE /user (or DELETE /user if `API_DOMAIN` is set)
 
         -   Behavior: Authenticated endpoint. Deletes the authenticated user's account, associated avatar file stored on the server (if found), and revokes stored API tokens.
         -   Success (200): { status: 'success', message: 'Account deleted' }
         -   Errors:
             - 401 Unauthenticated — missing or invalid token
 
-- POST /api/user/avatar (or POST /user/avatar if `API_DOMAIN` is set)
+- POST /user/avatar (or POST /user/avatar if `API_DOMAIN` is set)
 
   - Multipart/form-data: file field `avatar` (image, max 5MB)
   - Behavior: authenticated endpoint. Validates and stores the uploaded image under `storage/app/public/avatars/{user_id}/` and returns the public URL. If a previous avatar was stored on the server it will be deleted.
@@ -448,7 +448,7 @@ Authorization: Bearer <your-plain-text-token-here>
   }
   ```
 
-- GET /api/users/{id}/public (or GET /users/{id}/public if `API_DOMAIN` is set)
+- GET /users/{id}/public (or GET /users/{id}/public if `API_DOMAIN` is set)
 
   - Returns a limited public profile object suitable for other users or public pages: { id, username, first_name, last_name, avatar, created_at }
 
@@ -477,39 +477,39 @@ Notes: run `php artisan storage:link` in deployment to make `storage/app/public`
 
 ### Mail endpoints
 
-- POST /api/mail/contact (or POST /mail/contact if `API_DOMAIN` is set)
+- POST /mail/contact (or POST /mail/contact if `API_DOMAIN` is set)
 
   - Body: { name, email, message }
   - Action: Sends a contact message to the configured `MAIL_FROM_ADDRESS`.
 
-- POST /api/mail/newsletter (or POST /mail/newsletter if `API_DOMAIN` is set)
+- POST /mail/newsletter (or POST /mail/newsletter if `API_DOMAIN` is set)
 
   - Body: { email, name? }
   - Validation: `email` => required|email, `name` => sometimes|string|max:255
   - Action: Creates a newsletter subscriber with a verification token and sends a verification email. A notification is also sent to the admin inbox. Duplicate subscription attempts are idempotent.
   - Response (200): { status: 'success', message: 'Newsletter signup processed. Please check your email to verify.', data: { subscriber_id } }
 
-- GET /api/mail/newsletter/verify/{token} (or GET /mail/newsletter/verify/{token} if `API_DOMAIN` is set)
+- GET /mail/newsletter/verify/{token} (or GET /mail/newsletter/verify/{token} if `API_DOMAIN` is set)
 
   - Action: Verifies the newsletter subscription via the token sent in the verification email. Once verified, sends a personalized welcome email to the subscriber. If `FRONTEND_URL` is set and request is not JSON, redirects to `{FRONTEND_URL}/newsletter/verified`.
   - Response (200): { status: 'success', message: 'Subscription verified successfully' }
   - Response (404): Invalid or expired token
 
-- GET /api/mail/newsletter/unsubscribe/{token} (or GET /mail/newsletter/unsubscribe/{token} if `API_DOMAIN` is set)
+- GET /mail/newsletter/unsubscribe/{token} (or GET /mail/newsletter/unsubscribe/{token} if `API_DOMAIN` is set)
 
   - Action: Unsubscribes the user from the newsletter by deleting their record. The token is unique per subscriber and included in all newsletter emails. If `FRONTEND_URL` is set and request is not JSON, redirects to `{FRONTEND_URL}/newsletter/unsubscribed`.
   - Response (200): { status: 'success', message: 'Successfully unsubscribed from newsletter', data: { email } }
   - Response (404): Invalid or expired token
 
-- POST /api/mail/password-reset (or POST /mail/password-reset if `API_DOMAIN` is set)
+- POST /mail/password-reset (or POST /mail/password-reset if `API_DOMAIN` is set)
   - Body: { email }
   - Action: Creates a password reset token and sends the `PasswordResetMail` to the user. Response does not reveal whether the email exists (security best practice).
   - Response (200): { status: 'success', message: 'If this email is registered, a password reset link has been sent' }
 
 ### AI / Gorq
 
-- POST /api/ai/generate (or POST /ai/generate if `API_DOMAIN` is set) — Public endpoint
-- POST /api/ai/generate
+- POST /ai/generate (or POST /ai/generate if `API_DOMAIN` is set) — Public endpoint
+- POST /ai/generate
 
   - Body: { prompt?: string (required without messages), messages?: array (required without prompt), model?: string, max_tokens?: integer, async?: boolean }
   - Validation rules:
@@ -534,7 +534,7 @@ Content-Type: application/json
 {
     "status": "accepted",
     "message": "Request accepted, processing",
-    "data": { "job_id": 123, "status_url": "/api/ai/jobs/123/status" }
+    "data": { "job_id": 123, "status_url": "/ai/jobs/123/status" }
 }
 ```
 
@@ -547,7 +547,7 @@ Content-Type: application/json
         -   Example request (Chat Completions style):
 
 ```
-POST /api/ai/generate
+POST /ai/generate
 Content-Type: application/json
 
 {
@@ -584,13 +584,13 @@ Content-Type: application/json
 }
 ```
 
-    -   GET /api/ai/jobs/{id}/status (or GET /ai/jobs/{id}/status if `API_DOMAIN` is set) — Public
+    -   GET /ai/jobs/{id}/status (or GET /ai/jobs/{id}/status if `API_DOMAIN` is set) — Public
     -   Returns the job status and result (or error) for async requests:
     -   Response (200): { status: 'success', data: { id, status, result?, error?, meta?, created_at, updated_at } }
 
 ### Google Maps Embed
 
-- POST /api/maps/pin (or POST /maps/pin if `API_DOMAIN` is set)
+- POST /maps/pin (or POST /maps/pin if `API_DOMAIN` is set)
 
   - Public: does not require authentication (no Bearer token needed)
   - No API key required — uses Google Maps embed URL format
@@ -629,7 +629,7 @@ Content-Type: application/json
 
 ### Ping / health check
 
-- GET /api/ping — returns a simple JSON response with `{ "status": "ok" }`. If `API_DOMAIN` is set you can use `GET /ping` on your API subdomain (e.g. `https://api.example.com/ping`) to check it is reachable.
+- GET /ping — returns a simple JSON response with `{ "status": "ok" }`. If `API_DOMAIN` is set you can use `GET /ping` on your API subdomain (e.g. `https:/.example.com/ping`) to check it is reachable.
 
 ### Error response format
 
@@ -751,7 +751,7 @@ Standard success responses follow a consistent JSON response shape used througho
 - `code` — HTTP status code (e.g., `200` for OK, `201` for created).
 - `timestamp` — ISO 8601 timestamp at the time of response.
 
-Example success response (GET /api/ping):
+Example success response (GET /ping):
 
 ```
 HTTP/1.1 200 OK
@@ -819,7 +819,7 @@ The sandbox gateway accepts these test cards:
 
 ### Plans (public)
 
-#### GET /api/subscription-plans
+#### GET /subscription-plans
 
 List all active plans.
 
@@ -860,7 +860,7 @@ List all active plans.
 }
 ```
 
-#### GET /api/subscription-plans/{slug}
+#### GET /subscription-plans/{slug}
 
 Get a single plan by slug.
 
@@ -897,7 +897,7 @@ The API treats a plan payment as a payment that records the plan name and sets t
 
 All plan-payment endpoints require `Authorization: Bearer <token>` header.
 
-#### POST /api/subscriptions
+#### POST /subscriptions
 
 Pay for a plan (purchase). This endpoint charges (sandbox) the card, creates a payment record, and updates `users.current_plan` to the plan slug.
 
@@ -967,7 +967,7 @@ Pay for a plan (purchase). This endpoint charges (sandbox) the card, creates a p
 
 ### Payments (authenticated)
 
-#### POST /api/payments/process
+#### POST /payments/process
 
 Process a one-time payment (not a plan purchase).
 
@@ -1023,7 +1023,7 @@ Process a one-time payment (not a plan purchase).
 }
 ```
 
-#### GET /api/payments
+#### GET /payments
 
 List payment history for the authenticated user (paginated).
 
@@ -1055,7 +1055,7 @@ List payment history for the authenticated user (paginated).
 }
 ```
 
-#### GET /api/payments/{transactionId}
+#### GET /payments/{transactionId}
 
 Verify/retrieve a payment by transaction ID.
 
@@ -1088,7 +1088,7 @@ Verify/retrieve a payment by transaction ID.
 
 - 404 — Payment not found
 
-#### GET /api/payments/last-plan
+#### GET /payments/last-plan
 
 Get the last plan the authenticated user paid for, along with the payment record.
 
@@ -1142,7 +1142,7 @@ Get the last plan the authenticated user paid for, along with the payment record
 }
 ```
 
-#### POST /api/payments/refund/{transactionId}
+#### POST /payments/refund/{transactionId}
 
 Request a refund for a completed payment.
 
@@ -1180,7 +1180,7 @@ Request a refund for a completed payment.
 - 400 — Already refunded or not completed
 - 404 — Payment not found
 
-#### POST /api/payments/revert-plan
+#### POST /payments/revert-plan
 
 Change or clear the user's current plan without charging. This creates an audit payment record with type `revert` so plan changes are recorded in history.
 
@@ -1224,7 +1224,7 @@ Change or clear the user's current plan without charging. This creates an audit 
 
 ### Payment Webhook (public)
 
-#### POST /api/payments/webhook
+#### POST /payments/webhook
 
 Handle payment gateway webhooks (sandbox simulation).
 

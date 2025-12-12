@@ -5,6 +5,7 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock, User, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
+<<<<<<< Updated upstream
 
 const blogPosts = [
   {
@@ -80,12 +81,62 @@ const blogPosts = [
     featured: false,
   },
 ];
+=======
+import { blogPosts } from "@/lib/blog-data";
+import { useState } from "react";
+import { postJson } from "@/lib/api";
+>>>>>>> Stashed changes
 
 const categories = ["All", "Product", "Research", "Tutorial", "Engineering"];
 
 const Blog = () => {
   const featuredPosts = blogPosts.filter((post) => post.featured);
+<<<<<<< Updated upstream
   const regularPosts = blogPosts.filter((post) => !post.featured);
+=======
+  const allFilteredPosts =
+    selectedCategory === "All"
+      ? blogPosts.filter((post) => !post.featured)
+      : blogPosts.filter(
+          (post) => !post.featured && post.category === selectedCategory
+        );
+
+  const filteredPosts = allFilteredPosts.slice(0, visiblePostsCount);
+  const hasMorePosts = allFilteredPosts.length > visiblePostsCount;
+
+  const loadMorePosts = () => {
+    setVisiblePostsCount((prev) => prev + POSTS_PER_PAGE);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setVisiblePostsCount(POSTS_PER_PAGE); // Reset pagination when category changes
+  };
+
+  const handleNewsletterSubscribe = async () => {
+    if (!email.trim()) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await postJson("/mail/newsletter", { email: email.trim() });
+      const status = (res as unknown as { status?: string }).status;
+      const message = (res as unknown as { message?: string }).message;
+      if (status === "success") {
+        alert(message || "Subscribed successfully");
+        setEmail("");
+      } else {
+        alert(message || "Failed to subscribe to newsletter");
+      }
+    } catch (error) {
+      alert("An error occurred while subscribing. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+>>>>>>> Stashed changes
 
   return (
     <div className='min-h-screen bg-background'>

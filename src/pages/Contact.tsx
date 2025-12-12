@@ -19,6 +19,11 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+<<<<<<< Updated upstream
+=======
+import { useEffect } from "react";
+import { getApiBase, postJson } from "@/lib/api";
+>>>>>>> Stashed changes
 
 const contactSchema = z.object({
   name: z
@@ -69,23 +74,11 @@ const contactOptions = [
   },
 ];
 
-const offices = [
-  {
-    city: "San Francisco",
-    address: "100 Market Street, Suite 300",
-    country: "United States",
-  },
-  {
-    city: "London",
-    address: "1 Canada Square, Canary Wharf",
-    country: "United Kingdom",
-  },
-  {
-    city: "Singapore",
-    address: "1 Raffles Place, Tower 2",
-    country: "Singapore",
-  },
-];
+const office = {
+  city: "San Francisco",
+  address: "100 Market Street, Suite 300",
+  country: "United States",
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -98,6 +91,70 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+<<<<<<< Updated upstream
+=======
+  const [mapData, setMapData] = useState<Record<string, string>>({});
+  const [mapLoading, setMapLoading] = useState(true);
+
+  useEffect(() => {
+    fetchMapData();
+  }, []);
+
+  const fetchMapData = async () => {
+    try {
+      const payload = {
+        locations: [
+          {
+            name: "San Francisco Office",
+            address: "100 Market Street, Suite 300, San Francisco, CA 94105",
+          },
+          {
+            name: "London Office",
+            address: "1 Canada Square, Canary Wharf, London, EC2A 1PQ",
+          },
+          {
+            name: "Singapore Office",
+            address: "1 Raffles Place, Tower 2, Singapore 048616",
+          },
+        ],
+      };
+
+      const res = await postJson<{
+        map_urls?: Record<string, string>;
+        map_url?: string;
+      }>("/maps/pin", payload);
+
+      // API returns { status: 'success', data: { map_url: '...' } } or data.map_urls
+      type MapResp = { map_urls?: Record<string, string>; map_url?: string };
+      const mapDataObj: MapResp | Record<string, string> =
+        (
+          res as unknown as {
+            status?: string;
+            data?: MapResp | Record<string, string>;
+          }
+        ).data ?? {};
+
+      if (
+        typeof (mapDataObj as MapResp).map_urls !== "undefined" &&
+        typeof (mapDataObj as MapResp).map_urls === "object"
+      ) {
+        setMapData((mapDataObj as MapResp).map_urls as Record<string, string>);
+      } else if (typeof (mapDataObj as MapResp).map_url === "string") {
+        setMapData({
+          "San Francisco Office": (mapDataObj as MapResp).map_url as string,
+        });
+      } else if (typeof mapDataObj === "object") {
+        setMapData(mapDataObj as Record<string, string>);
+      } else {
+        console.error("Unexpected map response", mapDataObj);
+      }
+    } catch (error) {
+      console.error("Error fetching map data:", error);
+    } finally {
+      setMapLoading(false);
+    }
+  };
+>>>>>>> Stashed changes
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -128,6 +185,7 @@ const Contact = () => {
 
     setIsSubmitting(true);
 
+<<<<<<< Updated upstream
     // Simulate form submission
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
@@ -142,6 +200,52 @@ const Contact = () => {
       subject: "",
       message: "",
     });
+=======
+    try {
+      try {
+        const payload = {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company || undefined,
+          subject: formData.subject,
+          message: formData.message,
+        };
+
+        const res = await postJson<{ subscriber_id?: string }>(
+          "/mail/contact",
+          payload
+        );
+        const status = (res as unknown as { status?: string }).status;
+        const message = (res as unknown as { message?: string }).message;
+        if (status === "success") {
+          setIsSubmitted(true);
+          toast.success(
+            "Message sent successfully! We'll get back to you soon."
+          );
+          setFormData({
+            name: "",
+            email: "",
+            company: "",
+            subject: "",
+            message: "",
+          });
+        } else {
+          toast.error(message || "Failed to send message. Please try again.");
+        }
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error
+            ? err.message
+            : String(err ?? "Failed to send message. Please try again.");
+        toast.error(msg);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Network error. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+>>>>>>> Stashed changes
   };
 
   return (
@@ -378,6 +482,7 @@ const Contact = () => {
                 <div>
                   <h3 className='text-xl font-bold mb-4'>Our Offices</h3>
                   <div className='space-y-4'>
+<<<<<<< Updated upstream
                     {offices.map((office) => (
                       <div
                         key={office.city}
@@ -391,9 +496,24 @@ const Contact = () => {
                             <br />
                             {office.country}
                           </p>
+=======
+                    <div
+                      key={office.city}
+                      className='flex items-start gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'
+                    >
+                      <MapPin className='w-5 h-5 text-neon-cyan mt-0.5' />
+                      <div>
+                        <div className='font-medium text-card-foreground'>
+                          {office.city}
+>>>>>>> Stashed changes
                         </div>
+                        <p className='text-sm text-muted-foreground'>
+                          {office.address}
+                          <br />
+                          {office.country}
+                        </p>
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -401,6 +521,66 @@ const Contact = () => {
           </div>
         </section>
 
+<<<<<<< Updated upstream
+=======
+        {/* Maps Section */}
+        <section className='py-16'>
+          <div className='container mx-auto px-4'>
+            <div className='text-center mb-12'>
+              <h2 className='text-3xl font-bold mb-4 text-card-foreground'>
+                Find Us
+              </h2>
+              <p className='text-muted-foreground max-w-2xl mx-auto'>
+                Visit our offices around the world or connect with us virtually.
+              </p>
+            </div>
+
+            {mapLoading ? (
+              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+                {[...Array(3)].map((_, i) => (
+                  <div
+                    key={i}
+                    className='aspect-video rounded-2xl bg-card/80 backdrop-blur-md border border-border animate-pulse'
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+                <div key={office.city} className='space-y-4'>
+                  <div className='p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'>
+                    <div className='flex items-center gap-3 mb-3'>
+                      <Map className='w-5 h-5 text-neon-cyan' />
+                      <h3 className='font-semibold text-card-foreground'>
+                        {office.city}
+                      </h3>
+                    </div>
+                    <p className='text-sm text-muted-foreground'>
+                      {office.address}
+                      <br />
+                      {office.country}
+                    </p>
+                  </div>
+                  {mapData[`${office.city} Office`] && (
+                    <div className='aspect-video rounded-2xl overflow-hidden border border-border'>
+                      <iframe
+                        src={mapData[`${office.city} Office`]}
+                        width='100%'
+                        height='100%'
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading='lazy'
+                        referrerPolicy='no-referrer-when-downgrade'
+                        title={`${office.city} Office Location`}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+
+>>>>>>> Stashed changes
         {/* FAQ CTA */}
         <section className='py-24 bg-gradient-hero'>
           <div className='container mx-auto px-4 text-center'>
