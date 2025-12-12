@@ -5,95 +5,19 @@ import { AIChatWidget } from "@/components/AIChatWidget";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock, User, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
-<<<<<<< Updated upstream
-
-const blogPosts = [
-  {
-    id: "1",
-    slug: "introducing-vision-ai-2",
-    title: "Introducing CharadesAI 2.0: 40% Faster Inference",
-    excerpt:
-      "We're excited to announce CharadesAI 2.0, featuring our new optimized models that deliver 40% faster inference times while maintaining industry-leading accuracy.",
-    author: "Dr. Sarah Chen",
-    date: "Dec 5, 2024",
-    readTime: "5 min read",
-    category: "Product",
-    featured: true,
-  },
-  {
-    id: "2",
-    slug: "lip-reading-accuracy-benchmark",
-    title: "How We Achieved 99.7% Lip-Reading Accuracy",
-    excerpt:
-      "A deep dive into the research and engineering behind our state-of-the-art lip-reading models. Learn about our training methodology and benchmark results.",
-    author: "Dr. James Liu",
-    date: "Nov 28, 2024",
-    readTime: "12 min read",
-    category: "Research",
-    featured: true,
-  },
-  {
-    id: "3",
-    slug: "building-accessible-apps",
-    title: "Building Accessible Apps with CharadesAI",
-    excerpt:
-      "A comprehensive guide to using CharadesAI APIs to build applications that are accessible to deaf and hard-of-hearing users.",
-    author: "Aisha Patel",
-    date: "Nov 20, 2024",
-    readTime: "8 min read",
-    category: "Tutorial",
-    featured: false,
-  },
-  {
-    id: "4",
-    slug: "gesture-recognition-iot",
-    title: "Gesture Recognition for IoT Devices",
-    excerpt:
-      "How to integrate CharadesAI gesture recognition into smart home devices, kiosks, and interactive displays.",
-    author: "Emily Rodriguez",
-    date: "Nov 15, 2024",
-    readTime: "7 min read",
-    category: "Tutorial",
-    featured: false,
-  },
-  {
-    id: "5",
-    slug: "edge-ai-deployment",
-    title: "Deploying CharadesAI Models on Edge Devices",
-    excerpt:
-      "Learn how to optimize and deploy our lip-reading models on mobile devices, Raspberry Pi, and other edge hardware.",
-    author: "Marcus Johnson",
-    date: "Nov 8, 2024",
-    readTime: "10 min read",
-    category: "Engineering",
-    featured: false,
-  },
-  {
-    id: "6",
-    slug: "multi-language-support",
-    title: "Expanding Multi-Language Support to 40+ Languages",
-    excerpt:
-      "Announcing support for 15 new languages including Japanese, Korean, Arabic, and Hindi. Learn about our internationalization journey.",
-    author: "Dr. Sarah Chen",
-    date: "Nov 1, 2024",
-    readTime: "6 min read",
-    category: "Product",
-    featured: false,
-  },
-];
-=======
 import { blogPosts } from "@/lib/blog-data";
 import { useState } from "react";
-import { postJson } from "@/lib/api";
->>>>>>> Stashed changes
 
 const categories = ["All", "Product", "Research", "Tutorial", "Engineering"];
+const POSTS_PER_PAGE = 6;
 
 const Blog = () => {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [visiblePostsCount, setVisiblePostsCount] = useState(POSTS_PER_PAGE);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const featuredPosts = blogPosts.filter((post) => post.featured);
-<<<<<<< Updated upstream
-  const regularPosts = blogPosts.filter((post) => !post.featured);
-=======
   const allFilteredPosts =
     selectedCategory === "All"
       ? blogPosts.filter((post) => !post.featured)
@@ -121,14 +45,24 @@ const Blog = () => {
 
     setIsLoading(true);
     try {
-      const res = await postJson("/mail/newsletter", { email: email.trim() });
-      const status = (res as unknown as { status?: string }).status;
-      const message = (res as unknown as { message?: string }).message;
-      if (status === "success") {
-        alert(message || "Subscribed successfully");
+      const response = await fetch(
+        "https://api.charadesai.com/mail/newsletter",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: email.trim() }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.status === "success") {
+        alert(data.message);
         setEmail("");
       } else {
-        alert(message || "Failed to subscribe to newsletter");
+        alert(data.message || "Failed to subscribe to newsletter");
       }
     } catch (error) {
       alert("An error occurred while subscribing. Please try again.");
@@ -136,16 +70,26 @@ const Blog = () => {
       setIsLoading(false);
     }
   };
->>>>>>> Stashed changes
 
   return (
     <div className='min-h-screen bg-background'>
       <Navbar />
       <main>
-        {/* Hero */}
-        <section className='pt-32 pb-20 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
-            <span className='inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4'>
+        {/* Hero with Full-Width Background */}
+        <section className='relative py-32 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+            <img
+              src='https://images.unsplash.com/photo-1486312338219-ce68e2c6f44d?w=1920&h=1080&fit=crop&crop=center'
+              alt='Blog and insights background'
+              className='w-full h-full object-cover rounded-3xl'
+            />
+            {/* Overlay for better text readability */}
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10 text-center'>
+            <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>
               Blog
             </span>
             <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-6'>
@@ -157,18 +101,19 @@ const Blog = () => {
           </div>
         </section>
 
-        {/* Categories */}
-        <section className='py-8 bg-card border-b border-border sticky top-16 z-30'>
+        {/* Categories - Redesigned */}
+        <section className='py-8 sticky top-16 z-30'>
           <div className='container mx-auto px-4'>
             <div className='flex flex-wrap gap-2 justify-center'>
               {categories.map((category) => (
                 <button
                   key={category}
+                  onClick={() => handleCategoryChange(category)}
                   className={cn(
-                    "px-4 py-2 rounded-full text-sm font-medium transition-colors",
-                    category === "All"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    "px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 backdrop-blur-md cursor-pointer",
+                    selectedCategory === category
+                      ? "bg-primary text-primary-foreground shadow-lg scale-105"
+                      : "bg-card/80 text-card-foreground border border-border hover:bg-card/90 hover:border-primary/30 hover:scale-105"
                   )}
                 >
                   {category}
@@ -178,43 +123,45 @@ const Blog = () => {
           </div>
         </section>
 
-        {/* Featured Posts */}
+        {/* Featured Posts - Redesigned */}
         <section className='py-16'>
           <div className='container mx-auto px-4'>
-            <h2 className='text-2xl font-bold mb-8'>Featured Articles</h2>
-            <div className='grid md:grid-cols-2 gap-6'>
+            <h2 className='text-3xl font-bold mb-12 text-center'>
+              Featured Articles
+            </h2>
+            <div className='grid md:grid-cols-2 gap-8'>
               {featuredPosts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className='group p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all hover:shadow-lg'
+                  className='group p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl'
                 >
-                  <div className='flex items-center gap-2 mb-4'>
-                    <span className='px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium'>
+                  <div className='flex items-center gap-3 mb-6'>
+                    <span className='px-4 py-2 rounded-full bg-neon-cyan/20 border border-neon-cyan/30 text-neon-cyan text-sm font-medium'>
                       {post.category}
                     </span>
-                    <span className='text-xs text-muted-foreground'>
+                    <span className='px-3 py-1 rounded-full bg-card/80 text-card-foreground text-xs font-medium'>
                       Featured
                     </span>
                   </div>
-                  <h3 className='text-xl font-bold mb-3 group-hover:text-primary transition-colors'>
+                  <h3 className='text-2xl font-bold mb-4 group-hover:text-neon-cyan transition-colors'>
                     {post.title}
                   </h3>
-                  <p className='text-muted-foreground mb-4 line-clamp-2'>
+                  <p className='text-muted-foreground mb-6 line-clamp-2 leading-relaxed'>
                     {post.excerpt}
                   </p>
                   <div className='flex items-center justify-between text-sm text-muted-foreground'>
-                    <div className='flex items-center gap-4'>
-                      <span className='flex items-center gap-1'>
+                    <div className='flex items-center gap-6'>
+                      <span className='flex items-center gap-2'>
                         <User className='w-4 h-4' />
                         {post.author}
                       </span>
-                      <span className='flex items-center gap-1'>
+                      <span className='flex items-center gap-2'>
                         <Calendar className='w-4 h-4' />
                         {post.date}
                       </span>
                     </div>
-                    <span className='flex items-center gap-1'>
+                    <span className='flex items-center gap-2'>
                       <Clock className='w-4 h-4' />
                       {post.readTime}
                     </span>
@@ -225,45 +172,88 @@ const Blog = () => {
           </div>
         </section>
 
-        {/* All Posts */}
-        <section className='py-16 bg-secondary/30'>
+        {/* All Posts - Redesigned */}
+        <section className='py-16'>
           <div className='container mx-auto px-4'>
-            <h2 className='text-2xl font-bold mb-8'>All Articles</h2>
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {regularPosts.map((post) => (
+            <h2 className='text-3xl font-bold mb-12 text-center'>
+              {selectedCategory === "All"
+                ? "All Articles"
+                : `${selectedCategory} Articles`}
+            </h2>
+            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+              {filteredPosts.map((post) => (
                 <Link
                   key={post.id}
                   to={`/blog/${post.slug}`}
-                  className='group p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all hover:shadow-lg'
+                  className='group p-6 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl'
                 >
-                  <span className='inline-block px-3 py-1 rounded-full bg-secondary text-secondary-foreground text-xs font-medium mb-4'>
+                  <span className='inline-block px-4 py-2 rounded-full bg-card/80 border border-border text-card-foreground text-sm font-medium mb-6'>
                     {post.category}
                   </span>
-                  <h3 className='text-lg font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2'>
+                  <h3 className='text-xl font-bold mb-4 group-hover:text-neon-cyan transition-colors line-clamp-2'>
                     {post.title}
                   </h3>
-                  <p className='text-sm text-muted-foreground mb-4 line-clamp-2'>
+                  <p className='text-sm text-muted-foreground mb-6 line-clamp-2 leading-relaxed'>
                     {post.excerpt}
                   </p>
                   <div className='flex items-center justify-between text-xs text-muted-foreground'>
-                    <span>{post.author}</span>
-                    <span>{post.readTime}</span>
+                    <span className='flex items-center gap-2'>
+                      <User className='w-4 h-4' />
+                      {post.author}
+                    </span>
+                    <span className='flex items-center gap-2'>
+                      <Clock className='w-4 h-4' />
+                      {post.readTime}
+                    </span>
                   </div>
                 </Link>
               ))}
             </div>
 
-            <div className='text-center mt-12'>
-              <Button variant='outline' size='lg'>
-                Load More Articles
-              </Button>
-            </div>
+            {filteredPosts.length === 0 && (
+              <div className='text-center py-16'>
+                <p className='text-muted-foreground text-lg'>
+                  No articles found in this category.
+                </p>
+                <Button
+                  variant='outline'
+                  className='mt-4 bg-card/80 backdrop-blur-md border-border text-card-foreground hover:bg-card/90'
+                  onClick={() => handleCategoryChange("All")}
+                >
+                  View All Articles
+                </Button>
+              </div>
+            )}
+
+            {hasMorePosts && (
+              <div className='text-center mt-16'>
+                <Button
+                  variant='outline'
+                  size='lg'
+                  className='bg-card/80 backdrop-blur-md border-border text-card-foreground hover:bg-card/90 hover:border-primary/30'
+                  onClick={loadMorePosts}
+                >
+                  Load More Articles
+                </Button>
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Newsletter CTA */}
-        <section className='py-24 bg-gradient-hero'>
-          <div className='container mx-auto px-4 text-center'>
+        {/* Newsletter CTA - Redesigned */}
+        <section className='relative py-24 overflow-hidden'>
+          {/* Full-width rounded background image */}
+          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+            <img
+              src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
+              alt='Stay updated with CharadesAI newsletter'
+              className='w-full h-full object-cover rounded-3xl'
+            />
+            {/* Overlay for better text readability */}
+            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+          </div>
+
+          <div className='container mx-auto px-4 relative z-10 text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
               Stay Updated
             </h2>
@@ -275,10 +265,19 @@ const Blog = () => {
               <input
                 type='email'
                 placeholder='Enter your email'
-                className='flex-1 px-4 py-3 rounded-lg bg-card border border-border focus:border-primary focus:outline-none'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className='flex-1 px-4 py-3 rounded-lg bg-card/80 backdrop-blur-md border border-border text-card-foreground placeholder:text-muted-foreground focus:border-neon-cyan focus:outline-none'
+                disabled={isLoading}
               />
-              <Button variant='hero' size='lg'>
-                Subscribe
+              <Button
+                variant='hero'
+                size='lg'
+                className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
+                onClick={handleNewsletterSubscribe}
+                disabled={isLoading}
+              >
+                {isLoading ? "Subscribing..." : "Subscribe"}
               </Button>
             </div>
           </div>

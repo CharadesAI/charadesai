@@ -1,4 +1,4 @@
-# Synthia Vision Lab - Copilot Instructions
+# Charades AI Lab - Copilot Instructions
 
 ## Project Overview
 
@@ -107,3 +107,4 @@ Components install to `src/components/ui/`. Configuration in `components.json` u
 - Theme storage key: `CharadesAI-theme`
 - Default theme: dark
 - Do NOT modify files in `src/components/ui/` directly - use variants or wrapper components
+- Always use shadcn components for UI consistency
