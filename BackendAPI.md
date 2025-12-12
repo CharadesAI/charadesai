@@ -107,9 +107,6 @@ All API endpoints are exposed from `routes/api.php` and served from the API subd
 | GET                 | `/ai/jobs/{id}/status`                 | Get async AI job status                   | No    |
 | **Maps**            |                                        |                                           |       |
 | POST                | `/maps/pin`                            | Generate Google Maps embed URL            | No    |
-| **Plans**           |                                        |                                           |       |
-| GET                 | `/subscription-plans`                  | List all plans                            | No    |
-| GET                 | `/subscription-plans/{slug}`           | Get plan by slug                          | No    |
 | **Payments**        |                                        |                                           |       |
 | POST                | `/subscriptions`                       | Pay for a plan (purchase)                 | Yes   |
 | POST                | `/payments/process`                    | Process one-time payment                  | Yes   |
@@ -401,20 +398,6 @@ Behavior is identical to Google OAuth flow but uses the `github` Socialite drive
   - Body: { address, zoom, size }
   - Behavior: generates a Google Maps embed URL and direct link for the given address.
   - Success (200): { status: 'success', message: 'Map generated', data: { embed_url, maps_link } }
-
-### Subscription plans
-
-- GET /subscription-plans
-
-  - Returns all available subscription plans.
-  - Success (200): { status: 'success', message: 'Plans retrieved', data: { plans: [...] } }
-
-- GET /subscription-plans/{slug}
-
-  - Returns details for a specific plan by slug.
-  - Success (200): { status: 'success', message: 'Plan retrieved', data: { plan } }
-  - Errors:
-    - 404 Plan not found
 
 ### Payments
 

@@ -173,13 +173,24 @@ export function useUploadAvatar() {
 export function usePayments(page = 1) {
   return useQuery({
     queryKey: [...queryKeys.payments, page],
-    queryFn: () =>
-      fetchApi<
-        ApiResponse<{
+    // Try using documented backend endpoint `/payments`, fall back to null on error
+    queryFn: async () => {
+      try {
+        const res = await fetchApi<
+          ApiResponse<{
+            data: Payment[];
+            meta: { current_page: number; last_page: number; total: number };
+          }>
+        >(`/payments?page=${page}`);
+        return res.data;
+      } catch (err) {
+        console.warn("usePayments: failed to fetch payments, using demo", err);
+        return null as unknown as {
           data: Payment[];
           meta: { current_page: number; last_page: number; total: number };
-        }>
-      >(`/payments?page=${page}`).then((res) => res.data),
+        } | null;
+      }
+    },
     staleTime: 2 * 60 * 1000,
   });
 }
@@ -187,11 +198,21 @@ export function usePayments(page = 1) {
 export function useCurrentPlan() {
   return useQuery({
     queryKey: queryKeys.currentPlan,
-    queryFn: () =>
-      // API exposes last-plan under /payments/last-plan per docs
-      fetchApi<ApiResponse<CurrentPlan>>("/payments/last-plan").then(
-        (res) => res.data
-      ),
+    // Try using documented backend endpoint `/payments/last-plan`, fall back to null on error
+    queryFn: async () => {
+      try {
+        const res = await fetchApi<ApiResponse<CurrentPlan>>(
+          "/payments/last-plan"
+        );
+        return res.data;
+      } catch (err) {
+        console.warn(
+          "useCurrentPlan: failed to fetch last plan, using demo",
+          err
+        );
+        return null as unknown as CurrentPlan | null;
+      }
+    },
     staleTime: 5 * 60 * 1000,
   });
 }
