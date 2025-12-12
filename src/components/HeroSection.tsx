@@ -149,7 +149,7 @@ export function HeroSection() {
               }}
             >
               <Sparkles className='w-5 h-5 mr-2' />
-              Try Live Demo
+              Try the Dashboard
               <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
             </Button>
             <Button
@@ -164,8 +164,8 @@ export function HeroSection() {
                 );
               }}
             >
+              Book a Demo
               <Play className='w-5 h-5 mr-2' />
-              Watch AI in Action
             </Button>
           </div>
 
