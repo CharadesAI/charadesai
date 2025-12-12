@@ -261,7 +261,7 @@ export function Navbar() {
             {/* Desktop: Show Signin/Signup or User */}
             {!auth?.user ? (
               <>
-                <Link to='/signin' className='hidden md:inline'>
+                <Link to='/signin' target='_blank' className='hidden md:inline'>
                   <Button
                     variant='outline'
                     className='h-12 px-5 rounded-xl mr-2'
@@ -299,6 +299,7 @@ export function Navbar() {
                   <div className='absolute right-0 mt-2 w-48 bg-card rounded-xl shadow-lg border border-border z-50 p-2'>
                     <Link
                       to='/dashboard'
+                      target='_blank'
                       onClick={() => setShowProfileMenu(false)}
                       className='block px-3 py-2 rounded-md hover:bg-accent/40 font-medium'
                     >
@@ -306,6 +307,7 @@ export function Navbar() {
                     </Link>
                     <Link
                       to='/account'
+                      target='_blank'
                       onClick={() => setShowProfileMenu(false)}
                       className='block px-3 py-2 rounded-md hover:bg-accent/40'
                     >
@@ -327,7 +329,7 @@ export function Navbar() {
             )}
             {/* Primary CTA */}
             {!auth?.user && (
-              <Link to='/signup'>
+              <Link to='/signup' target='_blank'>
                 <Button
                   variant='hero'
                   className='h-12 px-6 rounded-xl font-semibold'
@@ -454,6 +456,7 @@ export function Navbar() {
                     <>
                       <Link
                         to='/signup'
+                        target='_blank'
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Button
@@ -467,6 +470,7 @@ export function Navbar() {
                       </Link>
                       <Link
                         to='/signin'
+                        target='_blank'
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Button
@@ -482,6 +486,7 @@ export function Navbar() {
                     <>
                       <Link
                         to='/dashboard'
+                        target='_blank'
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         <Button
@@ -559,6 +564,7 @@ export function Navbar() {
                   <>
                     <Link
                       to='/signin'
+                      target='_blank'
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant='heroOutline' className='rounded-xl'>
@@ -567,6 +573,7 @@ export function Navbar() {
                     </Link>
                     <Link
                       to='/signup'
+                      target='_blank'
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant='hero' className='rounded-xl'>
@@ -579,6 +586,7 @@ export function Navbar() {
                   <>
                     <Link
                       to='/dashboard'
+                      target='_blank'
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       <Button variant='hero' className='rounded-xl'>
