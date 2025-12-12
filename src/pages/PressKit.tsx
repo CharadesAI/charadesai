@@ -127,7 +127,7 @@ const pressReleases = [
   },
 ];
 
-const brandAssets = [
+const staticBrandAssets = [
   {
     category: "Primary Logo",
     icon: Image,
@@ -381,35 +381,66 @@ const PressKit = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [previewText, setPreviewText] = useState("The future of AI is here.");
   const [assetSizes, setAssetSizes] = useState<Record<string, string>>({});
+  const [brandAssets, setBrandAssets] = useState(staticBrandAssets);
 
-  // Calculate dynamic file sizes
+  // Check asset availability and update sizes
   useEffect(() => {
-    const calculateFileSizes = async () => {
+    const checkAssets = async () => {
       const sizes: Record<string, string> = {};
+      const availableCategories = [];
 
-      for (const category of brandAssets) {
+      for (const category of staticBrandAssets) {
+        const availableItems = [];
+
         for (const item of category.items) {
           try {
-            const response = await fetch(item.downloadUrl);
-            if (response.ok) {
-              const contentLength = response.headers.get("content-length");
+            // Check both downloadUrl and preview availability
+            const [downloadResponse, previewResponse] = await Promise.all([
+              fetch(item.downloadUrl),
+              fetch(item.preview),
+            ]);
+
+            if (downloadResponse.ok && previewResponse.ok) {
+              // Asset is available, update size if possible
+              const contentLength =
+                downloadResponse.headers.get("content-length");
+              let updatedSize = item.size; // default to static size
               if (contentLength) {
                 const sizeInBytes = parseInt(contentLength);
                 const sizeInKB = Math.round(sizeInBytes / 1024);
-                sizes[item.downloadUrl] = `${sizeInKB} KB`;
+                updatedSize = `${sizeInKB} KB`;
+                sizes[item.downloadUrl] = updatedSize;
               }
+
+              // Add the item with updated size
+              availableItems.push({
+                ...item,
+                size: updatedSize,
+              });
+            } else {
+              console.warn(`Asset not available: ${item.name}`);
             }
           } catch (error) {
-            // Keep the static size if fetch fails
-            console.warn(`Could not fetch size for ${item.name}`);
+            console.warn(
+              `Could not check availability for ${item.name}:`,
+              error
+            );
           }
+        }
+
+        if (availableItems.length > 0) {
+          availableCategories.push({
+            ...category,
+            items: availableItems,
+          });
         }
       }
 
       setAssetSizes(sizes);
+      setBrandAssets(availableCategories);
     };
 
-    calculateFileSizes();
+    checkAssets();
   }, []);
 
   const openAssetPreview = (asset: {
@@ -956,12 +987,6 @@ Generated on ${new Date().toLocaleDateString()}
                                   </div>
                                 </CardHeader>
                                 <CardContent>
-                                  <div
-                                    className='aspect-square bg-secondary/20 rounded-lg flex items-center justify-center mb-4 cursor-pointer hover:bg-secondary/30 transition-colors'
-                                    onClick={() => openAssetPreview(item)}
-                                  >
-                                    <FileImage className='w-12 h-12 text-muted-foreground' />
-                                  </div>
                                   <div className='flex gap-2'>
                                     <Button
                                       variant='outline'
@@ -1522,14 +1547,19 @@ Generated on ${new Date().toLocaleDateString()}
               {/* Asset Preview */}
               <div className='aspect-video bg-secondary/20 rounded-lg flex items-center justify-center'>
                 <div className='text-center'>
-                  <FileImage className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                  <p className='text-sm text-muted-foreground'>Asset Preview</p>
+                  <img
+                    src={selectedAsset.preview}
+                    alt={selectedAsset.name}
+                    className='max-h-96 mx-auto mb-4'
+                  />
+                  {/* <FileImage className='w-16 h-16 text-muted-foreground mx-auto mb-4' /> */}
+                  {/* <p className='text-sm text-muted-foreground'>Asset Preview</p>
                   <p className='text-xs text-muted-foreground mt-1'>
                     {selectedAsset.format} •{" "}
                     {assetSizes[selectedAsset.downloadUrl] ||
                       selectedAsset.size}{" "}
                     • {selectedAsset.resolution}
-                  </p>
+                  </p> */}
                 </div>
               </div>
 
