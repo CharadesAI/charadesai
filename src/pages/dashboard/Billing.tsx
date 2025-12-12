@@ -68,10 +68,8 @@ const Billing = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const { data: currentPlan, isLoading: planLoading } = useCurrentPlan();
-  const {
-    data: paymentsData,
-    isLoading: paymentsLoading,
-  } = usePaymentsHistory();
+  const { data: paymentsData, isLoading: paymentsLoading } =
+    usePaymentsHistory();
 
   // Use demo data when API returns nothing
   const demoPlan: CurrentPlan = useMemo(
@@ -114,12 +112,11 @@ const Billing = () => {
     return generateDemoPayments();
   }, [paymentsData]);
 
-  const totalPages =
-    Array.isArray(paymentsData)
-      ? 1
-      : isPaginatedPayments(paymentsData)
-      ? (paymentsData as PaginatedPayments).meta?.last_page ?? 1
-      : 1;
+  const totalPages = Array.isArray(paymentsData)
+    ? 1
+    : isPaginatedPayments(paymentsData)
+    ? (paymentsData as PaginatedPayments).meta?.last_page ?? 1
+    : 1;
 
   const getStatusBadge = (status: Payment["status"]) => {
     switch (status) {
@@ -243,12 +240,20 @@ const Billing = () => {
                         API Calls Used
                       </span>
                       <span className='text-sm font-medium'>
-                        32,450 / {plan.api_calls_limit.toLocaleString()}
+                        {plan.api_calls_limit
+                          ? (plan.api_calls_limit * 0.65).toLocaleString()
+                          : "35,426"}{" "}
+                        /{plan.api_calls_limit?.toLocaleString() || "54,500"}
                       </span>
                     </div>
                     <Progress value={65} className='h-2' />
                     <p className='text-xs text-muted-foreground mt-2'>
-                      65% of monthly limit
+                      {Math.round(
+                        (plan.api_calls_limit
+                          ? plan.api_calls_limit * 0.65
+                          : 35426 / 54500) * 100
+                      )}
+                      % of your monthly API call limit used.
                     </p>
                   </div>
 
@@ -260,11 +265,15 @@ const Billing = () => {
                         Next Renewal
                       </div>
                       <p className='font-medium'>
-                        {new Date(plan.expires_at).toLocaleDateString("en-US", {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {plan.expires_at &&
+                          new Date(plan.expires_at).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                            }
+                          )}
                       </p>
                     </div>
                   )}
@@ -420,14 +429,15 @@ const Billing = () => {
                     {payments.map((payment) => (
                       <TableRow key={payment.id}>
                         <TableCell className='font-medium'>
-                          {new Date(payment.paid_at).toLocaleDateString(
-                            "en-US",
-                            {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            }
-                          )}
+                          {payment.paid_at &&
+                            new Date(payment.paid_at).toLocaleDateString(
+                              "en-US",
+                              {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              }
+                            )}
                         </TableCell>
                         <TableCell>
                           <div>
