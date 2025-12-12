@@ -264,7 +264,7 @@ const Contact = () => {
             <h2 className='text-3xl font-bold mb-12 text-center'>
               How Can We Help?
             </h2>
-            <div className='grid grid-cols-1 gap-8 max-w-5xl mx-auto'>
+            <div className='grid grid-cols-3 gap-8 max-w-5xl mx-auto'>
               {contactOptions.map((option) => (
                 <div
                   key={option.title}
@@ -548,7 +548,7 @@ const Contact = () => {
                 ))}
               </div>
             ) : (
-              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+              <div className='grid md:grid-cols-1 gap-8 max-w-6xl mx-auto'>
                 <div key={office.city} className='space-y-4'>
                   <div className='p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'>
                     <div className='flex items-center gap-3 mb-3'>
