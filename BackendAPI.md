@@ -154,33 +154,97 @@ All API endpoints are exposed from `routes/api.php` and served from the API subd
 
 - POST /auth/register
 
-  - Body (JSON):
+  - **Body (JSON):**
     - `username` (string, required, max 255, unique) — desired username
     - `first_name` (string, required, max 255) — user's first name
     - `last_name` (string, optional, max 255) — user's last name
     - `email` (string, required, valid email, unique) — user's email address
     - `password_hash` (string, required, 64 hex chars) — SHA-256 hash of the password
     - `password_hash_confirmation` (string, required) — must match password_hash
-  - Behavior:
+  - **Behavior:**
     - Creates a new user account with the provided details
     - Automatically sends an email verification link
     - Returns a Sanctum personal access token for immediate authentication
-  - Success (201): `{ status: 'success', message: 'Registered. Please check your email to verify your account.', data: { user: {...}, token: '<plain-text-token>' } }`
-  - Errors:
-    - 422 — Validation failed (duplicate username/email, invalid format, etc.)
+  - **Success (201):**
+    ```json
+    {
+      "status": "success",
+      "message": "Registered. Please check your email to verify your account.",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": null,
+          "email_verified_at": null,
+          "current_plan": null,
+          "created_at": "2025-12-12T10:30:00Z",
+          "updated_at": "2025-12-12T10:30:00Z"
+        },
+        "token": "1|abc123def456..."
+      },
+      "code": 201,
+      "timestamp": "2025-12-12T10:30:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Validation failed:
+      ```json
+      {
+        "status": "error",
+        "message": "Validation failed",
+        "errors": {
+          "username": ["The username has already been taken."],
+          "email": ["The email has already been taken."]
+        },
+        "code": 422,
+        "timestamp": "2025-12-12T10:30:00Z"
+      }
+      ```
     - 500 — Server error
 
 - POST /auth/login
 
-  - Body (JSON):
+  - **Body (JSON):**
     - `email` (string, required) — user's email address
     - `password_hash` (string, required, 64 hex chars) — SHA-256 hash of the password
-  - Behavior:
+  - **Behavior:**
     - Validates the email/password combination
     - Returns a Sanctum personal access token if valid
-  - Success (200): `{ status: 'success', message: 'Logged in', data: { user: {...}, token: '<plain-text-token>' } }`
-  - Errors:
-    - 401 — Invalid credentials
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Logged in",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": "https://api.example.com/storage/avatars/avatar_123.jpg",
+          "email_verified_at": "2025-12-12T10:35:00Z",
+          "current_plan": "pro"
+        },
+        "token": "1|def456ghi789..."
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T10:35:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Invalid credentials:
+      ```json
+      {
+        "status": "error",
+        "message": "Invalid credentials",
+        "code": 401,
+        "timestamp": "2025-12-12T10:35:00Z"
+      }
+      ```
     - 422 — Validation failed
 
 #### Logout (token & cookie aware)
@@ -217,17 +281,48 @@ All API endpoints are exposed from `routes/api.php` and served from the API subd
 
 - POST /auth/google/token
 
-  - Body (JSON):
+  - **Body (JSON):**
     - `code` (string) — authorization code received from Google OAuth (required if `credential` missing)
     - `credential` (string) — ID token from Google One Tap / Credential API (required if `code` missing)
     - `redirect_uri` (string, optional) — override redirect URI used during code exchange
-  - Behavior:
+  - **Behavior:**
     - If `code` is provided, the backend exchanges it against Google's token endpoint using the configured `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, obtains an access token, resolves the user profile via Socialite, and creates/logs in the user.
     - If `credential` (ID token) is provided, the backend verifies it using Google's `tokeninfo` endpoint and uses the resulting profile to authenticate the user.
     - Always returns JSON (no redirects) with the Sanctum token.
-  - Success response (200): `{ "status": "success", "message": "Authenticated via Google", "data": { "user": {...}, "token": "plain-text-sanctum-token" } }`
-  - Errors:
-    - 400 — Invalid/expired code or credential, or Google API error
+  - **Success response (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Authenticated via Google",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": "https://lh3.googleusercontent.com/a/ABC123...",
+          "email_verified_at": "2025-12-12T13:05:00Z",
+          "current_plan": null,
+          "created_at": "2025-12-12T13:05:00Z",
+          "updated_at": "2025-12-12T13:05:00Z"
+        },
+        "token": "1|google_token_123..."
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T13:05:00Z"
+    }
+    ```
+  - **Errors:**
+    - 400 — Invalid/expired code or credential, or Google API error:
+      ```json
+      {
+        "status": "error",
+        "message": "Invalid Google credential",
+        "code": 400,
+        "timestamp": "2025-12-12T13:05:00Z"
+      }
+      ```
     - 422 — Missing `code`/`credential` payload
 
 #### GitHub OAuth (browser redirect flow)
@@ -250,45 +345,168 @@ Behavior is identical to Google OAuth flow but uses the `github` Socialite drive
 
 - POST /auth/github/token
 
-  - Body (JSON):
+  - **Body (JSON):**
     - `code` (string) — authorization code returned by GitHub's OAuth authorize endpoint (required if `access_token` missing)
     - `access_token` (string) — GitHub access token obtained on the client (required if `code` missing)
     - `redirect_uri` (string, optional) — custom redirect URI used when generating the code
-  - Behavior:
+  - **Behavior:**
     - When a `code` is provided, the backend calls `https://github.com/login/oauth/access_token` with your app's client ID/secret to exchange it for an access token, then fetches the user profile using Socialite and logs the user in.
     - When `access_token` is provided directly, it is used immediately to fetch the GitHub profile.
     - Always responds with JSON, returning `{ user, token }` on success or a structured 400 error on failure.
-  - Errors:
-    - 400 — Code exchange failed or provided access token invalid/expired
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Authenticated via GitHub",
+      "data": {
+        "user": {
+          "id": 124,
+          "username": "janedoe",
+          "first_name": "Jane",
+          "last_name": "Doe",
+          "email": "jane@example.com",
+          "avatar": "https://avatars.githubusercontent.com/u/123456?v=4",
+          "email_verified_at": "2025-12-12T13:10:00Z",
+          "current_plan": null,
+          "created_at": "2025-12-12T13:10:00Z",
+          "updated_at": "2025-12-12T13:10:00Z"
+        },
+        "token": "1|github_token_456..."
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T13:10:00Z"
+    }
+    ```
+  - **Errors:**
+    - 400 — Code exchange failed or provided access token invalid/expired:
+      ```json
+      {
+        "status": "error",
+        "message": "GitHub authentication failed",
+        "code": 400,
+        "timestamp": "2025-12-12T13:10:00Z"
+      }
+      ```
     - 422 — Neither `code` nor `access_token` provided
 
 #### Password reset
 
 - POST /auth/password/forgot
 
-  - Body: { email }
-  - Behavior: server will create a password reset token stored in `password_reset_tokens` (valid for ~2 hours) and email the frontend password-reset link to the user if the account exists. The response does not reveal whether the account exists.
-  - Success (200): { status: 'success', message: 'Password reset link sent if account exists' }
+  - **Body (JSON):**
+    - `email` (string, required, valid email) — user's email address
+  - **Behavior:**
+    - Creates a password reset token stored in `password_reset_tokens` (valid for ~2 hours)
+    - Emails the frontend password-reset link to the user if the account exists
+    - The response does not reveal whether the account exists for security
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Password reset link sent if account exists",
+      "code": 200,
+      "timestamp": "2025-12-12T10:40:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Invalid email format
 
 - POST /auth/password/reset
 
-  - Body: { email, token, password_hash, password_hash_confirmation }
-  - Note: password_hash must be a 64-character SHA-256 hex hash of the new password
-  - Behavior: verifies the reset token, ensures it is not expired (2 hours), updates the user's password hash, deletes the token, and returns a new API token so the user is authenticated immediately.
-  - Success (200): { status: 'success', message: 'Password reset successfully', data: { user: {...}, token: '<plain-text-token>' } }
+  - **Body (JSON):**
+    - `email` (string, required, valid email) — user's email address
+    - `token` (string, required) — password reset token from email link
+    - `password_hash` (string, required, 64 hex chars) — new SHA-256 hash of the password
+    - `password_hash_confirmation` (string, required) — must match password_hash
+  - **Behavior:**
+    - Verifies the reset token and ensures it is not expired (2 hours)
+    - Updates the user's password hash
+    - Deletes the token
+    - Returns a new API token so the user is authenticated immediately
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Password reset successfully",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": "https://api.example.com/storage/avatars/avatar_123.jpg",
+          "email_verified_at": "2025-12-12T10:35:00Z",
+          "current_plan": "pro"
+        },
+        "token": "1|newtoken123..."
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T10:45:00Z"
+    }
+    ```
+  - **Errors:**
+    - 400 — Invalid or expired token
+    - 422 — Validation failed (password mismatch, invalid format)
 
 #### Email verification
 
 - POST /auth/verify/send
 
-  - Body: { email } or (authenticated) send to current user
-  - Behavior: **Resend verification email** for users who missed or lost the original email sent during registration. Creates/updates an email verification token stored in `email_verification_tokens` and sends a verification email. For security, the response does not reveal whether the email exists if unregistered.
-  - Success (200): { status: 'success', message: 'Verification email sent' } or 'Email already verified' if already verified
+  - **Body (JSON):**
+    - `email` (string, optional, valid email) — email address to verify (if not provided, uses authenticated user's email)
+  - **Headers:**
+    - `Authorization: Bearer <token>` (optional if email provided)
+  - **Behavior:**
+    - Creates/updates an email verification token stored in `email_verification_tokens`
+    - Sends a verification email with a link containing the token
+    - For security, the response does not reveal whether the email exists if not authenticated
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Verification email sent",
+      "code": 200,
+      "timestamp": "2025-12-12T10:50:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated (if no email provided)
+    - 422 — Invalid email format
+    - 429 — Too many requests
 
 - GET /auth/verify/{token}
 
-  - Behavior: verifies the token, sets `email_verified_at` for the user, deletes the token, and either returns JSON (API clients) or redirects the browser to `${FRONTEND_URL}/auth/verified`.
-  - Success (200 or 302): JSON { status: 'success', message: 'Email verified', data: { user } } or 302 redirect to frontend verified page.
+  - **URL Parameters:**
+    - `token` (string, required) — email verification token from email link
+  - **Behavior:**
+    - Verifies the token and sets `email_verified_at` timestamp for the user
+    - Deletes the token
+    - Either returns JSON (API clients) or redirects the browser to `${FRONTEND_URL}/auth/verified`
+  - **Success (200 for API, 302 for browser):**
+    - API Response (200):
+      ```json
+      {
+        "status": "success",
+        "message": "Email verified",
+        "data": {
+          "user": {
+            "id": 123,
+            "username": "johndoe",
+            "first_name": "John",
+            "last_name": "Doe",
+            "email": "john@example.com",
+            "email_verified_at": "2025-12-12T10:55:00Z",
+            "current_plan": "pro"
+          }
+        },
+        "code": 200,
+        "timestamp": "2025-12-12T10:55:00Z"
+      }
+      ```
+    - Browser Response (302): Redirect to `${FRONTEND_URL}/auth/verified`
+  - **Errors:**
+    - 400 — Invalid or expired token
 
 ### Social account linking / unlinking
 
@@ -300,149 +518,929 @@ Behavior is identical to Google OAuth flow but uses the `github` Socialite drive
 
 - GET /user
 
-  - Returns current authenticated user's profile.
-  - Success (200): { status: 'success', message: 'User profile', data: { user } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Behavior:**
+    - Returns the current authenticated user's complete profile
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "User profile",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": "https://api.example.com/storage/avatars/avatar_123.jpg",
+          "email_verified_at": "2025-12-12T10:35:00Z",
+          "current_plan": "pro",
+          "created_at": "2025-12-01T08:00:00Z",
+          "updated_at": "2025-12-12T10:35:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T11:00:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated
 
 - PUT /user
 
-  - Body (optional fields):
-    - `username` (string, optional, max 255, unique)
-    - `first_name` (string, optional, max 255)
-    - `last_name` (string, optional, max 255)
-    - `email` (string, optional, valid email address, unique among users)
-    - `avatar` (string, optional, url to avatar image)
-  - Validation rules:
-    - `username` => sometimes|string|max:255|unique:users,username,{user_id}
-    - `first_name` => sometimes|string|max:255
-    - `last_name` => sometimes|string|max:255
-    - `email` => sometimes|email|unique:users,email,{user_id}
-    - `avatar` => sometimes|url
-  - Success (200): returns updated user { status: 'success', message: 'Profile updated', data: { user } }
-  - Errors:
-    - 401 Unauthenticated — missing or invalid token
-    - 422 Validation failed — invalid_name/email or email already taken
-    - 500 Server error — database or other internal error
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Body (JSON, all fields optional):**
+    - `username` (string, max 255, unique) — new username
+    - `first_name` (string, max 255) — new first name
+    - `last_name` (string, max 255) — new last name
+    - `email` (string, valid email, unique) — new email address
+    - `avatar` (string, valid URL) — new avatar URL
+  - **Behavior:**
+    - Updates only the provided fields
+    - Validates uniqueness for username and email
+    - If email is changed, sets `email_verified_at` to null and sends verification email
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Profile updated",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe_updated",
+          "first_name": "John",
+          "last_name": "Smith",
+          "email": "johnsmith@example.com",
+          "avatar": "https://api.example.com/storage/avatars/avatar_123.jpg",
+          "email_verified_at": null,
+          "current_plan": "pro"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T11:05:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated
+    - 422 — Validation failed:
+      ```json
+      {
+        "status": "error",
+        "message": "Validation failed",
+        "errors": {
+          "username": ["The username has already been taken."],
+          "email": ["The email has already been taken."]
+        },
+        "code": 422,
+        "timestamp": "2025-12-12T11:05:00Z"
+      }
+      ```
 
 - POST /user/avatar
 
-  - Body (multipart/form-data):
-    - `avatar` (file, required) — image file (jpg, png, gif, webp)
-  - Behavior: stores the uploaded image in `storage/app/public/avatars/` and updates the user's avatar field with the public URL.
-  - Success (200): { status: 'success', message: 'Avatar uploaded', data: { user } }
-  - Errors:
-    - 401 Unauthenticated
-    - 422 Invalid file type or size
-    - 500 Upload/storage error
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Body (multipart/form-data):**
+    - `avatar` (file, required) — image file (jpg, png, gif, webp, max 5MB)
+  - **Behavior:**
+    - Stores the uploaded image in `storage/app/public/avatars/`
+    - Updates the user's avatar field with the public URL
+    - Overwrites any existing avatar
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Avatar uploaded",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com",
+          "avatar": "https://api.example.com/storage/avatars/avatar_123_1734000000.jpg",
+          "current_plan": "pro"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T11:10:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated
+    - 422 — Invalid file type or size:
+      ```json
+      {
+        "status": "error",
+        "message": "Validation failed",
+        "errors": {
+          "avatar": [
+            "The avatar must be an image.",
+            "The avatar may not be greater than 5120 kilobytes."
+          ]
+        },
+        "code": 422,
+        "timestamp": "2025-12-12T11:10:00Z"
+      }
+      ```
 
 - DELETE /user
 
-  - Behavior: permanently deletes the user account and all associated data (tokens, payments, etc.)
-  - Success (200): { status: 'success', message: 'Account deleted' }
-  - Errors:
-    - 401 Unauthenticated
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Behavior:**
+    - Permanently deletes the user account and all associated data (tokens, payments, etc.)
+    - This action cannot be undone
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Account deleted",
+      "code": 200,
+      "timestamp": "2025-12-12T11:15:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated
 
 - GET /users/{id}/public
 
-  - Returns limited public profile information for the specified user ID.
-  - Success (200): { status: 'success', message: 'Public profile', data: { user: { id, username, first_name, last_name, avatar } } }
-  - Errors:
-    - 404 User not found
+  - **URL Parameters:**
+    - `id` (integer, required) — user ID
+  - **Behavior:**
+    - Returns limited public profile information for the specified user
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Public profile",
+      "data": {
+        "user": {
+          "id": 456,
+          "username": "janedoe",
+          "first_name": "Jane",
+          "last_name": "Doe",
+          "avatar": "https://api.example.com/storage/avatars/avatar_456.jpg"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T11:20:00Z"
+    }
+    ```
+  - **Errors:**
+    - 404 — User not found:
+      ```json
+      {
+        "status": "error",
+        "message": "User not found",
+        "code": 404,
+        "timestamp": "2025-12-12T11:20:00Z"
+      }
+      ```
 
 ### Mail endpoints
 
 - POST /mail/contact
 
-  - Body: { name, email, subject, message }
-  - Behavior: sends a contact email to the configured admin email address.
-  - Success (200): { status: 'success', message: 'Message sent' }
+  - **Body (JSON):**
+    - `name` (string, required, max 255) — sender's name
+    - `email` (string, required, valid email) — sender's email address
+    - `subject` (string, required, max 255) — message subject
+    - `message` (string, required, max 1000) — message content
+  - **Behavior:**
+    - Sends a contact email to the configured admin email address
+    - Includes sender information in the email
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Message sent",
+      "code": 200,
+      "timestamp": "2025-12-12T11:25:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Validation failed:
+      ```json
+      {
+        "status": "error",
+        "message": "Validation failed",
+        "errors": {
+          "email": ["The email must be a valid email address."],
+          "message": ["The message may not be greater than 1000 characters."]
+        },
+        "code": 422,
+        "timestamp": "2025-12-12T11:25:00Z"
+      }
+      ```
 
 - POST /mail/newsletter
 
-  - Body: { email, name }
-  - Behavior: subscribes the email to the newsletter and sends a verification email.
-  - Success (200): { status: 'success', message: 'Subscription verification sent' }
+  - **Body (JSON):**
+    - `email` (string, required, valid email) — subscriber's email address
+    - `name` (string, optional, max 255) — subscriber's name
+  - **Behavior:**
+    - Subscribes the email to the newsletter
+    - Sends a verification email to confirm subscription
+    - Creates a record in `newsletter_subscribers` table
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Subscription verification sent",
+      "code": 200,
+      "timestamp": "2025-12-12T11:30:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Invalid email format
 
 - GET /mail/newsletter/verify/{token}
 
-  - Behavior: verifies the newsletter subscription using the token.
-  - Success (200): { status: 'success', message: 'Newsletter subscription verified' }
+  - **URL Parameters:**
+    - `token` (string, required) — newsletter verification token from email
+  - **Behavior:**
+    - Verifies the newsletter subscription using the token
+    - Sets `verified_at` timestamp and clears the verification token
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Newsletter subscription verified",
+      "code": 200,
+      "timestamp": "2025-12-12T11:35:00Z"
+    }
+    ```
+  - **Errors:**
+    - 400 — Invalid token
 
 - GET /mail/newsletter/unsubscribe/{token}
 
-  - Behavior: unsubscribes the email from the newsletter using the token.
-  - Success (200): { status: 'success', message: 'Unsubscribed from newsletter' }
+  - **URL Parameters:**
+    - `token` (string, required) — newsletter unsubscribe token
+  - **Behavior:**
+    - Unsubscribes the email from the newsletter using the token
+    - Removes the subscriber record or marks as unsubscribed
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Unsubscribed from newsletter",
+      "code": 200,
+      "timestamp": "2025-12-12T11:40:00Z"
+    }
+    ```
+  - **Errors:**
+    - 400 — Invalid token
 
 - POST /mail/password-reset
 
-  - Body: { email }
-  - Behavior: alias for `/auth/password/forgot` - sends password reset email.
-  - Success (200): { status: 'success', message: 'Password reset link sent if account exists' }
+  - **Body (JSON):**
+    - `email` (string, required, valid email) — user's email address
+  - **Behavior:**
+    - Alias for `/auth/password/forgot` - sends password reset email
+    - Same behavior as the auth endpoint
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Password reset link sent if account exists",
+      "code": 200,
+      "timestamp": "2025-12-12T11:45:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Invalid email format
 
 ### AI / Gorq endpoints
 
 - POST /ai/generate
 
-  - Body: { prompt, model, ... }
-  - Behavior: generates AI response using Gorq API, supports both sync and async modes.
-  - Success (200): { status: 'success', message: 'Generated', data: { result, tokens_used } } or 202 for async with job ID.
+  - **Body (JSON):**
+    - `prompt` (string, required, max 10000) — the text prompt for AI generation
+    - `model` (string, optional) — AI model to use (defaults to configured default)
+    - `temperature` (number, optional, 0.0-2.0) — creativity/randomness level
+    - `max_tokens` (integer, optional) — maximum tokens to generate
+    - `async` (boolean, optional) — whether to process asynchronously (default: false)
+  - **Behavior:**
+    - Generates AI response using Gorq API
+    - Supports both sync and async modes
+    - Rate limited by `throttle:ai` middleware
+    - Logs request in `ai_requests` table
+  - **Success (200 for sync, 202 for async):**
+    - Sync Response (200):
+      ```json
+      {
+        "status": "success",
+        "message": "Generated",
+        "data": {
+          "result": "This is the AI-generated response based on your prompt...",
+          "tokens_used": 150,
+          "model": "gpt-3.5-turbo",
+          "request_id": "req_abc123"
+        },
+        "code": 200,
+        "timestamp": "2025-12-12T11:50:00Z"
+      }
+      ```
+    - Async Response (202):
+      ```json
+      {
+        "status": "success",
+        "message": "Request queued for processing",
+        "data": {
+          "job_id": "job_123456",
+          "status": "queued",
+          "estimated_time": 30
+        },
+        "code": 202,
+        "timestamp": "2025-12-12T11:50:00Z"
+      }
+      ```
+  - **Errors:**
+    - 422 — Validation failed (invalid prompt, model, etc.)
+    - 429 — Rate limit exceeded
+    - 503 — AI service unavailable
 
 - GET /ai/jobs/{id}/status
 
-  - Returns the status of an async AI generation job.
-  - Success (200): { status: 'success', message: 'Job status', data: { status, result, error } }
+  - **URL Parameters:**
+    - `id` (string, required) — job ID from async generation request
+  - **Behavior:**
+    - Returns the status of an async AI generation job
+    - Includes result when completed
+  - **Success (200):**
+    - Queued/Processing:
+      ```json
+      {
+        "status": "success",
+        "message": "Job status",
+        "data": {
+          "status": "processing",
+          "progress": 75,
+          "estimated_completion": "2025-12-12T11:52:00Z"
+        },
+        "code": 200,
+        "timestamp": "2025-12-12T11:51:00Z"
+      }
+      ```
+    - Completed:
+      ```json
+      {
+        "status": "success",
+        "message": "Job completed",
+        "data": {
+          "status": "completed",
+          "result": "This is the completed AI-generated response...",
+          "tokens_used": 150,
+          "model": "gpt-3.5-turbo",
+          "completed_at": "2025-12-12T11:51:30Z"
+        },
+        "code": 200,
+        "timestamp": "2025-12-12T11:51:30Z"
+      }
+      ```
+    - Failed:
+      ```json
+      {
+        "status": "success",
+        "message": "Job failed",
+        "data": {
+          "status": "failed",
+          "error": "AI service temporarily unavailable",
+          "error_code": "SERVICE_UNAVAILABLE"
+        },
+        "code": 200,
+        "timestamp": "2025-12-12T11:51:00Z"
+      }
+      ```
+  - **Errors:**
+    - 404 — Job not found
 
 ### Maps endpoint
 
 - POST /maps/pin
 
-  - Body: { address, zoom, size }
-  - Behavior: generates a Google Maps embed URL and direct link for the given address.
-  - Success (200): { status: 'success', message: 'Map generated', data: { embed_url, maps_link } }
+  - **Body (JSON):**
+    - `address` (string, required, max 500) — full address to geocode and map
+    - `zoom` (integer, optional, 1-20, default 15) — map zoom level
+    - `size` (string, optional, default "400x300") — embed size in format "WIDTHxHEIGHT"
+  - **Behavior:**
+    - Geocodes the address using Google Maps API
+    - Generates a Google Maps embed URL and direct link
+    - Returns both embeddable iframe URL and direct maps link
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Map generated",
+      "data": {
+        "embed_url": "https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=1600+Amphitheatre+Parkway,+Mountain+View,+CA&zoom=15",
+        "maps_link": "https://www.google.com/maps/search/?api=1&query=1600+Amphitheatre+Parkway%2C+Mountain+View%2C+CA",
+        "address": "1600 Amphitheatre Parkway, Mountain View, CA, USA",
+        "coordinates": {
+          "lat": 37.4224764,
+          "lng": -122.0842499
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:00:00Z"
+    }
+    ```
+  - **Errors:**
+    - 422 — Validation failed:
+      ```json
+      {
+        "status": "error",
+        "message": "Validation failed",
+        "errors": {
+          "address": ["The address field is required."]
+        },
+        "code": 422,
+        "timestamp": "2025-12-12T12:00:00Z"
+      }
+      ```
+    - 400 — Address not found or geocoding failed
+    - 503 — Google Maps API unavailable
+
+### Subscription plans
+
+**Note:** These endpoints are currently disabled in the routes configuration but documented for future implementation.
+
+- GET /subscription-plans
+
+  - **Behavior:**
+    - Returns all available subscription plans ordered by price
+    - Only includes active plans (`is_active = true`)
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Plans retrieved",
+      "data": {
+        "plans": [
+          {
+            "id": 1,
+            "name": "Basic Plan",
+            "slug": "basic",
+            "description": "Perfect for getting started",
+            "price": "9.99",
+            "currency": "USD",
+            "interval": "month",
+            "trial_days": 7,
+            "features": ["Feature 1", "Feature 2"],
+            "is_active": true,
+            "created_at": "2025-01-01T00:00:00Z",
+            "updated_at": "2025-01-01T00:00:00Z"
+          },
+          {
+            "id": 2,
+            "name": "Pro Plan",
+            "slug": "pro",
+            "description": "For power users",
+            "price": "19.99",
+            "currency": "USD",
+            "interval": "month",
+            "trial_days": 14,
+            "features": [
+              "All Basic features",
+              "Advanced feature",
+              "Priority support"
+            ],
+            "is_active": true,
+            "created_at": "2025-01-01T00:00:00Z",
+            "updated_at": "2025-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:05:00Z"
+    }
+    ```
+
+- GET /subscription-plans/{slug}
+
+  - **URL Parameters:**
+    - `slug` (string, required) — plan slug (e.g., "basic", "pro")
+  - **Behavior:**
+    - Returns details for a specific plan by slug
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Plan retrieved",
+      "data": {
+        "plan": {
+          "id": 2,
+          "name": "Pro Plan",
+          "slug": "pro",
+          "description": "For power users",
+          "price": "19.99",
+          "currency": "USD",
+          "interval": "month",
+          "trial_days": 14,
+          "features": [
+            "All Basic features",
+            "Advanced feature",
+            "Priority support"
+          ],
+          "is_active": true,
+          "created_at": "2025-01-01T00:00:00Z",
+          "updated_at": "2025-01-01T00:00:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:10:00Z"
+    }
+    ```
+  - **Errors:**
+    - 404 — Plan not found:
+      ```json
+      {
+        "status": "error",
+        "message": "Subscription plan not found",
+        "code": 404,
+        "timestamp": "2025-12-12T12:10:00Z"
+      }
+      ```
 
 ### Payments
 
 - POST /subscriptions
 
-  - Body: { plan_slug, payment_method_id, ... }
-  - Behavior: processes payment for a subscription plan.
-  - Success (200): { status: 'success', message: 'Subscription created', data: { payment, user } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Body (JSON):**
+    - `plan_slug` (string, required) — slug of the plan to subscribe to
+    - `payment_method` (object, required) — payment method details:
+      - `card_number` (string, required) — card number (13-19 digits)
+      - `expiry_month` (string, required) — expiry month (01-12)
+      - `expiry_year` (string, required) — expiry year (YY format)
+      - `cvv` (string, required) — CVV code (3-4 digits)
+      - `card_holder` (string, required) — cardholder name
+    - `billing_address` (object, optional) — billing address:
+      - `line1` (string) — address line 1
+      - `city` (string) — city
+      - `state` (string) — state/province
+      - `postal_code` (string) — postal code
+      - `country` (string) — country code (ISO 3166-1 alpha-2)
+  - **Behavior:**
+    - Processes payment for a subscription plan
+    - Creates payment record and updates user's current_plan
+    - Uses sandbox payment gateway for testing
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Subscription created",
+      "data": {
+        "payment": {
+          "id": 123,
+          "transaction_id": "TXN_SANDBOX_123456",
+          "gateway": "sandbox",
+          "amount": "19.99",
+          "currency": "USD",
+          "status": "completed",
+          "type": "subscription",
+          "plan_name": "pro",
+          "card_last_four": "4242",
+          "card_brand": "visa",
+          "paid_at": "2025-12-12T12:15:00Z",
+          "created_at": "2025-12-12T12:15:00Z"
+        },
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "current_plan": "pro",
+          "updated_at": "2025-12-12T12:15:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:15:00Z"
+    }
+    ```
+  - **Errors:**
+    - 401 — Unauthenticated
+    - 422 — Validation failed or invalid plan
+    - 402 — Payment failed (card declined, insufficient funds, etc.)
 
 - POST /payments/process
 
-  - Body: { amount, currency, payment_method_id, description }
-  - Behavior: processes a one-time payment.
-  - Success (200): { status: 'success', message: 'Payment processed', data: { payment } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Body (JSON):**
+    - `amount` (string/number, required) — payment amount
+    - `currency` (string, required, 3 chars) — currency code (e.g., "USD")
+    - `payment_method` (object, required) — same structure as subscription endpoint
+    - `description` (string, optional) — payment description
+  - **Behavior:**
+    - Processes a one-time payment (not subscription)
+    - Creates payment record but doesn't change user's plan
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Payment processed",
+      "data": {
+        "payment": {
+          "id": 124,
+          "transaction_id": "TXN_SANDBOX_123457",
+          "gateway": "sandbox",
+          "amount": "49.99",
+          "currency": "USD",
+          "status": "completed",
+          "type": "one-time",
+          "description": "Premium feature purchase",
+          "card_last_four": "4242",
+          "card_brand": "visa",
+          "paid_at": "2025-12-12T12:20:00Z",
+          "created_at": "2025-12-12T12:20:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:20:00Z"
+    }
+    ```
 
 - GET /payments
 
-  - Returns the authenticated user's payment history.
-  - Success (200): { status: 'success', message: 'Payments retrieved', data: { payments: [...] } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Behavior:**
+    - Returns the authenticated user's payment history
+    - Ordered by most recent first
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Payments retrieved",
+      "data": {
+        "payments": [
+          {
+            "id": 124,
+            "transaction_id": "TXN_SANDBOX_123457",
+            "gateway": "sandbox",
+            "amount": "49.99",
+            "currency": "USD",
+            "status": "completed",
+            "type": "one-time",
+            "description": "Premium feature purchase",
+            "card_last_four": "4242",
+            "card_brand": "visa",
+            "paid_at": "2025-12-12T12:20:00Z",
+            "created_at": "2025-12-12T12:20:00Z"
+          },
+          {
+            "id": 123,
+            "transaction_id": "TXN_SANDBOX_123456",
+            "gateway": "sandbox",
+            "amount": "19.99",
+            "currency": "USD",
+            "status": "completed",
+            "type": "subscription",
+            "plan_name": "pro",
+            "card_last_four": "4242",
+            "card_brand": "visa",
+            "paid_at": "2025-12-12T12:15:00Z",
+            "created_at": "2025-12-12T12:15:00Z"
+          }
+        ]
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:25:00Z"
+    }
+    ```
 
 - GET /payments/last-plan
 
-  - Returns the user's most recent subscription plan purchase.
-  - Success (200): { status: 'success', message: 'Last plan retrieved', data: { plan, payment } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Behavior:**
+    - Returns the user's most recent subscription plan purchase
+    - Includes both payment and plan details
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Last plan retrieved",
+      "data": {
+        "plan": {
+          "id": 2,
+          "name": "Pro Plan",
+          "slug": "pro",
+          "description": "For power users",
+          "price": "19.99",
+          "currency": "USD",
+          "interval": "month"
+        },
+        "payment": {
+          "id": 123,
+          "transaction_id": "TXN_SANDBOX_123456",
+          "amount": "19.99",
+          "currency": "USD",
+          "status": "completed",
+          "paid_at": "2025-12-12T12:15:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:30:00Z"
+    }
+    ```
 
 - GET /payments/{transactionId}
 
-  - Returns details for a specific payment transaction.
-  - Success (200): { status: 'success', message: 'Payment details', data: { payment } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **URL Parameters:**
+    - `transactionId` (string, required) — payment transaction ID
+  - **Behavior:**
+    - Returns details for a specific payment transaction
+    - User can only access their own payments
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Payment details",
+      "data": {
+        "payment": {
+          "id": 123,
+          "transaction_id": "TXN_SANDBOX_123456",
+          "gateway": "sandbox",
+          "amount": "19.99",
+          "currency": "USD",
+          "status": "completed",
+          "type": "subscription",
+          "plan_name": "pro",
+          "card_last_four": "4242",
+          "card_brand": "visa",
+          "description": null,
+          "paid_at": "2025-12-12T12:15:00Z",
+          "created_at": "2025-12-12T12:15:00Z",
+          "updated_at": "2025-12-12T12:15:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:35:00Z"
+    }
+    ```
+  - **Errors:**
+    - 404 — Payment not found or doesn't belong to user
 
 - POST /payments/refund/{transactionId}
 
-  - Behavior: requests a refund for the specified payment.
-  - Success (200): { status: 'success', message: 'Refund requested', data: { refund } }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **URL Parameters:**
+    - `transactionId` (string, required) — payment transaction ID
+  - **Behavior:**
+    - Requests a refund for the specified payment
+    - Only works for completed payments
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Refund requested",
+      "data": {
+        "refund": {
+          "id": 456,
+          "payment_id": 123,
+          "transaction_id": "REFUND_SANDBOX_789012",
+          "amount": "19.99",
+          "currency": "USD",
+          "status": "completed",
+          "processed_at": "2025-12-12T12:40:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:40:00Z"
+    }
+    ```
 
 - POST /payments/revert-plan
 
-  - Behavior: reverts the user's current plan to null.
-  - Success (200): { status: 'success', message: 'Plan reverted' }
+  - **Headers:**
+    - `Authorization: Bearer <token>` (required)
+  - **Behavior:**
+    - Reverts the user's current plan to null
+    - Used when subscription is cancelled or payment fails
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Plan reverted",
+      "data": {
+        "user": {
+          "id": 123,
+          "username": "johndoe",
+          "current_plan": null,
+          "updated_at": "2025-12-12T12:45:00Z"
+        }
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:45:00Z"
+    }
+    ```
 
 - POST /payments/webhook
 
-  - Body: webhook payload from payment provider
-  - Behavior: handles payment provider webhooks for payment status updates.
-  - Success (200): { status: 'success', message: 'Webhook processed' }
+  - **Body:** Webhook payload from payment provider (varies by provider)
+  - **Behavior:**
+    - Handles payment provider webhooks for payment status updates
+    - No authentication required (secured by webhook signature validation)
+    - Updates payment status, triggers subscription changes, etc.
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "Webhook processed",
+      "code": 200,
+      "timestamp": "2025-12-12T12:50:00Z"
+    }
+    ```
+
+## Error Response Format
+
+All API endpoints follow a consistent error response format:
+
+```json
+{
+  "status": "error",
+  "message": "Human-readable error message",
+  "errors": {
+    "field_name": ["Specific validation error message"],
+    "another_field": ["Another error message"]
+  },
+  "code": 400,
+  "timestamp": "2025-12-12T13:15:00Z"
+}
+```
+
+### Common HTTP Status Codes
+
+- **200** — Success
+- **201** — Created (for registration)
+- **302** — Redirect (OAuth flows)
+- **400** — Bad Request (invalid input, expired tokens)
+- **401** — Unauthorized (missing/invalid token)
+- **404** — Not Found (resource doesn't exist)
+- **422** — Validation Failed (invalid input format)
+- **429** — Too Many Requests (rate limited)
+- **500** — Internal Server Error
+- **503** — Service Unavailable (external API down)
+
+### Authentication Errors
+
+When a protected endpoint is accessed without proper authentication:
+
+```json
+{
+  "status": "error",
+  "message": "Unauthenticated",
+  "code": 401,
+  "timestamp": "2025-12-12T13:15:00Z"
+}
+```
+
+### Validation Errors
+
+When request data fails validation:
+
+```json
+{
+  "status": "error",
+  "message": "Validation failed",
+  "errors": {
+    "email": ["The email must be a valid email address."],
+    "password_hash": ["The password hash must be 64 characters."]
+  },
+  "code": 422,
+  "timestamp": "2025-12-12T13:15:00Z"
+}
+```
+
+### Ping endpoint
+
+- GET /ping
+
+  - **Behavior:**
+    - Simple health check endpoint
+    - Returns basic status information
+    - No authentication required
+  - **Success (200):**
+    ```json
+    {
+      "status": "success",
+      "message": "OK",
+      "data": {
+        "status": "ok"
+      },
+      "code": 200,
+      "timestamp": "2025-12-12T12:55:00Z"
+    }
+    ```
 
 ### Developer tools
 
@@ -473,6 +1471,31 @@ curl -X POST https://api.example.com/admin/migrate \
 
 Response:
 
-- Returns a JSON result with the Artisan output under `data.output`. If operations fail, a 500 result with details will be returned and logged.
+- **Success (200):**
+  ```json
+  {
+    "status": "success",
+    "message": "Migrations completed",
+    "data": {
+      "output": "Migrating: 2025_01_01_000000_create_users_table\nMigrated:  2025_01_01_000000_create_users_table\n...",
+      "exit_code": 0
+    },
+    "code": 200,
+    "timestamp": "2025-12-12T13:00:00Z"
+  }
+  ```
+- **Error (500):**
+  ```json
+  {
+    "status": "error",
+    "message": "Migration failed",
+    "data": {
+      "output": "Error: SQLSTATE[42S01]: Base table or view already exists: 1050 Table 'users' already exists...",
+      "exit_code": 1
+    },
+    "code": 500,
+    "timestamp": "2025-12-12T13:00:00Z"
+  }
+  ```
 
 Security note: After running migrations via HTTP, disable ALLOW_RUN_MIG or rotate the token. This endpoint provides a convenient but sensitive capability and should be restricted to trusted usage only.

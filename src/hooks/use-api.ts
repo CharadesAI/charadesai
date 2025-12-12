@@ -137,6 +137,31 @@ export function useUpdateProfile() {
     },
   });
 }
+// Get the users current subscription plan from backend API
+export function useCurrentPlan() {
+  return useQuery({
+    queryKey: queryKeys.currentPlan,
+    queryFn: () =>
+      fetchApi<ApiResponse<CurrentPlan>>("/payments/last-plan").then(
+        (res) => res.data
+      ),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+}
+
+// Payment history listing
+export function usePaymentsHistory() {
+  return useQuery({
+    queryKey: queryKeys.payments,
+    queryFn: () =>
+      fetchApi<ApiResponse<{ payments: Payment[] }>>("/payments").then(
+        (res) => res.data.payments
+      ),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+}
 
 export function useUploadAvatar() {
   const queryClient = useQueryClient();
@@ -167,53 +192,6 @@ export function useUploadAvatar() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.profile });
     },
-  });
-}
-
-export function usePayments(page = 1) {
-  return useQuery({
-    queryKey: [...queryKeys.payments, page],
-    // Try using documented backend endpoint `/payments`, fall back to null on error
-    queryFn: async () => {
-      try {
-        const res = await fetchApi<
-          ApiResponse<{
-            data: Payment[];
-            meta: { current_page: number; last_page: number; total: number };
-          }>
-        >(`/payments?page=${page}`);
-        return res.data;
-      } catch (err) {
-        console.warn("usePayments: failed to fetch payments, using demo", err);
-        return null as unknown as {
-          data: Payment[];
-          meta: { current_page: number; last_page: number; total: number };
-        } | null;
-      }
-    },
-    staleTime: 2 * 60 * 1000,
-  });
-}
-
-export function useCurrentPlan() {
-  return useQuery({
-    queryKey: queryKeys.currentPlan,
-    // Try using documented backend endpoint `/payments/last-plan`, fall back to null on error
-    queryFn: async () => {
-      try {
-        const res = await fetchApi<ApiResponse<CurrentPlan>>(
-          "/payments/last-plan"
-        );
-        return res.data;
-      } catch (err) {
-        console.warn(
-          "useCurrentPlan: failed to fetch last plan, using demo",
-          err
-        );
-        return null as unknown as CurrentPlan | null;
-      }
-    },
-    staleTime: 5 * 60 * 1000,
   });
 }
 

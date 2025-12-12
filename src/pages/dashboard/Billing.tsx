@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import {
-  useCurrentPlan,
-  usePayments,
   generateDemoPayments,
   type Payment,
   type CurrentPlan,
@@ -49,76 +47,31 @@ import {
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
+import { plans } from "@/lib/pricng";
+import { useCurrentPlan, usePaymentsHistory } from "@/hooks/use-api";
 
-const fallbackPlans = [
-  {
-    name: "Basic",
-    description: "Perfect for small projects and startups",
-    monthlyPrice: 29,
-    yearlyPrice: 24,
-    features: [
-      { text: "5,000 API calls/month", included: true },
-      { text: "720p video resolution", included: true },
-      { text: "Email support", included: true },
-      { text: "Basic analytics", included: true },
-      { text: "3 languages", included: true },
-      { text: "Standard latency", included: true },
-      { text: "Webhook integrations", included: false },
-      { text: "Custom model training", included: false },
-      { text: "SLA guarantee", included: false },
-    ],
-    cta: "Start Basic",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    description: "For growing teams and production apps",
-    monthlyPrice: 99,
-    yearlyPrice: 79,
-    features: [
-      { text: "50,000 API calls/month", included: true },
-      { text: "1080p video resolution", included: true },
-      { text: "Priority email support", included: true },
-      { text: "Advanced analytics", included: true },
-      { text: "Multi-language (10)", included: true },
-      { text: "Low latency (<50ms)", included: true },
-      { text: "Webhook integrations", included: true },
-      { text: "Custom model training", included: true },
-      { text: "99.9% SLA", included: true },
-    ],
-    cta: "Start Pro Plan",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For large-scale deployments",
-    monthlyPrice: null,
-    yearlyPrice: null,
-    features: [
-      { text: "Unlimited API calls", included: true },
-      { text: "4K video resolution", included: true },
-      { text: "24/7 dedicated support", included: true },
-      { text: "Custom analytics", included: true },
-      { text: "All 40+ languages", included: true },
-      { text: "Ultra-low latency", included: true },
-      { text: "Custom integrations", included: true },
-      { text: "Private model training", included: true },
-      { text: "Custom SLA", included: true },
-      { text: "On-premise deployment", included: true },
-      { text: "SSO & SAML", included: true },
-      { text: "Dedicated account manager", included: true },
-    ],
-    cta: "Contact Sales",
-    popular: false,
-  },
-];
+type PaginatedPayments = {
+  data: Payment[];
+  meta?: { last_page?: number };
+};
+
+function isPaginatedPayments(v: unknown): v is PaginatedPayments {
+  return (
+    typeof v === "object" &&
+    v !== null &&
+    "data" in v &&
+    Array.isArray((v as { data: unknown }).data)
+  );
+}
 
 const Billing = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-
   const { data: currentPlan, isLoading: planLoading } = useCurrentPlan();
-  const { data: paymentsData, isLoading: paymentsLoading } = usePayments(page);
+  const {
+    data: paymentsData,
+    isLoading: paymentsLoading,
+  } = usePaymentsHistory();
 
   // Use demo data when API returns nothing
   const demoPlan: CurrentPlan = useMemo(
@@ -141,15 +94,32 @@ const Billing = () => {
     }),
     []
   );
-
   const plan = currentPlan || demoPlan;
 
-  const payments: Payment[] = useMemo(
-    () => paymentsData?.data || generateDemoPayments(),
-    [paymentsData]
-  );
+  const payments: Payment[] = useMemo(() => {
+    // support two shapes: an array of payments or a paginated response with `data` array
+    if (!paymentsData) {
+      return generateDemoPayments();
+    }
+    if (Array.isArray(paymentsData)) {
+      return paymentsData.length > 0 ? paymentsData : generateDemoPayments();
+    }
+    // paginated response: { data: Payment[], meta: {...} }
+    if (
+      isPaginatedPayments(paymentsData) &&
+      (paymentsData as PaginatedPayments).data.length > 0
+    ) {
+      return (paymentsData as PaginatedPayments).data;
+    }
+    return generateDemoPayments();
+  }, [paymentsData]);
 
-  const totalPages = paymentsData?.meta?.last_page || 1;
+  const totalPages =
+    Array.isArray(paymentsData)
+      ? 1
+      : isPaginatedPayments(paymentsData)
+      ? (paymentsData as PaginatedPayments).meta?.last_page ?? 1
+      : 1;
 
   const getStatusBadge = (status: Payment["status"]) => {
     switch (status) {
@@ -337,7 +307,7 @@ const Billing = () => {
 
         {/* Plan Comparison Quick View */}
         <div className='grid md:grid-cols-3 gap-4'>
-          {fallbackPlans.map((tier) => {
+          {plans.map((tier) => {
             const highlight =
               tier.name === "Basic"
                 ? "5K API calls"

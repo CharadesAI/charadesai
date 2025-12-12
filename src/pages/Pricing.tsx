@@ -41,6 +41,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { plans } from "@/lib/pricng";
 
 const faqs = [
   {
@@ -73,7 +74,7 @@ const faqs = [
 const Pricing = () => {
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(true);
-  const [plans, setPlans] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [calculatorValues, setCalculatorValues] = useState({
     apiCalls: 5000,
@@ -81,40 +82,6 @@ const Pricing = () => {
     languages: 5,
     support: "priority",
   });
-
-  useEffect(() => {
-    fetchPlans();
-  }, []);
-
-  const fetchPlans = async () => {
-    try {
-      const base = (await import("@/lib/api")).getApiBase();
-      const response = await fetch(`${base}/subscription-plans`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.status === "success") {
-          const transformedPlans = data.data.map((plan) => ({
-            name: plan.name,
-            description: plan.description || "",
-            monthlyPrice: plan.price_monthly || null,
-            yearlyPrice: plan.price_yearly || null,
-            features: plan.features || [],
-            cta: plan.cta || "Get Started",
-            popular: plan.popular || false,
-          }));
-          setPlans(transformedPlans);
-        }
-      } else {
-        console.warn("Failed to fetch plans from API, using fallback data");
-        setPlans(fallbackPlans);
-      }
-    } catch (error) {
-      console.error("Error fetching plans:", error);
-      setPlans(fallbackPlans);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const calculatePrice = () => {
     // Base pricing tiers that match the plans
@@ -1047,66 +1014,3 @@ const Pricing = () => {
 };
 
 export default Pricing;
-
-const fallbackPlans = [
-  {
-    name: "Basic",
-    description: "Perfect for small projects and startups",
-    monthlyPrice: 29,
-    yearlyPrice: 24,
-    features: [
-      { text: "5,000 API calls/month", included: true },
-      { text: "720p video resolution", included: true },
-      { text: "Email support", included: true },
-      { text: "Basic analytics", included: true },
-      { text: "3 languages", included: true },
-      { text: "Standard latency", included: true },
-      { text: "Webhook integrations", included: false },
-      { text: "Custom model training", included: false },
-      { text: "SLA guarantee", included: false },
-    ],
-    cta: "Start Basic",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    description: "For growing teams and production apps",
-    monthlyPrice: 99,
-    yearlyPrice: 79,
-    features: [
-      { text: "50,000 API calls/month", included: true },
-      { text: "1080p video resolution", included: true },
-      { text: "Priority email support", included: true },
-      { text: "Advanced analytics", included: true },
-      { text: "Multi-language (10)", included: true },
-      { text: "Low latency (<50ms)", included: true },
-      { text: "Webhook integrations", included: true },
-      { text: "Custom model training", included: true },
-      { text: "99.9% SLA", included: true },
-    ],
-    cta: "Start Pro Plan",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    description: "For large-scale deployments",
-    monthlyPrice: null,
-    yearlyPrice: null,
-    features: [
-      { text: "Unlimited API calls", included: true },
-      { text: "4K video resolution", included: true },
-      { text: "24/7 dedicated support", included: true },
-      { text: "Custom analytics", included: true },
-      { text: "All 40+ languages", included: true },
-      { text: "Ultra-low latency", included: true },
-      { text: "Custom integrations", included: true },
-      { text: "Private model training", included: true },
-      { text: "Custom SLA", included: true },
-      { text: "On-premise deployment", included: true },
-      { text: "SSO & SAML", included: true },
-      { text: "Dedicated account manager", included: true },
-    ],
-    cta: "Contact Sales",
-    popular: false,
-  },
-];
