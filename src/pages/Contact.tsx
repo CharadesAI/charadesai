@@ -105,9 +105,6 @@ const Contact = () => {
     try {
       const payload = {
         address: "100 Market Street, Suite 300, San Francisco, CA 94105",
-        zoom: 15,
-        width: 600,
-        height: 450,
       };
 
       const base = getApiBase();
@@ -493,7 +490,7 @@ const Contact = () => {
 
                 <div>
                   <h3 className='text-xl font-bold mb-4 text-card-foreground'>
-                    Our Offices
+                    Our Office
                   </h3>
                   <div className='space-y-4'>
                     <div
@@ -537,12 +534,12 @@ const Contact = () => {
                 Find Us
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto'>
-                Visit our offices around the world or connect with us virtually.
+                Visit our office or connect with us virtually.
               </p>
             </div>
 
             {mapLoading ? (
-              <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
+              <div className='grid grid-cols-1 gap-8 max-w-6xl mx-auto'>
                 {[...Array(3)].map((_, i) => (
                   <div
                     key={i}
