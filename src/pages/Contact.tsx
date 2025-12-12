@@ -469,23 +469,6 @@ const Contact = () => {
                     Our Offices
                   </h3>
                   <div className='space-y-4'>
-<<<<<<< Updated upstream
-                    {offices.map((office) => (
-                      <div
-                        key={office.city}
-                        className='flex items-start gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'
-                      >
-                        <MapPin className='w-5 h-5 text-neon-cyan mt-0.5' />
-                        <div>
-                          <div className='font-medium text-card-foreground'>
-                            {office.city}
-                          </div>
-                          <p className='text-sm text-muted-foreground'>
-                            {office.address}
-                            <br />
-                            {office.country}
-                          </p>
-=======
                     <div
                       key={office.city}
                       className='flex items-start gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'
@@ -494,7 +477,6 @@ const Contact = () => {
                       <div>
                         <div className='font-medium text-card-foreground'>
                           {office.city}
->>>>>>> Stashed changes
                         </div>
                         <p className='text-sm text-muted-foreground'>
                           {office.address}
@@ -533,37 +515,35 @@ const Contact = () => {
               </div>
             ) : (
               <div className='grid md:grid-cols-3 gap-8 max-w-6xl mx-auto'>
-                {offices.map((office) => (
-                  <div key={office.city} className='space-y-4'>
-                    <div className='p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'>
-                      <div className='flex items-center gap-3 mb-3'>
-                        <Map className='w-5 h-5 text-neon-cyan' />
-                        <h3 className='font-semibold text-card-foreground'>
-                          {office.city}
-                        </h3>
-                      </div>
-                      <p className='text-sm text-muted-foreground'>
-                        {office.address}
-                        <br />
-                        {office.country}
-                      </p>
+                <div key={office.city} className='space-y-4'>
+                  <div className='p-4 rounded-xl bg-card/80 backdrop-blur-md border border-border'>
+                    <div className='flex items-center gap-3 mb-3'>
+                      <Map className='w-5 h-5 text-neon-cyan' />
+                      <h3 className='font-semibold text-card-foreground'>
+                        {office.city}
+                      </h3>
                     </div>
-                    {mapData[`${office.city} Office`] && (
-                      <div className='aspect-video rounded-2xl overflow-hidden border border-border'>
-                        <iframe
-                          src={mapData[`${office.city} Office`]}
-                          width='100%'
-                          height='100%'
-                          style={{ border: 0 }}
-                          allowFullScreen
-                          loading='lazy'
-                          referrerPolicy='no-referrer-when-downgrade'
-                          title={`${office.city} Office Location`}
-                        />
-                      </div>
-                    )}
+                    <p className='text-sm text-muted-foreground'>
+                      {office.address}
+                      <br />
+                      {office.country}
+                    </p>
                   </div>
-                ))}
+                  {mapData[`${office.city} Office`] && (
+                    <div className='aspect-video rounded-2xl overflow-hidden border border-border'>
+                      <iframe
+                        src={mapData[`${office.city} Office`]}
+                        width='100%'
+                        height='100%'
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        loading='lazy'
+                        referrerPolicy='no-referrer-when-downgrade'
+                        title={`${office.city} Office Location`}
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
