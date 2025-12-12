@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect } from "react";
-import { getApiBase, postJson } from "@/lib/api";
+import { postJson } from "@/lib/api";
 
 const contactSchema = z.object({
   name: z
@@ -102,14 +102,6 @@ const Contact = () => {
           {
             name: "San Francisco Office",
             address: "100 Market Street, Suite 300, San Francisco, CA 94105",
-          },
-          {
-            name: "London Office",
-            address: "1 Canada Square, Canary Wharf, London, EC2A 1PQ",
-          },
-          {
-            name: "Singapore Office",
-            address: "1 Raffles Place, Tower 2, Singapore 048616",
           },
         ],
       };
