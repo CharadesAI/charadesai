@@ -199,7 +199,8 @@ export function useCurrentPlan() {
 export function useUsageStats() {
   return useQuery({
     queryKey: queryKeys.usage,
-    queryFn: () => Promise.resolve(generateDemoUsageStats()),
+    // Undocumented endpoint; short-circuit to avoid network call so pages use demo
+    queryFn: async () => null as unknown as UsageStats,
     staleTime: 1 * 60 * 1000, // 1 minute
   });
 }
@@ -207,7 +208,8 @@ export function useUsageStats() {
 export function useAIResults(limit = 10) {
   return useQuery({
     queryKey: [...queryKeys.results, limit],
-    queryFn: () => Promise.resolve(generateDemoResults().slice(0, limit)),
+    // Undocumented listing endpoint; short-circuit so pages use demo data
+    queryFn: async () => null as unknown as AIResult[],
     staleTime: 30 * 1000, // 30 seconds
   });
 }

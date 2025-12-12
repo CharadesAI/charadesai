@@ -1,6 +1,10 @@
 import { useState, useMemo } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { useUsageStats, type UsageStats } from "@/hooks/use-api";
+import {
+  useUsageStats,
+  generateDemoUsageStats,
+  type UsageStats,
+} from "@/hooks/use-api";
 import {
   Card,
   CardContent,
@@ -61,7 +65,12 @@ const COLORS = {
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d">("30d");
-  const { data: usageStats, isLoading } = useUsageStats();
+  const { data: usageStatsRaw, isLoading } = useUsageStats();
+
+  const usageStats: UsageStats = useMemo(
+    () => usageStatsRaw || generateDemoUsageStats(),
+    [usageStatsRaw]
+  );
 
   // Generate additional analytics data
   const endpointStats = useMemo(
@@ -162,6 +171,7 @@ const Analytics = () => {
   return (
     <DashboardLayout>
       <div className='space-y-8'>
+        {/* Using demo analytics when backend route is unavailable */}
         {/* Header */}
         <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4'>
           <div>
