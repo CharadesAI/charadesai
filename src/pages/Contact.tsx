@@ -264,7 +264,7 @@ const Contact = () => {
             <h2 className='text-3xl font-bold mb-12 text-center'>
               How Can We Help?
             </h2>
-            <div className='grid md:grid-cols-3 gap-8 max-w-5xl mx-auto'>
+            <div className='grid grid-cols-1 gap-8 max-w-5xl mx-auto'>
               {contactOptions.map((option) => (
                 <div
                   key={option.title}
