@@ -31,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { a } from "node_modules/framer-motion/dist/types.d-DagZKalS";
+import Logo from "./Logo";
 
 // Menu categories with all pages
 const menuCategories = [
@@ -219,16 +220,9 @@ export function Navbar() {
               {/* Logo in bordered container */}
               <Link
                 to='/'
-                className='flex items-center gap-3 px-4 h-12 rounded-xl border border-border bg-card/50 hover:bg-card transition-colors group'
+                className='flex items-start justify-start gap-3 px-4 h-12 md:h-28 rounded-xl border border-border bg-card/50 hover:bg-card transition-colors group'
               >
-                <div className='relative'>
-                  <div className='w-8 h-8 rounded-lg bg-gradient-ai flex items-center justify-center group-hover:scale-110 transition-transform duration-300'>
-                    <Zap className='w-4 h-4 text-primary-foreground' />
-                  </div>
-                </div>
-                <span className='text-lg font-bold hidden sm:block'>
-                  Charades <span className='text-gradient'>AI</span>
-                </span>
+                <Logo />
               </Link>
             </div>
 

@@ -35,19 +35,37 @@ export function AIChatWidget() {
             `${getApiBase()}/ai/jobs/${pollingJob}/status`
           );
           const data = await res.json();
-          if (data.status === "success" && data.data.status === "completed") {
-            setMessages((prev) => [
-              ...prev,
-              { role: "assistant", content: data.data.result },
-            ]);
-            setIsTyping(false);
-            setPollingJob(null);
-          } else if (data.data.status === "failed") {
+          if (res.status === 200 && data.status === "success") {
+            if (data.data.status === "completed") {
+              setMessages((prev) => [
+                ...prev,
+                { role: "assistant", content: data.data.result },
+              ]);
+              setIsTyping(false);
+              setPollingJob(null);
+            } else if (data.data.status === "failed") {
+              setMessages((prev) => [
+                ...prev,
+                {
+                  role: "assistant",
+                  content:
+                    data.data.result ||
+                    "Sorry, I encountered an error. Please try again.",
+                },
+              ]);
+              setIsTyping(false);
+              setPollingJob(null);
+            }
+            // If status is pending or processing, continue polling
+          } else {
+            // Handle API error response
             setMessages((prev) => [
               ...prev,
               {
                 role: "assistant",
-                content: "Sorry, I encountered an error. Please try again.",
+                content:
+                  data.message ||
+                  "Sorry, I encountered an error. Please try again.",
               },
             ]);
             setIsTyping(false);
@@ -116,7 +134,17 @@ export function AIChatWidget() {
         // Async response, start polling
         setPollingJob(data.data.job_id);
       } else {
-        throw new Error(data.message || "Failed to get response");
+        // Error response
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              data.message ||
+              "Sorry, I encountered an error. Please try again.",
+          },
+        ]);
+        setIsTyping(false);
       }
     } catch (error) {
       console.error("AI request error:", error);

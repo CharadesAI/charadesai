@@ -10,6 +10,7 @@ import { SiCrunchbase } from "react-icons/si";
 import { cn } from "@/lib/utils";
 import { i } from "node_modules/framer-motion/dist/types.d-DagZKalS";
 import { FaPinterest } from "react-icons/fa";
+import Logo from "./Logo";
 
 const footerLinks = {
   product: [
@@ -95,13 +96,8 @@ export function Footer() {
         <div className='grid grid-cols-2 md:grid-cols-5 gap-8 mb-12'>
           {/* Brand Column */}
           <div className='col-span-2 md:col-span-1'>
-            <Link to='/' className='flex items-center gap-2 mb-4 group'>
-              <div className='w-10 h-10 rounded-xl bg-gradient-ai flex items-center justify-center group-hover:scale-105 transition-transform'>
-                <Zap className='w-5 h-5 text-primary-foreground' />
-              </div>
-              <span className='text-xl font-bold'>
-                Charades<span className='text-gradient'>AI</span>
-              </span>
+            <Link to='/' className='flex items-center h-20 gap-2 mb-4 group'>
+              <Logo />
             </Link>
             <p className='text-sm text-muted-foreground mb-6 max-w-xs'>
               Next-generation lip-reading and gesture recognition API for
