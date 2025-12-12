@@ -7,6 +7,7 @@ import { ArrowRight, Calendar, Clock, User, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { blogPosts } from "@/lib/blog-data";
 import { useState } from "react";
+import { postJson } from "@/lib/api";
 
 const categories = ["All", "Product", "Research", "Tutorial", "Engineering"];
 const POSTS_PER_PAGE = 6;
@@ -45,24 +46,14 @@ const Blog = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        "https://api.charadesai.com/mail/newsletter",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email: email.trim() }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.status === "success") {
-        alert(data.message);
+      const res = await postJson("/mail/newsletter", { email: email.trim() });
+      const status = (res as unknown as { status?: string }).status;
+      const message = (res as unknown as { message?: string }).message;
+      if (status === "success") {
+        alert(message || "Subscribed successfully");
         setEmail("");
       } else {
-        alert(data.message || "Failed to subscribe to newsletter");
+        alert(message || "Failed to subscribe to newsletter");
       }
     } catch (error) {
       alert("An error occurred while subscribing. Please try again.");

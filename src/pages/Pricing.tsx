@@ -88,9 +88,8 @@ const Pricing = () => {
 
   const fetchPlans = async () => {
     try {
-      const response = await fetch(
-        "https://api.charadesai.com/api/subscription-plans"
-      );
+      const base = (await import("@/lib/api")).getApiBase();
+      const response = await fetch(`${base}/subscription-plans`);
       if (response.ok) {
         const data = await response.json();
         if (data.status === "success") {

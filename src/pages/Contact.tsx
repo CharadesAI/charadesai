@@ -22,6 +22,7 @@ import {
 import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect } from "react";
+import { getApiBase, postJson } from "@/lib/api";
 
 const contactSchema = z.object({
   name: z
@@ -96,35 +97,51 @@ const Contact = () => {
 
   const fetchMapData = async () => {
     try {
-      const response = await fetch("https://api.charadesai.com/maps/pin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`,
-        },
-        body: JSON.stringify({
-          locations: [
-            {
-              name: "San Francisco Office",
-              address: "100 Market Street, Suite 300, San Francisco, CA 94105",
-            },
-            {
-              name: "London Office",
-              address: "1 Canada Square, Canary Wharf, London, EC2A 1PQ",
-            },
-            {
-              name: "Singapore Office",
-              address: "1 Raffles Place, Tower 2, Singapore 048616",
-            },
-          ],
-        }),
-      });
+      const payload = {
+        locations: [
+          {
+            name: "San Francisco Office",
+            address: "100 Market Street, Suite 300, San Francisco, CA 94105",
+          },
+          {
+            name: "London Office",
+            address: "1 Canada Square, Canary Wharf, London, EC2A 1PQ",
+          },
+          {
+            name: "Singapore Office",
+            address: "1 Raffles Place, Tower 2, Singapore 048616",
+          },
+        ],
+      };
 
-      if (response.ok) {
-        const data = await response.json();
-        setMapData(data);
+      const res = await postJson<{
+        map_urls?: Record<string, string>;
+        map_url?: string;
+      }>("/maps/pin", payload);
+
+      // API returns { status: 'success', data: { map_url: '...' } } or data.map_urls
+      type MapResp = { map_urls?: Record<string, string>; map_url?: string };
+      const mapDataObj: MapResp | Record<string, string> =
+        (
+          res as unknown as {
+            status?: string;
+            data?: MapResp | Record<string, string>;
+          }
+        ).data ?? {};
+
+      if (
+        typeof (mapDataObj as MapResp).map_urls !== "undefined" &&
+        typeof (mapDataObj as MapResp).map_urls === "object"
+      ) {
+        setMapData((mapDataObj as MapResp).map_urls as Record<string, string>);
+      } else if (typeof (mapDataObj as MapResp).map_url === "string") {
+        setMapData({
+          "San Francisco Office": (mapDataObj as MapResp).map_url as string,
+        });
+      } else if (typeof mapDataObj === "object") {
+        setMapData(mapDataObj as Record<string, string>);
       } else {
-        console.error("Failed to fetch map data");
+        console.error("Unexpected map response", mapDataObj);
       }
     } catch (error) {
       console.error("Error fetching map data:", error);
@@ -163,37 +180,42 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("https://api.charadesai.com/mail/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      try {
+        const payload = {
           name: formData.name,
           email: formData.email,
           company: formData.company || undefined,
           subject: formData.subject,
           message: formData.message,
-        }),
-      });
+        };
 
-      if (response.ok) {
-        const result = await response.json();
-        setIsSubmitted(true);
-        toast.success("Message sent successfully! We'll get back to you soon.");
-
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          subject: "",
-          message: "",
-        });
-      } else {
-        const errorData = await response.json().catch(() => ({}));
-        toast.error(
-          errorData.message || "Failed to send message. Please try again."
+        const res = await postJson<{ subscriber_id?: string }>(
+          "/mail/contact",
+          payload
         );
+        const status = (res as unknown as { status?: string }).status;
+        const message = (res as unknown as { message?: string }).message;
+        if (status === "success") {
+          setIsSubmitted(true);
+          toast.success(
+            "Message sent successfully! We'll get back to you soon."
+          );
+          setFormData({
+            name: "",
+            email: "",
+            company: "",
+            subject: "",
+            message: "",
+          });
+        } else {
+          toast.error(message || "Failed to send message. Please try again.");
+        }
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error
+            ? err.message
+            : String(err ?? "Failed to send message. Please try again.");
+        toast.error(msg);
       }
     } catch (error) {
       console.error("Form submission error:", error);
