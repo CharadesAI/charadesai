@@ -30,6 +30,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import Checkout from "./pages/Checkout";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import AuthComplete from "./pages/AuthComplete";
 import Account from "./pages/Account";
 
 // Dashboard pages
@@ -75,6 +76,7 @@ const App = () => (
               <Route path='/signup' element={<Signup />} />
               <Route path='/auth/login' element={<Signin />} />
               <Route path='/auth/register' element={<Signup />} />
+              <Route path='/auth/complete' element={<AuthComplete />} />
               <Route path='/forgot' element={<Forgot />} />
               <Route path='/account' element={<Account />} />
 

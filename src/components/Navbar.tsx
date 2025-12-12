@@ -479,6 +479,19 @@ export function Navbar() {
                   ) : (
                     <>
                       <Link
+                        to='/dashboard'
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        <Button
+                          variant='hero'
+                          size='lg'
+                          className='w-full rounded-xl'
+                        >
+                          Dashboard
+                          <ArrowRight className='w-4 h-4 ml-2' />
+                        </Button>
+                      </Link>
+                      <Link
                         to='/account'
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
@@ -562,6 +575,15 @@ export function Navbar() {
                   </>
                 ) : (
                   <>
+                    <Link
+                      to='/dashboard'
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Button variant='hero' className='rounded-xl'>
+                        Dashboard
+                        <ArrowRight className='w-4 h-4 ml-2' />
+                      </Button>
+                    </Link>
                     <Link
                       to='/account'
                       onClick={() => setIsMobileMenuOpen(false)}
