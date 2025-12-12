@@ -1,10 +1,6 @@
 import { useState, useMemo } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import {
-  useUsageStats,
-  generateDemoUsageStats,
-  type UsageStats,
-} from "@/hooks/use-api";
+import { useUsageStats, type UsageStats } from "@/hooks/use-api";
 import {
   Card,
   CardContent,
@@ -65,12 +61,7 @@ const COLORS = {
 
 const Analytics = () => {
   const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d">("30d");
-  const { data: usageStatsRaw, isLoading } = useUsageStats();
-
-  const usageStats: UsageStats = useMemo(
-    () => usageStatsRaw || generateDemoUsageStats(),
-    [usageStatsRaw]
-  );
+  const { data: usageStats, isLoading } = useUsageStats();
 
   // Generate additional analytics data
   const endpointStats = useMemo(

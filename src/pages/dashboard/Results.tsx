@@ -1,10 +1,6 @@
 import { useState, useMemo } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import {
-  useAIResults,
-  generateDemoResults,
-  type AIResult,
-} from "@/hooks/use-api";
+import { useAIResults, type AIResult } from "@/hooks/use-api";
 import {
   Card,
   CardContent,
@@ -56,12 +52,7 @@ const Results = () => {
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedResult, setSelectedResult] = useState<AIResult | null>(null);
 
-  const { data: resultsRaw, isLoading, refetch } = useAIResults(20);
-
-  const results: AIResult[] = useMemo(
-    () => resultsRaw || generateDemoResults(),
-    [resultsRaw]
-  );
+  const { data: results, isLoading, refetch } = useAIResults(20);
 
   const filteredResults = useMemo(() => {
     return results.filter((r) => {

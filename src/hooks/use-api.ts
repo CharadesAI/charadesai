@@ -199,8 +199,7 @@ export function useCurrentPlan() {
 export function useUsageStats() {
   return useQuery({
     queryKey: queryKeys.usage,
-    queryFn: () =>
-      fetchApi<ApiResponse<UsageStats>>("/usage/stats").then((res) => res.data),
+    queryFn: () => Promise.resolve(generateDemoUsageStats()),
     staleTime: 1 * 60 * 1000, // 1 minute
   });
 }
@@ -208,11 +207,7 @@ export function useUsageStats() {
 export function useAIResults(limit = 10) {
   return useQuery({
     queryKey: [...queryKeys.results, limit],
-    queryFn: () =>
-      // List jobs/results: call jobs listing if available under /ai/jobs
-      fetchApi<ApiResponse<AIResult[]>>(`/ai/jobs?limit=${limit}`).then(
-        (res) => res.data
-      ),
+    queryFn: () => Promise.resolve(generateDemoResults().slice(0, limit)),
     staleTime: 30 * 1000, // 30 seconds
   });
 }

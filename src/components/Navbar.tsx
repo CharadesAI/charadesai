@@ -30,6 +30,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
+import { a } from "node_modules/framer-motion/dist/types.d-DagZKalS";
 
 // Menu categories with all pages
 const menuCategories = [
@@ -325,16 +326,17 @@ export function Navbar() {
               </div>
             )}
             {/* Primary CTA */}
-            <Link to='/signup'>
-              <Button
-                variant='hero'
-                className='h-12 px-6 rounded-xl font-semibold'
-              >
-                <span className='hidden sm:inline'>Get Started</span>
-                <span className='sm:hidden'>Start</span>
-              </Button>
-            </Link>
-
+            {!auth?.user && (
+              <Link to='/signup'>
+                <Button
+                  variant='hero'
+                  className='h-12 px-6 rounded-xl font-semibold'
+                >
+                  <span className='hidden sm:inline'>Get Started</span>
+                  <span className='sm:hidden'>Start</span>
+                </Button>
+              </Link>
+            )}
             {/* Theme Toggle (Desktop) */}
             <div className='hidden md:block'>
               <ThemeToggle />
