@@ -1,6 +1,8 @@
 const TOKEN_KEY = "charadesai_token";
 const USER_KEY = "charadesai_user";
 
+export type User = Record<string, unknown>;
+
 export function setToken(token: string) {
   localStorage.setItem(TOKEN_KEY, token);
 }
@@ -14,7 +16,7 @@ export function clearToken() {
   localStorage.removeItem(USER_KEY);
 }
 
-export function setUser(user: any) {
+export function setUser(user: User) {
   try {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
   } catch (e) {
@@ -22,11 +24,11 @@ export function setUser(user: any) {
   }
 }
 
-export function getUser() {
+export function getUser(): User | null {
   const raw = localStorage.getItem(USER_KEY);
   if (!raw) return null;
   try {
-    return JSON.parse(raw);
+    return JSON.parse(raw) as User;
   } catch (e) {
     return null;
   }

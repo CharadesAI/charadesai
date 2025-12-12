@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, X, Send, Bot, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { getApiBase } from "@/lib/api";
 
 type Message = {
   role: "user" | "assistant";
@@ -16,37 +17,118 @@ const initialMessages: Message[] = [
   },
 ];
 
+const SITE_CONTEXT = `You are the personal assistant for CharadesAI, a cutting-edge platform that provides real-time lip-reading and gesture recognition APIs. Our services include API endpoints for lip-reading, gesture detection, emotion analysis, and speech-to-text. We offer various pricing plans including free tier, pro, and enterprise. Help users with questions about our APIs, integration, pricing, documentation, and any other inquiries. Be helpful, informative, and professional.`;
+
 export function AIChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [pollingJob, setPollingJob] = useState<string | null>(null);
 
-  const handleSend = () => {
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (pollingJob) {
+      interval = setInterval(async () => {
+        try {
+          const res = await fetch(
+            `${getApiBase()}/ai/jobs/${pollingJob}/status`
+          );
+          const data = await res.json();
+          if (data.status === "success" && data.data.status === "completed") {
+            setMessages((prev) => [
+              ...prev,
+              { role: "assistant", content: data.data.result },
+            ]);
+            setIsTyping(false);
+            setPollingJob(null);
+          } else if (data.data.status === "failed") {
+            setMessages((prev) => [
+              ...prev,
+              {
+                role: "assistant",
+                content: "Sorry, I encountered an error. Please try again.",
+              },
+            ]);
+            setIsTyping(false);
+            setPollingJob(null);
+          }
+        } catch (error) {
+          console.error("Polling error:", error);
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "assistant",
+              content: "Sorry, I encountered an error. Please try again.",
+            },
+          ]);
+          setIsTyping(false);
+          setPollingJob(null);
+        }
+      }, 2000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [pollingJob]);
+
+  const handleSend = async () => {
     if (!input.trim()) return;
+
+    let userContent = input;
+    const contextSent = localStorage.getItem("charadesAI_chat_context_sent");
+    if (!contextSent) {
+      userContent = `${SITE_CONTEXT}\n\nUser: ${input}`;
+      localStorage.setItem("charadesAI_chat_context_sent", "true");
+    }
 
     const userMessage: Message = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "I'd be happy to help! Our API offers real-time lip-reading with sub-50ms latency.",
-        "Great question! You can get started with our free tier - 1,000 API calls per month.",
-        "Our SDKs support JavaScript, Python, and PHP. Check out our documentation for quick-start guides!",
-        "CharadesAI supports 40+ languages for lip-reading recognition.",
-      ];
-      const randomResponse =
-        responses[Math.floor(Math.random() * responses.length)];
-      const assistantMessage: Message = {
-        role: "assistant",
-        content: randomResponse,
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
+    try {
+      const conversationMessages = messages.concat({
+        role: "user",
+        content: userContent,
+      });
+      const res = await fetch(`${getApiBase()}/ai/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: conversationMessages,
+          max_tokens: 256,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 200 && data.status === "success") {
+        // Immediate response
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: data.data.result },
+        ]);
+        setIsTyping(false);
+      } else if (res.status === 202 && data.status === "accepted") {
+        // Async response, start polling
+        setPollingJob(data.data.job_id);
+      } else {
+        throw new Error(data.message || "Failed to get response");
+      }
+    } catch (error) {
+      console.error("AI request error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Sorry, I encountered an error. Please try again.",
+        },
+      ]);
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
