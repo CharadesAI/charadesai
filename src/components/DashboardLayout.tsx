@@ -102,7 +102,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex flex-col bg-card/80 backdrop-blur-xl border-r border-border transition-all duration-300 lg:relative",
+          "fixed inset-y-0 left-0 z-50 flex flex-col bg-card/80 backdrop-blur-xl border-r border-border transition-all duration-300",
           sidebarCollapsed ? "w-16" : "w-64",
           mobileMenuOpen
             ? "translate-x-0"
@@ -251,7 +251,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       )}
 
       {/* Main Content */}
-      <div className='flex-1 flex flex-col min-h-screen'>
+      <div
+        className={cn(
+          "flex-1 flex flex-col min-h-screen transition-all duration-300",
+          sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
+        )}
+      >
         {/* Top Header */}
         <header className='h-16 border-b border-border bg-card/50 backdrop-blur-md flex items-center justify-between px-4 lg:px-8 sticky top-0 z-30'>
           <div className='flex items-center gap-4'>
