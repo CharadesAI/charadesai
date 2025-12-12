@@ -80,6 +80,12 @@ interface PlanData {
   support?: string;
 }
 
+interface SubscriptionResponse {
+  status?: "success" | "error";
+  message?: string;
+  transaction_id?: string;
+}
+
 const Checkout = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -211,21 +217,18 @@ const Checkout = () => {
         },
       };
 
-      const result = await postJson<{ transaction_id?: string }>(
+      const result = await postJson<SubscriptionResponse>(
         "/subscriptions",
         payload
       );
 
-      if ((result as any)?.status === "success") {
+      if (result.status === "success") {
         setSuccess(true);
         setTimeout(() => {
           navigate("/?success=true");
         }, 3000);
       } else {
-        setError(
-          ((result as any)?.message as string) ||
-            "Payment failed. Please try again."
-        );
+        setError(result.message ?? "Payment failed. Please try again.");
       }
     } catch (err) {
       setError("Network error. Please check your connection and try again.");

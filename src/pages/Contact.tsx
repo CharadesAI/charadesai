@@ -22,7 +22,7 @@ import {
 import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect } from "react";
-import { postJson } from "@/lib/api";
+import { getApiBase } from "@/lib/api";
 
 const contactSchema = z.object({
   name: z
@@ -88,7 +88,13 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mapData, setMapData] = useState<Record<string, string>>({});
+  const [mapData, setMapData] = useState<{
+    embed_url?: string;
+    maps_link?: string;
+    iframe?: string;
+    address?: string;
+    zoom?: number;
+  } | null>(null);
   const [mapLoading, setMapLoading] = useState(true);
 
   useEffect(() => {
@@ -98,42 +104,42 @@ const Contact = () => {
   const fetchMapData = async () => {
     try {
       const payload = {
-        locations: [
-          {
-            name: "San Francisco Office",
-            address: "100 Market Street, Suite 300, San Francisco, CA 94105",
-          },
-        ],
+        address: "100 Market Street, Suite 300, San Francisco, CA 94105",
+        zoom: 15,
+        width: 600,
+        height: 450,
       };
 
-      const res = await postJson<{
-        map_urls?: Record<string, string>;
-        map_url?: string;
-      }>("/maps/pin", payload);
+      const base = getApiBase();
+      const response = await fetch(`${base}/maps/pin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const res = await response.json().catch(() => null);
+      if (!response.ok) {
+        const msg =
+          (res && (res as unknown as { message?: string }).message) ||
+          "Failed to generate map";
+        toast.error(msg);
+        setMapData(null);
+        return;
+      }
 
-      // API returns { status: 'success', data: { map_url: '...' } } or data.map_urls
-      type MapResp = { map_urls?: Record<string, string>; map_url?: string };
-      const mapDataObj: MapResp | Record<string, string> =
-        (
-          res as unknown as {
-            status?: string;
-            data?: MapResp | Record<string, string>;
-          }
-        ).data ?? {};
-
-      if (
-        typeof (mapDataObj as MapResp).map_urls !== "undefined" &&
-        typeof (mapDataObj as MapResp).map_urls === "object"
-      ) {
-        setMapData((mapDataObj as MapResp).map_urls as Record<string, string>);
-      } else if (typeof (mapDataObj as MapResp).map_url === "string") {
-        setMapData({
-          "San Francisco Office": (mapDataObj as MapResp).map_url as string,
-        });
-      } else if (typeof mapDataObj === "object") {
-        setMapData(mapDataObj as Record<string, string>);
+      // API returns { status: 'success', data: { embed_url, maps_link, iframe, address, zoom } }
+      type MapResp = {
+        embed_url?: string;
+        maps_link?: string;
+        iframe?: string;
+        address?: string;
+        zoom?: number;
+      };
+      const mapObj = (res as unknown as { data?: MapResp }).data ?? null;
+      if (mapObj && typeof mapObj === "object") {
+        setMapData(mapObj);
       } else {
-        console.error("Unexpected map response", mapDataObj);
+        console.error("Unexpected map response", mapObj);
+        setMapData(null);
       }
     } catch (error) {
       console.error("Error fetching map data:", error);
@@ -181,12 +187,19 @@ const Contact = () => {
           message: formData.message,
         };
 
-        const res = await postJson<{ subscriber_id?: string }>(
-          "/mail/contact",
-          payload
-        );
+        const base = getApiBase();
+        const response = await fetch(`${base}/mail/contact`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const res = await response.json().catch(() => null);
         const status = (res as unknown as { status?: string }).status;
         const message = (res as unknown as { message?: string }).message;
+        if (!response.ok) {
+          toast.error(message || "Failed to send message. Please try again.");
+          return;
+        }
         if (status === "success") {
           setIsSubmitted(true);
           toast.success(
@@ -497,6 +510,16 @@ const Contact = () => {
                           <br />
                           {office.country}
                         </p>
+                        {mapData?.maps_link && (
+                          <a
+                            href={mapData.maps_link}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-sm text-primary hover:underline block mt-2'
+                          >
+                            Open in Google Maps
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -543,10 +566,15 @@ const Contact = () => {
                       {office.country}
                     </p>
                   </div>
-                  {mapData[`${office.city} Office`] && (
+                  {mapData?.iframe ? (
+                    <div
+                      className='rounded-2xl overflow-hidden border border-border'
+                      dangerouslySetInnerHTML={{ __html: mapData.iframe }}
+                    />
+                  ) : mapData?.embed_url ? (
                     <div className='aspect-video rounded-2xl overflow-hidden border border-border'>
                       <iframe
-                        src={mapData[`${office.city} Office`]}
+                        src={mapData.embed_url}
                         width='100%'
                         height='100%'
                         style={{ border: 0 }}
@@ -556,7 +584,7 @@ const Contact = () => {
                         title={`${office.city} Office Location`}
                       />
                     </div>
-                  )}
+                  ) : null}
                 </div>
               </div>
             )}
