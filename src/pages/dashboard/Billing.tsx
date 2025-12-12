@@ -50,6 +50,69 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useMemo } from "react";
 
+const fallbackPlans = [
+  {
+    name: "Basic",
+    description: "Perfect for small projects and startups",
+    monthlyPrice: 29,
+    yearlyPrice: 24,
+    features: [
+      { text: "5,000 API calls/month", included: true },
+      { text: "720p video resolution", included: true },
+      { text: "Email support", included: true },
+      { text: "Basic analytics", included: true },
+      { text: "3 languages", included: true },
+      { text: "Standard latency", included: true },
+      { text: "Webhook integrations", included: false },
+      { text: "Custom model training", included: false },
+      { text: "SLA guarantee", included: false },
+    ],
+    cta: "Start Basic",
+    popular: false,
+  },
+  {
+    name: "Pro",
+    description: "For growing teams and production apps",
+    monthlyPrice: 99,
+    yearlyPrice: 79,
+    features: [
+      { text: "50,000 API calls/month", included: true },
+      { text: "1080p video resolution", included: true },
+      { text: "Priority email support", included: true },
+      { text: "Advanced analytics", included: true },
+      { text: "Multi-language (10)", included: true },
+      { text: "Low latency (<50ms)", included: true },
+      { text: "Webhook integrations", included: true },
+      { text: "Custom model training", included: true },
+      { text: "99.9% SLA", included: true },
+    ],
+    cta: "Start Pro Plan",
+    popular: true,
+  },
+  {
+    name: "Enterprise",
+    description: "For large-scale deployments",
+    monthlyPrice: null,
+    yearlyPrice: null,
+    features: [
+      { text: "Unlimited API calls", included: true },
+      { text: "4K video resolution", included: true },
+      { text: "24/7 dedicated support", included: true },
+      { text: "Custom analytics", included: true },
+      { text: "All 40+ languages", included: true },
+      { text: "Ultra-low latency", included: true },
+      { text: "Custom integrations", included: true },
+      { text: "Private model training", included: true },
+      { text: "Custom SLA", included: true },
+      { text: "On-premise deployment", included: true },
+      { text: "SSO & SAML", included: true },
+      { text: "Dedicated account manager", included: true },
+    ],
+    cta: "Contact Sales",
+    popular: false,
+  },
+];
+
 const Billing = () => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
@@ -187,13 +250,15 @@ const Billing = () => {
 
                   {/* Plan Features */}
                   <div className='grid sm:grid-cols-2 gap-3'>
-                    {plan.features.map((feature, i) => (
+                    {plan.features?.map((feature, i) => (
                       <div
                         key={i}
                         className='flex items-center gap-2 text-sm text-muted-foreground'
                       >
                         <Check className='w-4 h-4 text-neon-emerald flex-shrink-0' />
-                        {feature}
+                        {typeof feature === "string"
+                          ? feature
+                          : (feature as { text: string }).text}
                       </div>
                     ))}
                   </div>
@@ -272,84 +337,73 @@ const Billing = () => {
 
         {/* Plan Comparison Quick View */}
         <div className='grid md:grid-cols-3 gap-4'>
-          {[
-            {
-              name: "Basic",
-              price: 29,
-              highlight: "5K API calls",
-              current: plan.slug === "basic",
-            },
-            {
-              name: "Pro",
-              price: 99,
-              highlight: "50K API calls",
-              current: plan.slug === "pro",
-              popular: true,
-            },
-            {
-              name: "Enterprise",
-              price: null,
-              highlight: "Unlimited",
-              current: plan.slug === "enterprise",
-            },
-          ].map((tier) => (
-            <Card
-              key={tier.name}
-              className={cn(
-                "bg-card/80 backdrop-blur-md border-border transition-all",
-                tier.current && "ring-2 ring-neon-cyan border-neon-cyan/30",
-                tier.popular && !tier.current && "border-neon-violet/30"
-              )}
-            >
-              <CardContent className='p-6'>
-                <div className='flex items-center justify-between mb-4'>
-                  <h4 className='font-semibold'>{tier.name}</h4>
-                  {tier.current && (
-                    <Badge className='bg-neon-cyan/20 text-neon-cyan text-xs'>
-                      Current
-                    </Badge>
-                  )}
-                  {tier.popular && !tier.current && (
-                    <Badge className='bg-neon-violet/20 text-neon-violet text-xs'>
-                      Popular
-                    </Badge>
-                  )}
-                </div>
-                <div className='mb-4'>
-                  <span className='text-2xl font-bold'>
-                    {tier.price ? `$${tier.price}` : "Custom"}
-                  </span>
-                  {tier.price && (
-                    <span className='text-muted-foreground text-sm'>/mo</span>
-                  )}
-                </div>
-                <p className='text-sm text-muted-foreground mb-4'>
-                  {tier.highlight}
-                </p>
-                <Button
-                  variant={tier.current ? "secondary" : "heroOutline"}
-                  size='sm'
-                  className='w-full'
-                  disabled={tier.current}
-                  onClick={() =>
-                    tier.price
-                      ? navigate(
-                          `/checkout?plan=${tier.name.toLowerCase()}&name=${
-                            tier.name
-                          }&price=${tier.price}`
-                        )
-                      : navigate("/contact")
-                  }
-                >
-                  {tier.current
-                    ? "Current Plan"
-                    : tier.price
-                    ? "Upgrade"
-                    : "Contact Sales"}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+          {fallbackPlans.map((tier) => {
+            const highlight =
+              tier.name === "Basic"
+                ? "5K API calls"
+                : tier.name === "Pro"
+                ? "50K API calls"
+                : "Unlimited";
+            const isCurrent = plan.slug === tier.name.toLowerCase();
+            return (
+              <Card
+                key={tier.name}
+                className={cn(
+                  "bg-card/80 backdrop-blur-md border-border transition-all",
+                  isCurrent && "ring-2 ring-neon-cyan border-neon-cyan/30",
+                  tier.popular && !isCurrent && "border-neon-violet/30"
+                )}
+              >
+                <CardContent className='p-6'>
+                  <div className='flex items-center justify-between mb-4'>
+                    <h4 className='font-semibold'>{tier.name}</h4>
+                    {isCurrent && (
+                      <Badge className='bg-neon-cyan/20 text-neon-cyan text-xs'>
+                        Current
+                      </Badge>
+                    )}
+                    {tier.popular && !isCurrent && (
+                      <Badge className='bg-neon-violet/20 text-neon-violet text-xs'>
+                        Popular
+                      </Badge>
+                    )}
+                  </div>
+                  <div className='mb-4'>
+                    <span className='text-2xl font-bold'>
+                      {tier.monthlyPrice ? `$${tier.monthlyPrice}` : "Custom"}
+                    </span>
+                    {tier.monthlyPrice && (
+                      <span className='text-muted-foreground text-sm'>/mo</span>
+                    )}
+                  </div>
+                  <p className='text-sm text-muted-foreground mb-4'>
+                    {highlight}
+                  </p>
+                  <Button
+                    variant={isCurrent ? "secondary" : "heroOutline"}
+                    size='sm'
+                    className='w-full'
+                    disabled={isCurrent}
+                    onClick={() =>
+                      tier.monthlyPrice
+                        ? navigate(
+                            `/checkout?plan=${tier.name.toLowerCase()}&name=${
+                              tier.name
+                            }&price=${tier.monthlyPrice}`
+                          )
+                        : navigate("/contact")
+                    }
+                  >
+                    {isCurrent
+                      ? "Current Plan"
+                      : tier.monthlyPrice
+                      ? "Upgrade"
+                      : "Contact Sales"}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Payment History */}
