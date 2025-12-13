@@ -127,7 +127,7 @@ export function AIChatWidget() {
         // Immediate response
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: data.data.result },
+          { role: "assistant", content: data.choices[0].message.content },
         ]);
         setIsTyping(false);
       } else if (res.status === 202 && data.status === "accepted") {
