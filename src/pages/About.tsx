@@ -19,24 +19,24 @@ import { useNavigate } from "react-router-dom";
 
 const values = [
   {
-    icon: Target,
+    icon: "/images/our values.webp",
     title: "Mission-Driven",
     description:
       "We believe in making communication accessible to everyone, regardless of hearing ability.",
   },
   {
-    icon: Eye,
+    icon: "/images/our values (2).webp",
     title: "Innovation First",
     description:
       "Pushing the boundaries of computer vision to solve real-world problems.",
   },
   {
-    icon: Users,
+    icon: "/images/our values (3).webp",
     title: "User-Centric",
     description: "Every feature we build starts with understanding user needs.",
   },
   {
-    icon: Zap,
+    icon: "/images/our values (4).webp",
     title: "Performance Obsessed",
     description:
       "Milliseconds matter. We optimize relentlessly for speed and accuracy.",
@@ -48,70 +48,64 @@ const team = [
     name: "Dr. Sarah Chen",
     role: "CEO & Co-Founder",
     bio: "Former Google AI researcher with 15+ years in computer vision.",
-    image: "SC",
+    imageFallBack: "SC",
+    image: "/images/team (4).webp",
   },
   {
     name: "Marcus Johnson",
     role: "CTO & Co-Founder",
     bio: "Ex-Meta ML infrastructure lead. Built systems serving billions.",
-    image: "MJ",
+    imageFallBack: "MJ",
+    image: "/images/team (2).webp",
   },
   {
     name: "Emily Rodriguez",
     role: "VP of Engineering",
     bio: "Former Stripe engineer. Expert in scalable distributed systems.",
-    image: "ER",
+    imageFallBack: "ER",
+    image: "/images/team (6).webp",
   },
   {
     name: "Dr. James Liu",
     role: "Head of AI Research",
     bio: "PhD Stanford. Published 40+ papers on speech recognition.",
-    image: "JL",
+    imageFallBack: "JL",
+    image: "/images/team.webp",
   },
   {
     name: "Aisha Patel",
     role: "Head of Product",
     bio: "Former Figma PM. Passionate about accessible design.",
-    image: "AP",
+    imageFallBack: "AP",
+    image: "/images/team (5).webp",
   },
   {
     name: "David Kim",
     role: "VP of Sales",
     bio: "Built sales teams at 3 unicorn startups from 0 to $50M ARR.",
-    image: "DK",
+    imageFallBack: "DK",
+    image: "/images/team (3).webp",
   },
 ];
 
 const timeline = [
   {
-    year: "2020",
+    year: "2023",
     title: "Founded",
     description:
       "CharadesAI founded in San Francisco with a mission to make communication accessible.",
   },
   {
-    year: "2021",
+    year: "2024",
     title: "Seed Round",
     description:
       "$5M seed funding led by Sequoia Capital. Launched first lip-reading API.",
   },
   {
-    year: "2022",
+    year: "2025",
     title: "Series A",
     description:
       "$25M Series A. Expanded to gesture recognition and multi-language support.",
-  },
-  {
-    year: "2023",
-    title: "Global Expansion",
-    description:
-      "Opened offices in London and Singapore. Reached 10,000+ developers.",
-  },
-  {
-    year: "2024",
-    title: "Enterprise Launch",
-    description:
-      "Launched enterprise solutions. Partnered with Fortune 500 companies.",
   },
 ];
 
@@ -126,11 +120,13 @@ const About = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='min-h-screen bg-background'>
+    <div className='min-h-sceen'>
       <Navbar />
       <main>
         {/* Hero */}
-        <section className='relative pt-32 pb-20 overflow-hidden'>
+        <section className='relative py-48 overflow-hidden '>
+          {/* Background Image */}
+          <div className='absolute inset-0 opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30 bg-[url("/images/39.webp")] bg-cover bg-no-repeat bg-center'></div>
           {/* Animated background elements */}
           <div className='absolute inset-0'>
             <div className='absolute top-20 left-10 w-72 h-72 bg-gradient-to-r from-neon-cyan/20 to-neon-violet/20 rounded-full blur-3xl animate-pulse'></div>
@@ -148,7 +144,7 @@ const About = () => {
               <h1 className='text-4xl md:text-5xl lg:text-7xl font-bold mb-6 animate-slide-up'>
                 Making Communication{" "}
                 <span className='text-gradient animate-shimmer'>
-                  Accessible
+                  Accessible{" "}
                 </span>{" "}
                 for Everyone
               </h1>
@@ -299,8 +295,12 @@ const About = () => {
                 >
                   <div className='absolute -inset-1 bg-gradient-to-r from-neon-cyan/20 via-neon-violet/20 to-neon-pink/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl'></div>
                   <div className='relative p-8 rounded-3xl bg-card border border-border hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2'>
-                    <div className='w-14 h-14 rounded-2xl bg-gradient-ai flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300'>
-                      <value.icon className='w-7 h-7 text-primary-foreground' />
+                    <div className='w-14 h-14 p-1 rounded-2xl bg-gradient-ai flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300'>
+                      <img
+                        src={value.icon}
+                        alt={value.title}
+                        className='w-full h-full text-primary-foreground rounded-lg'
+                      />
                     </div>
                     <h3 className='text-xl font-bold mb-3 group-hover:text-primary transition-colors duration-300'>
                       {value.title}
@@ -405,9 +405,17 @@ const About = () => {
                   <div className='relative p-8 rounded-3xl bg-card border border-border hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 text-center'>
                     {/* Avatar with gradient border */}
                     <div className='relative mb-6'>
-                      <div className='w-24 h-24 rounded-full bg-gradient-ai flex items-center justify-center text-primary-foreground text-3xl font-bold mx-auto mb-4 relative z-10'>
-                        {member.image}
-                      </div>
+                      {member.image ? (
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className='w-24 h-24 rounded-full object-cover mx-auto mb-4 relative z-10'
+                        />
+                      ) : (
+                        <div className='w-24 h-24 rounded-full bg-gradient-ai flex items-center justify-center text-primary-foreground text-3xl font-bold mx-auto mb-4 relative z-10'>
+                          {member.imageFallBack}
+                        </div>
+                      )}
                       <div className='absolute inset-0 rounded-full bg-gradient-to-r from-neon-cyan to-neon-violet opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-md scale-110'></div>
                     </div>
 
@@ -420,22 +428,6 @@ const About = () => {
                     <p className='text-muted-foreground mb-6 leading-relaxed'>
                       {member.bio}
                     </p>
-
-                    {/* Social links with hover effects */}
-                    <div className='flex justify-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0'>
-                      <a
-                        href='#'
-                        className='p-3 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/25'
-                      >
-                        <Linkedin className='w-4 h-4' />
-                      </a>
-                      <a
-                        href='#'
-                        className='p-3 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-primary/25'
-                      >
-                        <Twitter className='w-4 h-4' />
-                      </a>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -492,12 +484,7 @@ const About = () => {
                   onClick={() => navigate("/contact")}
                   className='group border-2 hover:border-primary/50'
                 >
-                  <span className='flex items-center gap-3'>
-                    Contact Us
-                    <span className='group-hover:scale-110 transition-transform duration-300'>
-                      💬
-                    </span>
-                  </span>
+                  <span className='flex items-center gap-3'>Contact Us</span>
                 </Button>
               </div>
 

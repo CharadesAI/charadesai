@@ -87,12 +87,6 @@ const menuCategories = [
         icon: Terminal,
         description: "Sample implementations",
       },
-      {
-        label: "Changelog",
-        href: "/changelog",
-        icon: History,
-        description: "What's new",
-      },
     ],
   },
   {
@@ -343,7 +337,7 @@ export function Navbar() {
 
       {/* Mega Menu Overlay */}
       {isMobileMenuOpen && (
-        <div className='fixed inset-x-0 top-[75px] bottom-0 bg-background/98 backdrop-blur-2xl border-t border-border animate-fade-in z-50 overflow-y-auto'>
+        <div className='fixed inset-x-0 top-0 bottom-0 bg-background/98 backdrop-blur-2xl border-t border-border animate-fade-in z-50 overflow-y-auto'>
           {/* Decorative background elements */}
           <div className='absolute inset-0 overflow-hidden pointer-events-none'>
             <div className='absolute -top-40 -right-40 w-80 h-80 bg-neon-cyan/5 rounded-full blur-3xl' />
@@ -352,6 +346,17 @@ export function Navbar() {
           </div>
 
           <div className='container mx-auto px-4 py-6 md:py-10 relative'>
+            {/* Close Button */}
+            <div className='absolute top-4 right-4 z-10'>
+              <Button
+                variant='outline'
+                size='icon'
+                className='h-10 w-10 rounded-xl border-border bg-card/80 hover:bg-card backdrop-blur-sm'
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <X className='h-5 w-5' />
+              </Button>
+            </div>
             {/* Desktop: Grid Layout */}
             <div className='hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8'>
               {menuCategories.map((category, catIndex) => (
@@ -526,7 +531,7 @@ export function Navbar() {
               </div>
 
               {/* Mobile: Theme Toggle */}
-              <div className='flex items-center justify-between pt-4'>
+              <div className='flex items-center justify-start space-x-4 pt-4'>
                 <span className='text-sm text-muted-foreground'>Theme</span>
                 <ThemeToggle />
               </div>

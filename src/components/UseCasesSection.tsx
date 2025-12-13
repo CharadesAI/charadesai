@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 
 const useCases = [
   {
-    icon: Accessibility,
+    icon: "/images/icon.webp",
     title: "Universal Accessibility",
     description:
       "Break communication barriers for 1.5B people worldwide with hearing impairments through real-time lip-reading and sign language recognition.",
@@ -35,7 +35,7 @@ const useCases = [
     delay: 0,
   },
   {
-    icon: Shield,
+    icon: "/images/icon (2).webp",
     title: "Intelligent Security",
     description:
       "Silent authentication and surveillance systems that detect threats through facial expressions and unauthorized gestures.",
@@ -46,7 +46,7 @@ const useCases = [
     delay: 0.1,
   },
   {
-    icon: Building,
+    icon: "/images/icon (3).webp",
     title: "Smart Buildings & IoT",
     description:
       "Gesture-controlled smart homes, offices, and public spaces. Control lighting, security, and appliances with natural hand movements.",
@@ -57,7 +57,7 @@ const useCases = [
     delay: 0.2,
   },
   {
-    icon: Heart,
+    icon: "/images/icon (4).webp",
     title: "Healthcare Innovation",
     description:
       "Assist patients with speech impairments, monitor vital signs through facial cues, and enable silent communication in critical care.",
@@ -72,7 +72,7 @@ const useCases = [
     delay: 0.3,
   },
   {
-    icon: Radio,
+    icon: "/images/icon (5).webp",
     title: "Media & Entertainment",
     description:
       "Automated lip-sync verification, enhanced captioning, and interactive experiences that respond to audience gestures and reactions.",
@@ -83,7 +83,7 @@ const useCases = [
     delay: 0.4,
   },
   {
-    icon: Car,
+    icon: "/images/icon (6).webp",
     title: "Autonomous Vehicles",
     description:
       "Driver monitoring systems that detect fatigue, distraction, and emergency gestures for safer autonomous and semi-autonomous driving.",
@@ -94,7 +94,7 @@ const useCases = [
     delay: 0.5,
   },
   {
-    icon: GraduationCap,
+    icon: "/images/icon (7).webp",
     title: "Education Technology",
     description:
       "Interactive learning experiences with gesture-based controls, accessibility tools for diverse learners, and automated assessment.",
@@ -109,7 +109,7 @@ const useCases = [
     delay: 0.6,
   },
   {
-    icon: Gamepad2,
+    icon: "/images/icon (8).webp",
     title: "Gaming & VR",
     description:
       "Immersive gaming experiences with gesture controls, facial expression recognition, and natural interaction in virtual worlds.",
@@ -201,12 +201,16 @@ export function UseCasesSection() {
                 <div className='flex items-start justify-between mb-3'>
                   <div
                     className={cn(
-                      "w-12 h-12 rounded-xl flex items-center justify-center shadow-lg",
+                      "w-12 h-12 p-1 rounded-xl flex items-center justify-center shadow-lg",
                       "bg-gradient-to-br group-hover:scale-110 transition-transform duration-300",
                       useCase.gradient
                     )}
                   >
-                    <useCase.icon className='w-6 h-6 text-primary-foreground' />
+                    <img
+                      src={useCase.icon}
+                      alt={useCase.title}
+                      className='w-full h-full rounded-md text-primary-foreground'
+                    />
                   </div>
                   <div className='text-right'>
                     <div className='text-xs font-medium text-primary mb-1'>

@@ -23,8 +23,7 @@ const testimonials = [
     rating: 5,
     validationType: "gesture",
     liveMetric: "99.7% Success Rate",
-    image:
-      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    image: "/images/testimonial.webp",
     company: "BioSecure",
     achievement: "Reduced login time by 85%",
   },
@@ -36,8 +35,7 @@ const testimonials = [
     rating: 5,
     validationType: "voice",
     liveMetric: "40ms Processing",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    image: "/images/testimonial (3).webp",
     company: "LiveStream Pro",
     achievement: "10M+ accessible streams",
   },
@@ -49,8 +47,7 @@ const testimonials = [
     rating: 5,
     validationType: "continuous",
     liveMetric: "10M+ Daily Interactions",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    image: "/images/testimonial (2).webp",
     company: "GlobalTech",
     achievement: "99.9% uptime achieved",
   },
@@ -62,8 +59,7 @@ const testimonials = [
     rating: 5,
     validationType: "gesture",
     liveMetric: "50K+ Training Sessions",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+    image: "/images/testimonial (4).webp",
     company: "LearnAI",
     achievement: "Enhanced learning by 40%",
   },
@@ -156,7 +152,7 @@ export function TrustSection() {
       {/* Full-width rounded background image */}
       <div className='hidden md:block absolute inset-0 mx-4 mt-8 mb-8'>
         <img
-          src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
+          src='/images/live trust signal bg.webp'
           alt='Trust and validation background'
           className='w-full h-full object-cover rounded-3xl'
         />

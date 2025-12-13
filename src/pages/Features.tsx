@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 
 const mainFeatures = [
   {
-    icon: Eye,
+    icon: "/images/AI capability.webp",
     title: "Lip-Reading AI Engine",
     description:
       "Our state-of-the-art deep learning models analyze lip movements with unprecedented accuracy. Trained on millions of video samples across diverse demographics, lighting conditions, and angles.",
@@ -39,7 +39,7 @@ const mainFeatures = [
     gradient: "from-neon-blue to-neon-cyan",
   },
   {
-    icon: Layers,
+    icon: "/images/AI capability (2).webp",
     title: "Gesture Recognition",
     description:
       "Detect and classify hand gestures, body poses, and sign language in real-time. Support for custom gesture libraries and multi-hand tracking.",
@@ -51,7 +51,7 @@ const mainFeatures = [
     gradient: "from-neon-violet to-neon-pink",
   },
   {
-    icon: Brain,
+    icon: "/images/AI capability (3).webp",
     title: "Multi-Modal Fusion",
     description:
       "Combine lip-reading with audio for superior accuracy in noisy environments. Our fusion models adapt to signal quality in real-time.",
@@ -144,15 +144,7 @@ const Features = () => {
         {/* Hero with Full-Width Background */}
         <section className='relative py-48 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-20 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=1920&h=1080&fit=crop&crop=center'
-              alt='AI and computer vision technology background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 bg-[url("/images/41.webp")] bg-cover bg-center bg-no-repeat opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30 ' />
 
           <div className='container mx-auto px-4 relative z-10'>
             <div className='text-center'>
@@ -232,11 +224,15 @@ const Features = () => {
                 >
                   <div
                     className={cn(
-                      "w-16 h-16 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br",
+                      "w-16 h-16 p-1 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br",
                       feature.gradient
                     )}
                   >
-                    <feature.icon className='w-8 h-8 text-primary-foreground' />
+                    <img
+                      src={feature.icon}
+                      alt={feature.title}
+                      className='w-full h-full rounded-2xl'
+                    />
                   </div>
                   <h3 className='text-xl font-bold mb-4'>{feature.title}</h3>
                   <p className='text-muted-foreground mb-6 leading-relaxed'>
