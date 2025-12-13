@@ -75,7 +75,7 @@ const Pricing = () => {
   const navigate = useNavigate();
   const [isYearly, setIsYearly] = useState(true);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [calculatorValues, setCalculatorValues] = useState({
     apiCalls: 5000,
     resolution: "1080p",
@@ -169,14 +169,7 @@ const Pricing = () => {
       <main>
         {/* Interactive Hero with Calculator */}
         <section className='relative py-32 overflow-hidden'>
-          <div className='absolute inset-0 mx-4 mt-20 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1920&h=1080&fit=crop&crop=center'
-              alt='Pricing calculator background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            <div className='absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 bg-[url("/images/bg.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30' />
 
           <div className='container mx-auto px-4 relative z-10'>
             <div className='grid lg:grid-cols-2 gap-12 items-center'>
@@ -528,7 +521,7 @@ const Pricing = () => {
               <div className='grid md:grid-cols-3 gap-8 relative'>
                 {[
                   {
-                    icon: Play,
+                    icon: "/images/price.webp",
                     title: "Get Started",
                     plan: "Basic",
                     description: "Perfect for small projects",
@@ -540,7 +533,7 @@ const Pricing = () => {
                     ],
                   },
                   {
-                    icon: Users,
+                    icon: "/images/price (2).webp",
                     title: "Scale Up",
                     plan: "Pro",
                     description: "For growing teams and apps",
@@ -552,7 +545,7 @@ const Pricing = () => {
                     ],
                   },
                   {
-                    icon: Crown,
+                    icon: "/images/price (3).webp",
                     title: "Go Enterprise",
                     plan: "Enterprise",
                     description: "For large-scale deployments",
@@ -573,11 +566,15 @@ const Pricing = () => {
                     <div className='p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-neon-cyan/30 transition-all duration-300 group-hover:scale-105 text-center'>
                       <div
                         className={cn(
-                          "w-16 h-16 rounded-2xl bg-gradient-to-r mx-auto mb-6 flex items-center justify-center",
+                          "w-16 h-16 p-1 rounded-2xl bg-gradient-to-r mx-auto mb-6 flex items-center justify-center",
                           stage.color
                         )}
                       >
-                        <stage.icon className='w-8 h-8 text-primary-foreground' />
+                        <img
+                          src={stage.icon}
+                          alt={stage.title}
+                          className='w-full h-full rounded-2xl'
+                        />
                       </div>
 
                       <h3 className='text-xl font-bold mb-2 text-card-foreground group-hover:text-neon-cyan transition-colors'>
@@ -958,15 +955,7 @@ const Pricing = () => {
         {/* CTA with Full-Width Background */}
         <section className='relative py-24 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
-              alt='Contact sales background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 mx-4 mt-8 mb-8 bg-[url("/images/pricing-cta.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30 rounded-3xl' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6 text-card-foreground'>

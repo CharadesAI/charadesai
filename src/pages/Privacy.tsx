@@ -136,7 +136,7 @@ const Privacy = () => {
                   </ul>
                   <p className='mt-4'>
                     To exercise these rights, please contact us at
-                    privacy@charadesai.com.
+                    hello@charadesai.com.
                   </p>
                 </CardContent>
               </Card>
@@ -148,7 +148,7 @@ const Privacy = () => {
               </p>
               <div className='bg-secondary/30 p-4 rounded-lg mt-4'>
                 <p>
-                  <strong>Email:</strong> privacy@charadesai.com
+                  <strong>Email:</strong> hello@charadesai.com
                 </p>
                 <p>
                   <strong>Address:</strong> 123 AI Street, Tech City, TC 12345

@@ -565,7 +565,7 @@ CharadesAI is a cutting-edge AI platform specializing in real-time lip-reading a
 Our advanced machine learning models provide industry-leading accuracy in understanding human communication through visual cues.
 
 ## Contact Information
-For press inquiries: press@charadesai.com
+For press inquiries: hello@charadesai.com
 Website: https://charadesai.com
 
 ---
@@ -583,7 +583,7 @@ Generated on ${new Date().toLocaleDateString()}
       {
         name: "press-contacts.md",
         content:
-          "# Press Contacts\n\nMedia Inquiries: press@charadesai.com\nTechnical Questions: tech@charadesai.com\nPartnerships: partnerships@charadesai.com",
+          "# Press Contacts\n\nMedia Inquiries: hello@charadesai.com",
       },
     ];
 

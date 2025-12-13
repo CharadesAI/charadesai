@@ -193,7 +193,7 @@ const Terms = () => {
               </p>
               <div className='bg-secondary/30 p-4 rounded-lg mt-4'>
                 <p>
-                  <strong>Email:</strong> legal@charadesai.com
+                  <strong>Email:</strong> hello@charadesai.com
                 </p>
                 <p>
                   <strong>Address:</strong> 123 AI Street, Tech City, TC 12345

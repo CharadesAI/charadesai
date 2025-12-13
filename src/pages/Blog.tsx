@@ -67,17 +67,9 @@ const Blog = () => {
       <Navbar />
       <main>
         {/* Hero with Full-Width Background */}
-        <section className='relative py-32 overflow-hidden'>
+        <section className='relative py-48 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1486312338219-ce68e2c6f44d?w=1920&h=1080&fit=crop&crop=center'
-              alt='Blog and insights background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 bg-[url("/images/blog.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>

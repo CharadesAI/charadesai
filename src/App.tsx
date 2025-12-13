@@ -18,7 +18,6 @@ import NotFound from "./pages/NotFound";
 import Forgot from "./pages/Forgot";
 import UseCases from "./pages/UseCases";
 import API from "./pages/API";
-import Changelog from "./pages/Changelog";
 import APIStatus from "./pages/APIStatus";
 import CodeExamples from "./pages/CodeExamples";
 import Community from "./pages/Community";
@@ -63,7 +62,6 @@ const App = () => (
               <Route path='/contact' element={<Contact />} />
               <Route path='/use-cases' element={<UseCases />} />
               <Route path='/api' element={<API />} />
-              <Route path='/changelog' element={<Changelog />} />
               <Route path='/status' element={<APIStatus />} />
               <Route path='/examples' element={<CodeExamples />} />
               <Route path='/community' element={<Community />} />

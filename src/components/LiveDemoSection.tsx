@@ -216,22 +216,22 @@ export function LiveDemoSection() {
                         Face Detected
                       </div>
                     </div>
-
+                    <img
+                      src={"/images/face detected.webp"}
+                      alt='Face Detected'
+                      className='w-full h-full object-cover rounded-2xl'
+                    />
                     {/* Facial landmarks */}
-                    <div className='absolute inset-4'>
-                      {/* Eyes */}
+                    {/* <div className='absolute inset-4'>
                       <div className='absolute top-1/3 left-1/4 w-4 h-4 border-2 border-neon-emerald rounded-full animate-pulse' />
                       <div className='absolute top-1/3 right-1/4 w-4 h-4 border-2 border-neon-emerald rounded-full animate-pulse' />
 
-                      {/* Nose */}
                       <div className='absolute top-1/2 left-1/2 -translate-x-1/2 w-2 h-2 border-2 border-neon-violet rounded-full animate-pulse' />
 
-                      {/* Mouth with lip-reading focus */}
                       <div className='absolute bottom-1/3 left-1/2 -translate-x-1/2 w-12 h-4 border-2 border-neon-pink rounded-lg animate-pulse'>
                         <div className='absolute -top-5 left-1/2 -translate-x-1/2 px-2 py-0.5 bg-neon-pink/20 rounded text-xs font-medium text-neon-pink border border-neon-pink/30'>
                           Lip Reading Active
                         </div>
-                        {/* Speech waveform */}
                         <svg
                           className='absolute -bottom-6 left-1/2 -translate-x-1/2 w-16 h-4'
                           viewBox='0 0 64 16'
@@ -257,9 +257,8 @@ export function LiveDemoSection() {
                           </defs>
                         </svg>
                       </div>
-                    </div>
+                    </div> */}
 
-                    {/* Gesture tracking points */}
                     <div className='absolute top-1/4 right-1/4 w-3 h-3 border-2 border-neon-violet rounded-full animate-ping' />
                     <div
                       className='absolute bottom-1/4 left-1/4 w-3 h-3 border-2 border-neon-violet rounded-full animate-ping'
@@ -293,8 +292,12 @@ export function LiveDemoSection() {
                 <div className='p-6 rounded-2xl bg-gradient-to-r from-card to-card/80 border border-border/50 shadow-lg'>
                   <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center gap-3'>
-                      <div className='p-2 rounded-lg bg-neon-cyan/20 border border-neon-cyan/30'>
-                        <Mic className='w-5 h-5 text-neon-cyan' />
+                      <div className='p-1 rounded-lg bg-neon-cyan/20 border border-neon-cyan/30'>
+                        <img
+                          src={"/images/face detected icon.webp"}
+                          alt='Lip Reading'
+                          className='w-8 h-8 text-neon-cyan rounded-md'
+                        />
                       </div>
                       <div>
                         <span className='font-medium'>
@@ -341,8 +344,12 @@ export function LiveDemoSection() {
                 <div className='p-4 md:p-6 rounded-2xl bg-gradient-to-r from-card to-card/80 border border-border/50 shadow-lg'>
                   <div className='flex items-center justify-between mb-4'>
                     <div className='flex items-center gap-3'>
-                      <div className='p-2 rounded-lg bg-neon-violet/20 border border-neon-violet/30'>
-                        <Target className='w-5 h-5 text-neon-violet' />
+                      <div className='p-1 rounded-lg bg-neon-violet/20 border border-neon-violet/30'>
+                        <img
+                          src={"/images/face detected icon (2).webp"}
+                          alt='Gesture Recognition'
+                          className='w-8 h-8 rounded-md'
+                        />
                       </div>
                       <div>
                         <span className='font-medium'>Gesture Recognition</span>

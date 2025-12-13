@@ -17,7 +17,6 @@ const footerLinks = {
     { label: "Features", href: "/features" },
     { label: "Pricing", href: "/pricing" },
     { label: "Use Cases", href: "/use-cases" },
-    { label: "Changelog", href: "/changelog" },
   ],
   developers: [
     { label: "API Docs", href: "/api" },

@@ -54,17 +54,17 @@ const contactSchema = z.object({
 
 const contactOptions = [
   {
-    icon: MessageSquare,
+    icon: "/images/how can we help.webp",
     title: "Sales Inquiry",
     description: "Talk to our sales team about enterprise solutions.",
   },
   {
-    icon: Headphones,
+    icon: "/images/how can we help (2).webp",
     title: "Technical Support",
     description: "Get help with API integration and troubleshooting.",
   },
   {
-    icon: FileText,
+    icon: "/images/how can we help (3).webp",
     title: "Partnerships",
     description: "Explore partnership and integration opportunities.",
   },
@@ -234,15 +234,7 @@ const Contact = () => {
         {/* Hero with Full-Width Background */}
         <section className='relative py-48 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-20 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
-              alt='Contact us background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 bg-[url("/images/48.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>
@@ -270,8 +262,12 @@ const Contact = () => {
                   key={option.title}
                   className='group p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl text-center'
                 >
-                  <div className='w-16 h-16 rounded-2xl bg-gradient-ai flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300'>
-                    <option.icon className='w-8 h-8 text-primary-foreground' />
+                  <div className='w-16 h-16 p-1 rounded-2xl bg-gradient-ai flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300'>
+                    <img
+                      src={option.icon}
+                      alt={option.title}
+                      className='w-full h-full rounded-2xl'
+                    />
                   </div>
                   <h3 className='text-xl font-bold mb-4 text-card-foreground group-hover:text-neon-cyan transition-colors'>
                     {option.title}
@@ -591,15 +587,7 @@ const Contact = () => {
         {/* FAQ CTA */}
         <section className='relative py-24 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=1920&h=1080&fit=crop&crop=center'
-              alt='Get help and support background'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 mx-4 mt-8 mb-8 bg-[url("/images/contact_cta.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30 rounded-3xl' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6 text-card-foreground'>

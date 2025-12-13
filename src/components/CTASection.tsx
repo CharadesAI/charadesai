@@ -66,7 +66,11 @@ export function CTASection() {
           <div className='grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto mb-12'>
             <div className='text-center'>
               <div className='flex items-center justify-center gap-2 mb-2'>
-                <Brain className='w-5 h-5 text-neon-cyan' />
+                <img
+                  src={"/images/neural network online.webp"}
+                  alt='Neural Inferences'
+                  className='w-8 h-8 rounded'
+                />
                 <span className='text-2xl font-bold text-foreground'>10M+</span>
               </div>
               <div className='text-sm text-muted-foreground'>
@@ -75,14 +79,22 @@ export function CTASection() {
             </div>
             <div className='text-center'>
               <div className='flex items-center justify-center gap-2 mb-2'>
-                <Activity className='w-5 h-5 text-neon-violet' />
+                <img
+                  src={"/images/neural network online (3).webp"}
+                  alt='Avg Latency'
+                  className='w-8 h-8 rounded'
+                />
                 <span className='text-2xl font-bold text-foreground'>40ms</span>
               </div>
               <div className='text-sm text-muted-foreground'>Avg Latency</div>
             </div>
             <div className='text-center'>
               <div className='flex items-center justify-center gap-2 mb-2'>
-                <Sparkles className='w-5 h-5 text-neon-pink' />
+                <img
+                  src={"/images/neural network online (2).webp"}
+                  alt='Accuracy Rate'
+                  className='w-8 h-8 rounded'
+                />
                 <span className='text-2xl font-bold text-foreground'>
                   99.9%
                 </span>
