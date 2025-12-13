@@ -294,7 +294,7 @@ export function Navbar() {
                       Dashboard
                     </Link>
                     <Link
-                      to='/account'
+                      to='/dashboard/profile'
                       target='_blank'
                       onClick={() => setShowProfileMenu(false)}
                       className='block px-3 py-2 rounded-md hover:bg-accent/40'

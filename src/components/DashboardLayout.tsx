@@ -113,7 +113,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Logo */}
         <div className='h-16 flex items-center justify-between px-4 border-b border-border'>
           {!sidebarCollapsed && (
-            <NavLink to='/' className='flex items-center gap-2'>
+            <NavLink to='/' className='flex items-center h-20 gap-2'>
               <Logo />
             </NavLink>
           )}

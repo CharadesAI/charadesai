@@ -144,8 +144,8 @@ export function HeroSection() {
               size='xl'
               className='group shadow-2xl shadow-neon-cyan/25 w-full sm:w-auto'
               onClick={() => {
-                const demoSection = document.getElementById("live-demo");
-                demoSection?.scrollIntoView({ behavior: "smooth" });
+                // Navigate to dashboard or sign-up page
+                window.location.href = "/dashboard";
               }}
             >
               <Sparkles className='w-5 h-5 mr-2' />
@@ -157,11 +157,8 @@ export function HeroSection() {
               size='xl'
               className='group border-neon-cyan/50 hover:border-neon-cyan w-full sm:w-auto'
               onClick={() => {
-                // Open video modal or external video link
-                window.open(
-                  "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-                  "_blank"
-                );
+                // Navigate to contact page
+                window.location.href = "/contact";
               }}
             >
               Book a Demo
