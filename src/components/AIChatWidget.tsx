@@ -132,7 +132,7 @@ export function AIChatWidget() {
         setIsTyping(false);
       } else if (res.status === 202 && data.status === "accepted") {
         // Async response, start polling
-        setPollingJob(data.data.job_id);
+        // setPollingJob(data.data.job_id);
       } else {
         // Error response
         setMessages((prev) => [
