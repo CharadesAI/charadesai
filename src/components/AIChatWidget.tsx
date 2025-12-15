@@ -165,24 +165,28 @@ export function AIChatWidget() {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full",
+          "fixed z-50 rounded-full",
           "bg-gradient-ai text-primary-foreground",
           "flex items-center justify-center",
           "shadow-xl shadow-primary/25",
           "hover:scale-110 transition-transform duration-300",
-          "animate-pulse-glow"
+          "animate-pulse-glow",
+          // Mobile: bottom-0, left side, smaller
+          "bottom-0 left-4 w-12 h-12 mb-4",
+          // Desktop: bottom-6, right side, larger
+          "md:bottom-32 md:right-6 md:left-auto md:w-14 md:h-14"
         )}
       >
         {isOpen ? (
-          <X className='w-6 h-6' />
+          <X className='w-5 h-5 md:w-6 md:h-6' />
         ) : (
-          <MessageCircle className='w-6 h-6' />
+          <MessageCircle className='w-5 h-5 md:w-6 md:h-6' />
         )}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className='fixed bottom-24 right-6 z-50 w-[360px] max-w-[calc(100vw-48px)] animate-scale-up'>
+        <div className='fixed bottom-20 left-4 md:bottom-24 md:right-6 md:left-auto z-50 w-[360px] max-w-[calc(100vw-48px)] animate-scale-up'>
           <div className='rounded-2xl overflow-hidden bg-card border border-border shadow-2xl'>
             {/* Header */}
             <div className='p-4 bg-gradient-ai flex items-center gap-3'>
