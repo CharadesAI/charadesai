@@ -113,7 +113,7 @@ export function HeroSection() {
           </h1>
 
           {/* Technology Showcase */}
-          <div className='flex items-center justify-center gap-8 mb-8 animate-fade-in-up [animation-delay:0.2s]'>
+          <div className='flex items-center flex-col md:flex-row justify-center gap-4 md:gap-8 mb-8 animate-fade-in-up [animation-delay:0.2s]'>
             <div className='flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20'>
               <Mic className='w-4 h-4 text-neon-cyan' />
               <span className='text-sm font-medium'>
@@ -197,7 +197,7 @@ export function HeroSection() {
       </div>
 
       {/* Interactive Scroll Prompt */}
-      <div className='absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in-up [animation-delay:1s]'>
+      <div className='hidden md:block absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in-up [animation-delay:1s]'>
         <div className='flex flex-col items-center gap-2 text-muted-foreground/60'>
           <div className='w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2'>
             <div className='w-1 h-2 rounded-full bg-muted-foreground/50 animate-bounce' />

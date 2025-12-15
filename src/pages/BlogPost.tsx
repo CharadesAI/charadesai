@@ -69,7 +69,7 @@ const BlogPost = () => {
       <Navbar />
 
       {/* Sticky Back Button */}
-      <div className='sticky top-48 z-40 mb-4'>
+      <div className='sticky top-20 md:top-48 z-40 mb-4'>
         <div className='container mx-auto px-4'>
           <Link
             to='/blog'
