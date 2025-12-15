@@ -17,50 +17,50 @@ import { useState, useEffect } from "react";
 const testimonials = [
   {
     quote:
-      "CharadesAI's gesture recognition authenticated 99.7% of our users instantly. No more passwords - just natural movements.",
-    author: "Dr. Elena Vasquez",
-    role: "Security Lead, BioSecure",
+      "CharadesAI transformed how we interact with devices. The real-time gesture recognition and lip-reading APIs allowed us to automate workflows effortlessly.",
+    author: "Maria Santos",
+    role: "AI Operations Lead, GlobalTech",
     rating: 5,
     validationType: "gesture",
     liveMetric: "99.7% Success Rate",
     image: "/images/testimonial.webp",
-    company: "BioSecure",
+    company: "GlobalTech",
     achievement: "Reduced login time by 85%",
   },
   {
     quote:
-      "Lip-reading API processes real-time captions at 40ms latency. Our deaf community users can now participate fully in live streams.",
-    author: "James Park",
-    role: "Accessibility Director, LiveStream Pro",
+      "Integrating CharadesAI into our accessibility apps was seamless. The AI understands non-verbal cues across multiple languages with incredible accuracy.",
+    author: "Rajiv Mehta",
+    role: "CTO, HealthConnect Solutions",
     rating: 5,
     validationType: "voice",
     liveMetric: "40ms Processing",
     image: "/images/testimonial (3).webp",
-    company: "LiveStream Pro",
+    company: "HealthConnect Solutions",
     achievement: "10M+ accessible streams",
   },
   {
     quote:
-      "Enterprise deployment was seamless. The AI continuously learns from our 10M+ daily interactions, improving accuracy every day.",
-    author: "Maria Santos",
-    role: "AI Operations, GlobalTech",
-    rating: 5,
+      "Our enterprise adoption of CharadesAI has boosted productivity and user engagement. Silent communication recognition opened new possibilities for remote collaboration.",
+    author: "Emily Rodriguez",
+    role: "VP of Engineering, Innovate Robotics",
+    rating: 4,
     validationType: "continuous",
     liveMetric: "10M+ Daily Interactions",
     image: "/images/testimonial (2).webp",
-    company: "GlobalTech",
+    company: "Innovate Robotics",
     achievement: "99.9% uptime achieved",
   },
   {
     quote:
-      "The real-time gesture recognition has transformed our virtual training platform. Trainees can now interact naturally with our AI instructor.",
-    author: "Dr. Sarah Chen",
-    role: "Education Director, LearnAI",
+      "Deploying CharadesAI at the edge enabled us to maintain low-latency gesture control across thousands of IoT devices. Truly enterprise-grade AI.",
+    author: " Thomas Lee",
+    role: "Director of IoT Solutions, SmartHome Global",
     rating: 5,
     validationType: "gesture",
     liveMetric: "50K+ Training Sessions",
     image: "/images/testimonial (4).webp",
-    company: "LearnAI",
+    company: "SmartHome Global",
     achievement: "Enhanced learning by 40%",
   },
 ];
@@ -337,15 +337,13 @@ export function TrustSection() {
                 <span className='text-sm font-medium'>Live Trust Signals</span>
               </div>
               <h2 className='text-3xl md:text-4xl font-bold'>
-                Real-Time Validation
+                Take A Moment to View
                 <span className='text-gradient block'>
-                  Proven in Production
+                  Our Gathered Feedbacks
                 </span>
               </h2>
               <p className='text-muted-foreground max-w-md text-lg leading-relaxed'>
-                See how enterprises worldwide trust CharadesAI for
-                mission-critical AI validation, with real-time metrics and
-                continuous learning.
+                Highlights client achievements using CharadesAI.
               </p>
             </div>
           </motion.div>

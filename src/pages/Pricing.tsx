@@ -45,29 +45,29 @@ import { plans } from "@/lib/pricng";
 
 const faqs = [
   {
-    question: "Can I change plans anytime?",
+    question: "What industries benefit most from CharadesAI?",
     answer:
-      "Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate your billing.",
+      "CharadesAI is deployed across healthcare, manufacturing, retail, robotics, AR/VR, smart home, and security industries,anywhere real-time lip-reading and gesture recognition enhances operations and accessibility.",
   },
   {
-    question: "What counts as an API call?",
+    question: "How accurate is CharadesAI in real-world scenarios?",
     answer:
-      "Each video frame or image processed counts as one API call. Batch processing and streaming have the same per-frame pricing.",
+      "Our AI delivers 97.7% recognition accuracy across 40+ languages with low-latency processing , ensuring reliable performance for mission-critical enterprise applications.",
   },
   {
-    question: "Do you offer discounts for startups?",
+    question: "Can CharadesAI integrate with existing enterprise systems?",
     answer:
-      "Yes! We offer special pricing for early-stage startups. Contact our sales team to learn about our startup program.",
+      "Yes. CharadesAI provides developer-friendly APIs and edge deployment options, making it easy to integrate gesture recognition, lip-reading, and silent communication into your existing workflows.",
   },
   {
-    question: "What payment methods do you accept?",
+    question: "How have clients achieved measurable ROI using CharadesAI?",
     answer:
-      "We accept all major credit cards, PayPal, and wire transfers for annual enterprise contracts.",
+      "Clients report improved productivity, enhanced accessibility, faster decision-making, and safer operations by leveraging silent communication recognition and hands-free AI controls.",
   },
   {
-    question: "Is there a contract or commitment?",
+    question: "Is CharadesAI suitable for global, multilingual teams?",
     answer:
-      "No long-term contracts. Monthly plans can be cancelled anytime. Annual plans are billed upfront with a 20% discount.",
+      "Absolutely. Our platform supports 40+ languages, enabling inclusive communication across international offices, customer bases, and multilingual applications.",
   },
 ];
 
@@ -925,10 +925,10 @@ const Pricing = () => {
             <div className='text-center mb-16'>
               <HelpCircle className='w-12 h-12 mx-auto mb-4 text-neon-cyan' />
               <h2 className='text-3xl md:text-4xl font-bold mb-4 text-card-foreground'>
-                Frequently Asked Questions
+                Guided Solutions
               </h2>
               <p className='text-muted-foreground'>
-                Everything you need to know about our pricing.
+                Find Out The Suitable Answers For Your Needs
               </p>
             </div>
 
