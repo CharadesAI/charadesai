@@ -135,16 +135,17 @@ export function LiveDemoSection() {
         <div className='text-center mb-16'>
           <div className='inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6 border border-neon-cyan/30'>
             <Brain className='w-4 h-4 text-neon-cyan animate-pulse' />
-            <span className='text-sm font-medium'>Neural Processing Live</span>
+            <span className='text-sm font-medium'>
+              Visual Intelligence - Live
+            </span>
           </div>
           <h2 className='text-3xl md:text-4xl font-bold mb-4'>
-            Witness <span className='text-gradient'>AI Intelligence</span> in
-            Real-Time
+            See <span className='text-gradient'>AI </span>
+            Understand the <span className='text-gradient'>Unspoken</span>
           </h2>
           <p className='text-muted-foreground max-w-3xl mx-auto text-lg'>
-            Experience our advanced neural networks deciphering human
-            communication through sophisticated computer vision and natural
-            language processing.
+            Witness real-time neural inference as silent speech and human motion
+            are transformed into meaningful, machine-readable insight.
           </p>
         </div>
 

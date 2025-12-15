@@ -56,23 +56,25 @@ const contactOptions = [
   {
     icon: "/images/how can we help.webp",
     title: "Sales Inquiry",
-    description: "Talk to our sales team about enterprise solutions.",
+    description:
+      "Discover enterprise solutions and see how CharadesAI can power your products and systems.",
   },
   {
     icon: "/images/how can we help (2).webp",
     title: "Technical Support",
-    description: "Get help with API integration and troubleshooting.",
+    description:
+      "Need help with API integration, real-time demos, or troubleshooting? Our engineers are here for you.",
   },
   {
     icon: "/images/how can we help (3).webp",
     title: "Partnerships",
-    description: "Explore partnership and integration opportunities.",
+    description:
+      "Explore collaboration, integration, or co-innovation opportunities with CharadesAI.",
   },
 ];
-
 const office = {
-  city: "San Francisco",
-  address: "100 Market Street, Suite 300",
+  city: "Los Angeles, CA",
+  address: "2440 Glendale Blvd",
   country: "United States",
 };
 
@@ -244,8 +246,9 @@ const Contact = () => {
               Get in <span className='text-gradient'>Touch</span>
             </h1>
             <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-              Have questions about CharadesAI? We'd love to hear from you. Send
-              us a message and we'll respond as soon as possible.
+              Have questions or ideas about CharadesAI? Let’s connect! Our team
+              is ready to help you explore AI-driven silent communication
+              solutions.
             </p>
           </div>
         </section>
@@ -254,7 +257,7 @@ const Contact = () => {
         <section className='py-16'>
           <div className='container mx-auto px-4'>
             <h2 className='text-3xl font-bold mb-12 text-center'>
-              How Can We Help?
+              How Can We Assist You?
             </h2>
             <div className='grid grid-cols-3 gap-8 max-w-5xl mx-auto'>
               {contactOptions.map((option) => (
@@ -461,10 +464,10 @@ const Contact = () => {
                           Phone
                         </div>
                         <a
-                          href='tel:+1-800-VISION'
+                          href='tel:+1-323-729-1142'
                           className='text-muted-foreground hover:text-neon-cyan transition-colors'
                         >
-                          +1 (800) VISION-AI
+                          +1 (323) 729‑1142
                         </a>
                       </div>
                     </div>

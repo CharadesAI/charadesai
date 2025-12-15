@@ -9,10 +9,10 @@ import {
   Clock,
   User,
   Share2,
-  Twitter,
   Linkedin,
   Copy,
 } from "lucide-react";
+import { FaX } from "react-icons/fa6";
 import { toast } from "sonner";
 import { blogContent } from "@/lib/blog-content";
 
@@ -69,7 +69,7 @@ const BlogPost = () => {
       <Navbar />
 
       {/* Sticky Back Button */}
-      <div className='sticky top-20 z-40 mb-4'>
+      <div className='sticky top-48 z-40 mb-4'>
         <div className='container mx-auto px-4'>
           <Link
             to='/blog'
@@ -85,14 +85,13 @@ const BlogPost = () => {
         {/* Header with Full-Width Background */}
         <section className='relative py-32 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
+          <div className='absolute inset-0'>
             <img
-              src='https://images.unsplash.com/photo-1486312338219-ce68e2c6f44d?w=1920&h=1080&fit=crop&crop=center'
-              alt='Blog post header background'
-              className='w-full h-full object-cover rounded-3xl'
+              src={post.image}
+              alt={post.title}
+              className='w-full h-full object-cover rounded-3xl opacity-30 md:opacity-50'
             />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
+            <div className='absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/70 rounded-3xl' />
           </div>
 
           <div className='container mx-auto px-4 relative z-10'>
@@ -153,7 +152,7 @@ const BlogPost = () => {
                   onClick={() => handleShare("twitter")}
                   className='p-3 rounded-lg bg-card/80 backdrop-blur-md border border-border hover:bg-card/60 transition-all duration-300 hover:scale-110'
                 >
-                  <Twitter className='w-4 h-4 text-card-foreground' />
+                  <FaX className='w-4 h-4 text-card-foreground' />
                 </button>
                 <button
                   onClick={() => handleShare("linkedin")}
@@ -240,15 +239,13 @@ const BlogPost = () => {
         </section>
 
         {/* Related Posts CTA - Redesigned */}
-        <section className='relative py-24 overflow-hidden'>
-          {/* Full-width rounded background image */}
+        {/* <section className='relative py-24 overflow-hidden'>
           <div className='absolute inset-0 mx-4 mt-8 mb-8'>
             <img
               src='https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop&crop=center'
               alt='Continue reading background'
               className='w-full h-full object-cover rounded-3xl'
             />
-            {/* Overlay for better text readability */}
             <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
           </div>
 
@@ -267,7 +264,7 @@ const BlogPost = () => {
               <Link to='/blog'>View All Articles</Link>
             </Button>
           </div>
-        </section>
+        </section> */}
       </main>
       <Footer />
       <AIChatWidget />

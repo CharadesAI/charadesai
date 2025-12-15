@@ -151,7 +151,7 @@ const Privacy = () => {
                   <strong>Email:</strong> hello@charadesai.com
                 </p>
                 <p>
-                  <strong>Address:</strong> 123 AI Street, Tech City, TC 12345
+                  <strong>Address:</strong> 2440 Glendale Blvd, Los Angeles, CA
                 </p>
               </div>
             </div>

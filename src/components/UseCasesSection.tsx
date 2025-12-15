@@ -138,37 +138,44 @@ export function UseCasesSection() {
         <div className='text-center mb-12 md:mb-20'>
           <div className='inline-flex items-center gap-2 px-6 py-2 rounded-full glass mb-6 border border-neon-cyan/30'>
             <Target className='w-4 h-4 text-neon-cyan animate-pulse' />
-            <span className='text-sm font-medium'>Real-World Applications</span>
+            <span className='text-sm font-medium'>
+              Visual Intelligence in the Real World
+            </span>
           </div>
           <h2 className='text-3xl md:text-4xl lg:text-5xl font-bold mb-6'>
-            Transforming{" "}
-            <span className='text-gradient'>Industries Worldwide</span>
+            Redefining{" "}
+            <span className='text-gradient'>Human Machine Interaction </span>
+            at Scale
           </h2>
           <p className='text-muted-foreground max-w-3xl mx-auto text-lg leading-relaxed'>
-            From healthcare to entertainment, our AI technology is
-            revolutionizing how humans interact with technology, making systems
-            more intuitive, accessible, and intelligent.
+            From healthcare to immersive media, Charades AI enables machines to
+            understand lips, gestures, and silent intent,creating more natural,
+            accessible, and intelligent systems worldwide.
           </p>
 
           {/* Global Impact Stats */}
           <div className='flex flex-wrap justify-center gap-8 mt-12'>
             <div className='text-center'>
               <div className='text-3xl font-bold text-neon-cyan mb-1'>50+</div>
-              <div className='text-sm text-muted-foreground'>Industries</div>
+              <div className='text-sm text-muted-foreground'>
+                Industries Enabled
+              </div>
             </div>
             <div className='text-center'>
               <div className='text-3xl font-bold text-neon-emerald mb-1'>
                 2B+
               </div>
               <div className='text-sm text-muted-foreground'>
-                Potential Users
+                Potential Users Impacted
               </div>
             </div>
             <div className='text-center'>
               <div className='text-3xl font-bold text-neon-violet mb-1'>
                 99.7%
               </div>
-              <div className='text-sm text-muted-foreground'>Accuracy Rate</div>
+              <div className='text-sm text-muted-foreground'>
+                Visual Recognition Accuracy
+              </div>
             </div>
           </div>
         </div>

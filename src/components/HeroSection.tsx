@@ -105,36 +105,38 @@ export function HeroSection() {
 
           {/* Dynamic Headline */}
           <h1 className='text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 animate-fade-in-up [animation-delay:0.1s]'>
-            <span className='text-foreground'>See What You </span>
-            <span className='text-gradient animate-shimmer'>Can't Hear</span>
+            <span className='text-foreground'>Vision Beyond </span>
+            <span className='text-gradient animate-shimmer'>Sound</span>
             <br />
-            <span className='text-foreground'>Read What You </span>
-            <span className='text-gradient animate-shimmer'>Can't See</span>
+            <span className='text-foreground'>Intelligence Beyond </span>
+            <span className='text-gradient animate-shimmer'>Words</span>
           </h1>
 
           {/* Technology Showcase */}
           <div className='flex items-center justify-center gap-8 mb-8 animate-fade-in-up [animation-delay:0.2s]'>
             <div className='flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20'>
               <Mic className='w-4 h-4 text-neon-cyan' />
-              <span className='text-sm font-medium'>Lip Reading</span>
+              <span className='text-sm font-medium'>
+                Visual Speech Recognition
+              </span>
             </div>
             <div className='flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20'>
               <Hand className='w-4 h-4 text-neon-emerald' />
-              <span className='text-sm font-medium'>Gesture Recognition</span>
+              <span className='text-sm font-medium'>
+                Human Gesture Intelligence
+              </span>
             </div>
             <div className='flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20'>
               <Eye className='w-4 h-4 text-neon-violet' />
-              <span className='text-sm font-medium'>Real-Time AI</span>
+              <span className='text-sm font-medium'>Live AI Inference</span>
             </div>
           </div>
 
           {/* Compelling Subheadline */}
           <p className='text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 animate-fade-in-up [animation-delay:0.3s]'>
-            Transform silent communication into actionable insights. Our AI
-            deciphers lip movements and gestures with{" "}
-            <span className='text-neon-cyan font-semibold'>99.7% accuracy</span>
-            , enabling accessibility, security, and intelligent automation
-            across industries.
+            A powerful visual intelligence API that reads lips, understands
+            gestures, and delivers real-time insights for silent, hands-free
+            communication.
           </p>
 
           {/* Enhanced CTAs */}
@@ -149,7 +151,7 @@ export function HeroSection() {
               }}
             >
               <Sparkles className='w-5 h-5 mr-2' />
-              Try the Dashboard
+              Explore the Dashboard
               <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
             </Button>
             <Button
@@ -161,7 +163,7 @@ export function HeroSection() {
                 window.location.href = "/contact";
               }}
             >
-              Book a Demo
+              Book Your Demo
               <Play className='w-5 h-5 mr-2' />
             </Button>
           </div>
@@ -173,23 +175,21 @@ export function HeroSection() {
                 99.7%
               </div>
               <div className='text-sm text-muted-foreground'>
-                Recognition Accuracy
+                Prediction Accuracy
               </div>
             </div>
             <div className='text-center'>
               <div className='text-2xl font-bold text-neon-emerald mb-1'>
                 &lt;50ms
               </div>
-              <div className='text-sm text-muted-foreground'>
-                Processing Latency
-              </div>
+              <div className='text-sm text-muted-foreground'>Response Time</div>
             </div>
             <div className='text-center'>
               <div className='text-2xl font-bold text-neon-violet mb-1'>
                 24/7
               </div>
               <div className='text-sm text-muted-foreground'>
-                Real-Time Operation
+                Continuous Operation
               </div>
             </div>
           </div>

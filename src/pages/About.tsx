@@ -22,30 +22,30 @@ const values = [
     icon: "/images/our values.webp",
     title: "Mission-Driven",
     description:
-      "We believe in making communication accessible to everyone, regardless of hearing ability.",
+      "Communication accessibility is at the heart of everything we do.",
   },
   {
     icon: "/images/our values (2).webp",
     title: "Innovation First",
     description:
-      "Pushing the boundaries of computer vision to solve real-world problems.",
+      "Pushing computer vision boundaries to solve real-world problems.",
   },
   {
     icon: "/images/our values (3).webp",
     title: "User-Centric",
-    description: "Every feature we build starts with understanding user needs.",
+    description: "Every feature begins with understanding user needs.",
   },
   {
     icon: "/images/our values (4).webp",
     title: "Performance Obsessed",
     description:
-      "Milliseconds matter. We optimize relentlessly for speed and accuracy.",
+      "Milliseconds matter—optimized for speed, reliability, and accuracy.",
   },
 ];
 
 const team = [
   {
-    name: "Dr. Sarah Chen",
+    name: "Elowen Hartfield",
     role: "CEO & Co-Founder",
     bio: "Former Google AI researcher with 15+ years in computer vision.",
     imageFallBack: "SC",
@@ -93,19 +93,19 @@ const timeline = [
     year: "2023",
     title: "Founded",
     description:
-      "CharadesAI founded in San Francisco with a mission to make communication accessible.",
+      "CharadesAI launched in San Francisco with a mission to make communication accessible.",
   },
   {
     year: "2024",
-    title: "Seed Round",
+    title: "Global Expansion",
     description:
-      "$5M seed funding led by Sequoia Capital. Launched first lip-reading API.",
+      "Offices opened in London and Singapore. Reached 10,000+ developers.",
   },
   {
     year: "2025",
-    title: "Series A",
+    title: "Enterprise Launch",
     description:
-      "$25M Series A. Expanded to gesture recognition and multi-language support.",
+      "Partnered with Fortune 500 companies. Rolled out enterprise-grade AI solutions.",
   },
 ];
 
@@ -152,8 +152,11 @@ const About = () => {
                 className='text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-slide-up'
                 style={{ animationDelay: "0.2s" }}
               >
-                We're building the future of human-computer interaction through
-                advanced lip-reading and gesture recognition AI.
+                We are shaping the future of human-computer interaction with{" "}
+                <strong>
+                  advanced lip-reading and gesture recognition AI,
+                </strong>{" "}
+                enabling seamless communication for all.
               </p>
               <div
                 className='flex flex-wrap justify-center gap-4 animate-slide-up'
@@ -217,8 +220,8 @@ const About = () => {
                 className='text-lg text-muted-foreground max-w-2xl mx-auto animate-slide-up'
                 style={{ animationDelay: "0.2s" }}
               >
-                Driving innovation in accessibility technology to create a more
-                inclusive world
+                Driving innovation in accessibility technology to build a more{" "}
+                <strong>inclusive, barrier-free world.</strong>
               </p>
             </div>
 
@@ -235,12 +238,11 @@ const About = () => {
                     </div>
                     <h3 className='text-2xl font-bold mb-4'>Our Mission</h3>
                     <p className='text-muted-foreground leading-relaxed text-lg'>
-                      To break down communication barriers through AI. We
-                      believe that everyone deserves equal access to
-                      information, regardless of hearing ability or speaking
-                      conditions. Our technology empowers developers to build
-                      inclusive applications that understand human communication
-                      in all its forms.
+                      Break down communication barriers with AI. Everyone
+                      deserves equal access to information, regardless of
+                      hearing ability or speaking conditions. Our technology
+                      empowers developers to create inclusive applications that
+                      understand human communication in all forms.
                     </p>
                   </div>
                 </div>
@@ -258,11 +260,10 @@ const About = () => {
                     </div>
                     <h3 className='text-2xl font-bold mb-4'>Our Vision</h3>
                     <p className='text-muted-foreground leading-relaxed text-lg'>
-                      A world where technology understands us as naturally as
-                      humans do. We're working towards a future where devices
-                      can read lips, understand gestures, and respond to
-                      non-verbal communication seamlessly—making technology
-                      truly accessible to all.
+                      A world where technology understands humans as naturally
+                      as humans do. Devices that can read lips, interpret
+                      gestures, and respond to non-verbal cues seamlessly,making
+                      communication universally accessible.
                     </p>
                   </div>
                 </div>
@@ -456,28 +457,17 @@ const About = () => {
                 className='text-lg md:text-xl text-muted-foreground mb-12 animate-slide-up'
                 style={{ animationDelay: "0.2s" }}
               >
-                We're always looking for talented people passionate about AI and
-                accessibility. Help us build the future of human-computer
-                interaction.
+                We’re hiring{" "}
+                <strong>
+                  talented innovators passionate about AI and accessibility.
+                </strong>{" "}
+                Help us build the future of human-computer interaction.
               </p>
 
               <div
                 className='flex flex-col sm:flex-row items-center justify-center gap-6 animate-slide-up'
                 style={{ animationDelay: "0.4s" }}
               >
-                <Button
-                  variant='hero'
-                  size='xl'
-                  onClick={() => navigate("/contact")}
-                  className='group relative overflow-hidden'
-                >
-                  <span className='relative z-10 flex items-center gap-3'>
-                    View Open Positions
-                    <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform duration-300' />
-                  </span>
-                  <div className='absolute inset-0 bg-gradient-to-r from-neon-cyan to-neon-violet opacity-0 group-hover:opacity-100 transition-opacity duration-300'></div>
-                </Button>
-
                 <Button
                   variant='heroOutline'
                   size='xl'
@@ -503,13 +493,6 @@ const About = () => {
                     style={{ animationDelay: "0.2s" }}
                   ></div>
                   Competitive compensation
-                </div>
-                <div className='flex items-center gap-2'>
-                  <div
-                    className='w-2 h-2 bg-neon-pink rounded-full animate-pulse'
-                    style={{ animationDelay: "0.4s" }}
-                  ></div>
-                  Equity package
                 </div>
               </div>
             </div>

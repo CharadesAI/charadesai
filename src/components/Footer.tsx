@@ -51,7 +51,7 @@ const socialLinks = [
   },
   {
     icon: Linkedin,
-    href: "https://linkedin.com/company/charadesai",
+    href: "https://www.linkedin.com/company/charadesai",
     label: "LinkedIn",
   },
   {
@@ -78,10 +78,10 @@ const F6SIcon = () => (
 const platformLinks = [
   {
     icon: SiCrunchbase,
-    href: "https://crunchbase.com/organization/charadesai",
+    href: "https://www.crunchbase.com/organization/charadesai",
     label: "Crunchbase",
   },
-  { icon: F6SIcon, href: "https://f6s.com/charadesai", label: "F6S" },
+  { icon: F6SIcon, href: "hhttps://www.f6s.com/charadesai", label: "F6S" },
 ];
 
 export function Footer() {

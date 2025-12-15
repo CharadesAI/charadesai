@@ -69,7 +69,7 @@ const Blog = () => {
         {/* Hero with Full-Width Background */}
         <section className='relative py-48 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 bg-[url("/images/blog.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30' />
+          <div className='absolute inset-0 bg-[url("/images/blog-hero.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <span className='inline-block px-4 py-1.5 rounded-full bg-card/80 border border-border backdrop-blur-sm text-card-foreground text-sm font-medium mb-6'>
@@ -119,6 +119,13 @@ const Blog = () => {
                   to={`/blog/${post.slug}`}
                   className='group p-8 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl'
                 >
+                  <div className='mb-6 overflow-hidden rounded-xl'>
+                    <img
+                      src={post.thumbnail}
+                      alt={post.title}
+                      className='w-full h-auto group-hover:scale-105 transition-transform duration-300'
+                    />
+                  </div>
                   <div className='flex items-center gap-3 mb-6'>
                     <span className='px-4 py-2 rounded-full bg-neon-cyan/20 border border-neon-cyan/30 text-neon-cyan text-sm font-medium'>
                       {post.category}
@@ -170,6 +177,13 @@ const Blog = () => {
                   to={`/blog/${post.slug}`}
                   className='group p-6 rounded-3xl bg-card/80 backdrop-blur-md border border-border hover:border-primary/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl'
                 >
+                  <div className='mb-6 overflow-hidden rounded-xl'>
+                    <img
+                      src={post.thumbnail}
+                      alt={post.title}
+                      className='w-full h-auto group-hover:scale-105 transition-transform duration-300'
+                    />
+                  </div>
                   <span className='inline-block px-4 py-2 rounded-full bg-card/80 border border-border text-card-foreground text-sm font-medium mb-6'>
                     {post.category}
                   </span>
@@ -226,15 +240,7 @@ const Blog = () => {
         {/* Newsletter CTA - Redesigned */}
         <section className='relative py-24 overflow-hidden'>
           {/* Full-width rounded background image */}
-          <div className='absolute inset-0 mx-4 mt-8 mb-8'>
-            <img
-              src='https://images.unsplash.com/photo-1551434678-e076c223a692?w=1920&h=1080&fit=crop&crop=center'
-              alt='Stay updated with CharadesAI newsletter'
-              className='w-full h-full object-cover rounded-3xl'
-            />
-            {/* Overlay for better text readability */}
-            <div className='absolute inset-0 bg-gradient-to-r from-background/80 via-background/60 to-background/70 rounded-3xl' />
-          </div>
+          <div className='absolute inset-0 mx-4 mt-8 mb-8 bg-[url("/images/blog.webp")] bg-cover bg-center opacity-10 md:opacity-20 dark:opacity-20 md:dark:opacity-30 rounded-3xl' />
 
           <div className='container mx-auto px-4 relative z-10 text-center'>
             <h2 className='text-3xl md:text-4xl font-bold mb-6'>
