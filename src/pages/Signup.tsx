@@ -1,10 +1,12 @@
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AuthLayout } from "@/components/AuthLayout";
 import { postJson, getApiBase } from "@/lib/api";
+import { getCaptchaToken } from "@/lib/recaptcha";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useAuth } from "@/lib/AuthContext";
@@ -50,11 +52,25 @@ export default function Signup() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
+  const [isCaptchaLoading, setIsCaptchaLoading] = useState(false);
 
   const onSubmit = async (data: FormValues) => {
     try {
       const passHash = await hashPassword(data.password);
       const passHashConfirm = await hashPassword(data.confirmPassword);
+      setIsCaptchaLoading(true);
+      const captchaToken = await getCaptchaToken("register");
+      setIsCaptchaLoading(false);
+
+      if (
+        import.meta.env.VITE_CAPTCHA_PROVIDER &&
+        import.meta.env.VITE_CAPTCHA_PROVIDER !== "none" &&
+        !captchaToken
+      ) {
+        toast.error("Captcha verification failed. Please try again.");
+        return;
+      }
+
       const payload = {
         username: data.username,
         first_name: data.firstName,
@@ -62,6 +78,7 @@ export default function Signup() {
         email: data.email,
         password_hash: passHash,
         password_hash_confirmation: passHashConfirm,
+        ...(captchaToken ? { recaptcha_token: captchaToken } : {}),
       };
       type UserData = Record<string, unknown>;
       type RegisterResp = {
@@ -187,7 +204,11 @@ export default function Signup() {
               Sign in
             </Link>
           </div>
-          <Button type='submit' variant='hero' disabled={isSubmitting}>
+          <Button
+            type='submit'
+            variant='hero'
+            disabled={isSubmitting || isCaptchaLoading}
+          >
             Create account
           </Button>
         </div>

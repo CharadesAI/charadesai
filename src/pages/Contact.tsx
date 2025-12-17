@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect } from "react";
 import { getApiBase } from "@/lib/api";
+import { getCaptchaToken } from "@/lib/recaptcha";
 
 const contactSchema = z.object({
   name: z
@@ -90,6 +91,7 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isCaptchaLoading, setIsCaptchaLoading] = useState(false);
   const [mapData, setMapData] = useState<{
     embed_url?: string;
     maps_link?: string;
@@ -178,12 +180,27 @@ const Contact = () => {
 
     try {
       try {
+        // Acquire captcha token (if configured)
+        setIsCaptchaLoading(true);
+        const captchaToken = await getCaptchaToken("contact");
+        setIsCaptchaLoading(false);
+
+        if (
+          import.meta.env.VITE_CAPTCHA_PROVIDER &&
+          import.meta.env.VITE_CAPTCHA_PROVIDER !== "none" &&
+          !captchaToken
+        ) {
+          toast.error("Captcha verification failed. Please try again.");
+          return;
+        }
+
         const payload = {
           name: formData.name,
           email: formData.email,
           company: formData.company || undefined,
           subject: formData.subject,
           message: formData.message,
+          ...(captchaToken ? { recaptcha_token: captchaToken } : {}),
         };
 
         const base = getApiBase();
@@ -417,9 +434,9 @@ const Contact = () => {
                       variant='hero'
                       size='lg'
                       className='w-full'
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || isCaptchaLoading}
                     >
-                      {isSubmitting ? (
+                      {isSubmitting || isCaptchaLoading ? (
                         "Sending..."
                       ) : (
                         <>

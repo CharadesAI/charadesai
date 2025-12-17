@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { blogPosts } from "@/lib/blog-data";
 import { useState } from "react";
 import { postJson } from "@/lib/api";
+import { getCaptchaToken } from "@/lib/recaptcha";
 
 const categories = ["All", "Product", "Research", "Tutorial", "Engineering"];
 const POSTS_PER_PAGE = 6;
@@ -46,7 +47,21 @@ const Blog = () => {
 
     setIsLoading(true);
     try {
-      const res = await postJson("/mail/newsletter", { email: email.trim() });
+      const captchaToken = await getCaptchaToken("newsletter");
+      if (
+        import.meta.env.VITE_CAPTCHA_PROVIDER &&
+        import.meta.env.VITE_CAPTCHA_PROVIDER !== "none" &&
+        !captchaToken
+      ) {
+        alert("Captcha verification failed. Please try again.");
+        setIsLoading(false);
+        return;
+      }
+
+      const res = await postJson("/mail/newsletter", {
+        email: email.trim(),
+        ...(captchaToken ? { recaptcha_token: captchaToken } : {}),
+      });
       const status = (res as unknown as { status?: string }).status;
       const message = (res as unknown as { message?: string }).message;
       if (status === "success") {
