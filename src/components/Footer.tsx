@@ -225,6 +225,7 @@ export function Footer() {
               </a>
             ))}
           </div>
+          <span className='w-40 h-8 md:h-0' />
         </div>
       </div>
     </footer>
