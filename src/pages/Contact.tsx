@@ -23,7 +23,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { useEffect } from "react";
 import { getApiBase } from "@/lib/api";
-import { getCaptchaToken } from "@/lib/recaptcha";
+import { loadRecaptchaScript, executeRecaptcha } from "@/lib/recaptcha";
 
 const contactSchema = z.object({
   name: z
@@ -91,7 +91,6 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isCaptchaLoading, setIsCaptchaLoading] = useState(false);
   const [mapData, setMapData] = useState<{
     embed_url?: string;
     maps_link?: string;
@@ -103,6 +102,7 @@ const Contact = () => {
 
   useEffect(() => {
     fetchMapData();
+    loadRecaptchaScript();
   }, []);
 
   const fetchMapData = async () => {
@@ -179,28 +179,17 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
+      // Get reCAPTCHA token
+      const recaptchaToken = await executeRecaptcha("contact");
+
       try {
-        // Acquire captcha token (if configured)
-        setIsCaptchaLoading(true);
-        const captchaToken = await getCaptchaToken("contact");
-        setIsCaptchaLoading(false);
-
-        if (
-          import.meta.env.VITE_CAPTCHA_PROVIDER &&
-          import.meta.env.VITE_CAPTCHA_PROVIDER !== "none" &&
-          !captchaToken
-        ) {
-          toast.error("Captcha verification failed. Please try again.");
-          return;
-        }
-
         const payload = {
           name: formData.name,
           email: formData.email,
           company: formData.company || undefined,
           subject: formData.subject,
           message: formData.message,
-          ...(captchaToken ? { recaptcha_token: captchaToken } : {}),
+          ...(recaptchaToken && { recaptcha_token: recaptchaToken }),
         };
 
         const base = getApiBase();
@@ -434,9 +423,9 @@ const Contact = () => {
                       variant='hero'
                       size='lg'
                       className='w-full'
-                      disabled={isSubmitting || isCaptchaLoading}
+                      disabled={isSubmitting}
                     >
-                      {isSubmitting || isCaptchaLoading ? (
+                      {isSubmitting ? (
                         "Sending..."
                       ) : (
                         <>

@@ -2,31 +2,33 @@ import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AuthLayout } from "@/components/AuthLayout";
-import { postJson, getApiBase } from "@/lib/api";
-import { getCaptchaToken } from "@/lib/recaptcha";
-import { useState } from "react";
+import { postJson } from "@/lib/api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { loadRecaptchaScript, executeRecaptcha } from "@/lib/recaptcha";
 
 export default function Forgot() {
-  const { register, handleSubmit } = useForm<{ email: string }>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<{ email: string }>();
   const navigate = useNavigate();
+
+  // Load reCAPTCHA script on mount
+  useEffect(() => {
+    loadRecaptchaScript();
+  }, []);
 
   const onSubmit = async (data: { email: string }) => {
     try {
-      const captchaToken = await getCaptchaToken("password_forgot");
-      if (
-        import.meta.env.VITE_CAPTCHA_PROVIDER &&
-        import.meta.env.VITE_CAPTCHA_PROVIDER !== "none" &&
-        !captchaToken
-      ) {
-        toast.error("Captcha verification failed. Please try again.");
-        return;
-      }
+      // Get reCAPTCHA token
+      const recaptchaToken = await executeRecaptcha("forgot_password");
 
       await postJson("/auth/password/forgot", {
         email: data.email,
-        ...(captchaToken ? { recaptcha_token: captchaToken } : {}),
+        ...(recaptchaToken && { recaptcha_token: recaptchaToken }),
       });
       toast.success("If this email is registered, a reset link has been sent.");
       navigate("/");
@@ -47,8 +49,8 @@ export default function Forgot() {
           <Input type='email' {...register("email")} />
         </div>
         <div className='flex justify-end'>
-          <Button type='submit' variant='hero'>
-            Send Reset Link
+          <Button type='submit' variant='hero' disabled={isSubmitting}>
+            {isSubmitting ? "Sending..." : "Send Reset Link"}
           </Button>
         </div>
       </form>
