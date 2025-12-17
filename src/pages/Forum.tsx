@@ -848,7 +848,7 @@ const Forum = () => {
         {/* Header */}
         <section className='pt-32 pb-16'>
           <div className='container mx-auto px-4 relative z-10'>
-            <div className='flex items-center justify-between mb-6'>
+            <div className='flex items-center flex-wrap space-y-2 justify-between mb-6'>
               <div className='flex items-center gap-4'>
                 <Button
                   variant='ghost'
@@ -884,7 +884,7 @@ const Forum = () => {
                       New Thread
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className='max-w-2xl'>
+                  <DialogContent className='w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6'>
                     <DialogHeader>
                       <DialogTitle>Create New Thread</DialogTitle>
                       <DialogDescription>
@@ -992,42 +992,51 @@ const Forum = () => {
               </p>
 
               {/* Search and Filters */}
-              <div className='flex flex-col md:flex-row gap-4 max-w-4xl mx-auto mb-8'>
-                <div className='flex-1 relative'>
+              <div className='flex flex-col sm:flex-col md:flex-row gap-4 max-w-4xl mx-auto mb-8 w-full'>
+                <div className='relative flex-1 min-w-0'>
                   <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
                   <Input
                     placeholder='Search threads, topics, or tags...'
-                    className='pl-10'
+                    className='pl-10 w-full'
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className='w-full md:w-48'>
-                    <SelectValue placeholder='All Categories' />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='all'>All Categories</SelectItem>
-                    {forumCategories.map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className='w-full md:w-32'>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value='recent'>Recent</SelectItem>
-                    <SelectItem value='popular'>Popular</SelectItem>
-                    <SelectItem value='unanswered'>Unanswered</SelectItem>
-                  </SelectContent>
-                </Select>
+
+                {/* Stacked on small screens; inline on md+ */}
+                <div className='flex gap-2 w-full md:w-auto md:items-center md:ml-2'>
+                  <div className='w-full md:w-48'>
+                    <Select
+                      value={selectedCategory}
+                      onValueChange={setSelectedCategory}
+                    >
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='All Categories' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='all'>All Categories</SelectItem>
+                        {forumCategories.map((category) => (
+                          <SelectItem key={category.id} value={category.name}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className='w-full md:w-32'>
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value='recent'>Recent</SelectItem>
+                        <SelectItem value='popular'>Popular</SelectItem>
+                        <SelectItem value='unanswered'>Unanswered</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
               </div>
 
               {/* Stats */}
@@ -1067,40 +1076,171 @@ const Forum = () => {
         {/* Main Content */}
         <section className='py-16'>
           <div className='container mx-auto px-4'>
-            <Tabs
-              value={activeTab}
-              onValueChange={setActiveTab}
-              className='w-full'
-            >
-              <TabsList className='grid w-full grid-cols-4 mb-8'>
-                <TabsTrigger value='all'>All Threads</TabsTrigger>
-                <TabsTrigger value='unanswered'>Unanswered</TabsTrigger>
-                <TabsTrigger value='bookmarks'>Bookmarks</TabsTrigger>
-                <TabsTrigger value='my-posts'>My Posts</TabsTrigger>
-              </TabsList>
+            <div className='md:flex md:items-start md:gap-6'>
+              {/* Main column */}
+              <div className='flex-1'>
+                <Tabs
+                  value={activeTab}
+                  onValueChange={setActiveTab}
+                  className='w-full'
+                >
+                  <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden md:grid md:grid-cols-4 mb-8 py-1'>
+                    <TabsTrigger value='all'>All Threads</TabsTrigger>
+                    <TabsTrigger value='unanswered'>Unanswered</TabsTrigger>
+                    <TabsTrigger value='bookmarks'>Bookmarks</TabsTrigger>
+                    <TabsTrigger value='my-posts'>My Posts</TabsTrigger>
+                  </TabsList>
 
-              <TabsContent value='all' className='space-y-6'>
-                {/* Pinned Threads */}
-                {pinnedThreads.length > 0 && (
-                  <div className='space-y-4'>
-                    <h3 className='text-lg font-semibold flex items-center gap-2'>
-                      <Pin className='w-5 h-5 text-primary' />
-                      Pinned Threads
-                    </h3>
+                  <TabsContent value='all' className='space-y-6'>
+                    {/* Pinned Threads */}
+                    {pinnedThreads.length > 0 && (
+                      <div className='space-y-4'>
+                        <h3 className='text-lg font-semibold flex items-center gap-2'>
+                          <Pin className='w-5 h-5 text-primary' />
+                          Pinned Threads
+                        </h3>
+                        <div
+                          className={`grid gap-4 ${
+                            viewMode === "card"
+                              ? "grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                              : "grid-cols-1"
+                          }`}
+                        >
+                          {pinnedThreads.map((thread) => (
+                            <Card
+                              key={thread.id}
+                              className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary'
+                              onClick={() => handleViewThread(thread)}
+                            >
+                              <CardHeader>
+                                <div className='flex items-start justify-between'>
+                                  <div className='flex-1 min-w-0'>
+                                    <CardTitle className='text-lg mb-2 line-clamp-2'>
+                                      {thread.title}
+                                    </CardTitle>
+                                    <div className='flex items-center gap-2 mb-2'>
+                                      <Badge
+                                        className={getCategoryColor(
+                                          thread.category
+                                        )}
+                                      >
+                                        {thread.category}
+                                      </Badge>
+                                      {thread.solved && (
+                                        <CheckCircle className='w-4 h-4 text-green-500' />
+                                      )}
+                                      {thread.featured && (
+                                        <Star className='w-4 h-4 text-yellow-500' />
+                                      )}
+                                    </div>
+                                  </div>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant='ghost' size='sm'>
+                                        <MoreHorizontal className='w-4 h-4' />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                      <DropdownMenuItem
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleBookmark(
+                                            thread.id,
+                                            currentUser?.id || ""
+                                          );
+                                        }}
+                                      >
+                                        <Bookmark className='w-4 h-4 mr-2' />
+                                        {bookmarks.some(
+                                          (b) => b.threadId === thread.id
+                                        )
+                                          ? "Remove Bookmark"
+                                          : "Bookmark"}
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          toggleLike(
+                                            thread.id,
+                                            currentUser?.id || ""
+                                          );
+                                        }}
+                                      >
+                                        <ThumbsUp className='w-4 h-4 mr-2' />
+                                        Like ({thread.likes})
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          markAsSolved(thread.id);
+                                        }}
+                                      >
+                                        <CheckCircle className='w-4 h-4 mr-2' />
+                                        Mark as Solved
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+                              </CardHeader>
+                              <CardContent>
+                                <p className='text-muted-foreground mb-4 line-clamp-3'>
+                                  {thread.content}
+                                </p>
+                                <div className='flex items-center justify-between'>
+                                  <div className='flex items-center gap-3'>
+                                    <Avatar className='w-8 h-8'>
+                                      <AvatarImage src={thread.authorAvatar} />
+                                      <AvatarFallback>
+                                        {thread.author[0]}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                      <div className='font-medium text-sm'>
+                                        {thread.author}
+                                      </div>
+                                      <div className='text-xs text-muted-foreground'>
+                                        {formatTimeAgo(thread.createdAt)}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                                    <span className='flex items-center gap-1'>
+                                      <MessageSquare className='w-4 h-4' />
+                                      {thread.replies.length}
+                                    </span>
+                                    <span className='flex items-center gap-1'>
+                                      <Eye className='w-4 h-4' />
+                                      {thread.views}
+                                    </span>
+                                    <span className='flex items-center gap-1'>
+                                      <ThumbsUp className='w-4 h-4' />
+                                      {thread.likes}
+                                    </span>
+                                  </div>
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Regular Threads */}
                     <div
                       className={`grid gap-4 ${
                         viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
                       }`}
                     >
-                      {pinnedThreads.map((thread) => (
+                      {regularThreads.map((thread) => (
                         <Card
                           key={thread.id}
-                          className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-primary'
+                          className='hover:shadow-lg transition-shadow cursor-pointer'
                           onClick={() => handleViewThread(thread)}
                         >
                           <CardHeader>
                             <div className='flex items-start justify-between'>
-                              <div className='flex-1'>
+                              <div className='flex-1 min-w-0'>
                                 <CardTitle className='text-lg mb-2 line-clamp-2'>
                                   {thread.title}
                                 </CardTitle>
@@ -1209,367 +1349,346 @@ const Forum = () => {
                         </Card>
                       ))}
                     </div>
-                  </div>
-                )}
 
-                {/* Regular Threads */}
-                <div
-                  className={`grid gap-4 ${
-                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
-                  }`}
-                >
-                  {regularThreads.map((thread) => (
-                    <Card
-                      key={thread.id}
-                      className='hover:shadow-lg transition-shadow cursor-pointer'
-                      onClick={() => handleViewThread(thread)}
+                    {filteredThreads.length === 0 && (
+                      <div className='text-center py-12'>
+                        <MessageSquare className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>
+                          No threads found
+                        </h3>
+                        <p className='text-muted-foreground mb-4'>
+                          Try adjusting your search or filters, or create a new
+                          thread.
+                        </p>
+                        <Button onClick={() => setIsCreateThreadOpen(true)}>
+                          <Plus className='w-4 h-4 mr-2' />
+                          Create Thread
+                        </Button>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value='unanswered'>
+                    <div
+                      className={`grid gap-4 ${
+                        viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                      }`}
                     >
-                      <CardHeader>
-                        <div className='flex items-start justify-between'>
-                          <div className='flex-1'>
-                            <CardTitle className='text-lg mb-2 line-clamp-2'>
-                              {thread.title}
-                            </CardTitle>
-                            <div className='flex items-center gap-2 mb-2'>
+                      {threads
+                        .filter(
+                          (thread) =>
+                            !thread.solved && thread.replies.length === 0
+                        )
+                        .map((thread) => (
+                          <Card
+                            key={thread.id}
+                            className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-orange-500'
+                            onClick={() => handleViewThread(thread)}
+                          >
+                            <CardHeader>
+                              <CardTitle className='text-lg'>
+                                {thread.title}
+                              </CardTitle>
+                              <div className='flex items-center gap-2'>
+                                <Badge
+                                  className={getCategoryColor(thread.category)}
+                                >
+                                  {thread.category}
+                                </Badge>
+                                <span className='text-sm text-muted-foreground'>
+                                  No replies yet
+                                </span>
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <p className='text-muted-foreground mb-4 line-clamp-3'>
+                                {thread.content}
+                              </p>
+                              <div className='flex items-center justify-between'>
+                                <div className='flex items-center gap-3'>
+                                  <Avatar className='w-8 h-8'>
+                                    <AvatarImage src={thread.authorAvatar} />
+                                    <AvatarFallback>
+                                      {thread.author[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <div className='font-medium text-sm'>
+                                      {thread.author}
+                                    </div>
+                                    <div className='text-xs text-muted-foreground'>
+                                      {formatTimeAgo(thread.createdAt)}
+                                    </div>
+                                  </div>
+                                </div>
+                                <Button
+                                  size='sm'
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setIsReplyOpen(thread.id);
+                                  }}
+                                >
+                                  <Reply className='w-4 h-4 mr-2' />
+                                  Reply
+                                </Button>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value='bookmarks'>
+                    <div
+                      className={`grid gap-4 ${
+                        viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                      }`}
+                    >
+                      {threads
+                        .filter((thread) =>
+                          bookmarks.some((b) => b.threadId === thread.id)
+                        )
+                        .map((thread) => (
+                          <Card
+                            key={thread.id}
+                            className='hover:shadow-lg transition-shadow cursor-pointer'
+                            onClick={() => handleViewThread(thread)}
+                          >
+                            <CardHeader>
+                              <CardTitle className='text-lg flex items-center gap-2'>
+                                <Bookmark className='w-4 h-4 text-primary' />
+                                {thread.title}
+                              </CardTitle>
                               <Badge
                                 className={getCategoryColor(thread.category)}
                               >
                                 {thread.category}
                               </Badge>
-                              {thread.solved && (
-                                <CheckCircle className='w-4 h-4 text-green-500' />
-                              )}
-                              {thread.featured && (
-                                <Star className='w-4 h-4 text-yellow-500' />
-                              )}
-                            </div>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant='ghost' size='sm'>
-                                <MoreHorizontal className='w-4 h-4' />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleBookmark(
-                                    thread.id,
-                                    currentUser?.id || ""
-                                  );
-                                }}
-                              >
-                                <Bookmark className='w-4 h-4 mr-2' />
-                                {bookmarks.some((b) => b.threadId === thread.id)
-                                  ? "Remove Bookmark"
-                                  : "Bookmark"}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  toggleLike(thread.id, currentUser?.id || "");
-                                }}
-                              >
-                                <ThumbsUp className='w-4 h-4 mr-2' />
-                                Like ({thread.likes})
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  markAsSolved(thread.id);
-                                }}
-                              >
-                                <CheckCircle className='w-4 h-4 mr-2' />
-                                Mark as Solved
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className='text-muted-foreground mb-4 line-clamp-3'>
-                          {thread.content}
+                            </CardHeader>
+                            <CardContent>
+                              <p className='text-muted-foreground mb-4 line-clamp-3'>
+                                {thread.content}
+                              </p>
+                              <div className='flex items-center justify-between'>
+                                <div className='flex items-center gap-3'>
+                                  <Avatar className='w-8 h-8'>
+                                    <AvatarImage src={thread.authorAvatar} />
+                                    <AvatarFallback>
+                                      {thread.author[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <div className='font-medium text-sm'>
+                                      {thread.author}
+                                    </div>
+                                    <div className='text-xs text-muted-foreground'>
+                                      {formatTimeAgo(thread.createdAt)}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                                  <span className='flex items-center gap-1'>
+                                    <MessageSquare className='w-4 h-4' />
+                                    {thread.replies.length}
+                                  </span>
+                                  <span className='flex items-center gap-1'>
+                                    <Eye className='w-4 h-4' />
+                                    {thread.views}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                    </div>
+                    {threads.filter((thread) =>
+                      bookmarks.some((b) => b.threadId === thread.id)
+                    ).length === 0 && (
+                      <div className='text-center py-12'>
+                        <Bookmark className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>
+                          No bookmarked threads
+                        </h3>
+                        <p className='text-muted-foreground'>
+                          Bookmark threads to find them easily later.
                         </p>
-                        <div className='flex items-center justify-between'>
-                          <div className='flex items-center gap-3'>
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value='my-posts'>
+                    <div
+                      className={`grid gap-4 ${
+                        viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
+                      }`}
+                    >
+                      {threads
+                        .filter((thread) => thread.author === currentUser?.name)
+                        .map((thread) => (
+                          <Card
+                            key={thread.id}
+                            className='hover:shadow-lg transition-shadow cursor-pointer'
+                            onClick={() => handleViewThread(thread)}
+                          >
+                            <CardHeader>
+                              <CardTitle className='text-lg'>
+                                {thread.title}
+                              </CardTitle>
+                              <Badge
+                                className={getCategoryColor(thread.category)}
+                              >
+                                {thread.category}
+                              </Badge>
+                            </CardHeader>
+                            <CardContent>
+                              <p className='text-muted-foreground mb-4 line-clamp-3'>
+                                {thread.content}
+                              </p>
+                              <div className='flex items-center justify-between'>
+                                <div className='flex items-center gap-3'>
+                                  <Avatar className='w-8 h-8'>
+                                    <AvatarImage src={thread.authorAvatar} />
+                                    <AvatarFallback>
+                                      {thread.author[0]}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <div>
+                                    <div className='font-medium text-sm'>
+                                      {thread.author}
+                                    </div>
+                                    <div className='text-xs text-muted-foreground'>
+                                      {formatTimeAgo(thread.createdAt)}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className='flex items-center gap-4 text-sm text-muted-foreground'>
+                                  <span className='flex items-center gap-1'>
+                                    <MessageSquare className='w-4 h-4' />
+                                    {thread.replies.length}
+                                  </span>
+                                  <span className='flex items-center gap-1'>
+                                    <Eye className='w-4 h-4' />
+                                    {thread.views}
+                                  </span>
+                                  <span className='flex items-center gap-1'>
+                                    <ThumbsUp className='w-4 h-4' />
+                                    {thread.likes}
+                                  </span>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        ))}
+                    </div>
+                    {threads.filter(
+                      (thread) => thread.author === currentUser?.name
+                    ).length === 0 && (
+                      <div className='text-center py-12'>
+                        <User className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
+                        <h3 className='text-xl font-semibold mb-2'>
+                          No posts yet
+                        </h3>
+                        <p className='text-muted-foreground mb-4'>
+                          Start a conversation by creating your first thread.
+                        </p>
+                        <Button onClick={() => setIsCreateThreadOpen(true)}>
+                          <Plus className='w-4 h-4 mr-2' />
+                          Create Thread
+                        </Button>
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
+              </div>
+
+              {/* Sidebar (hidden on small screens) */}
+              <aside className='hidden md:block md:w-80 lg:w-96 mt-6 md:mt-0'>
+                <div className='space-y-4'>
+                  {/* Stats card (re-use existing stat components from header or replicate) */}
+                  <Card className='p-4'>
+                    <div className='grid grid-cols-2 gap-4'>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-primary'>
+                          {threads.length}
+                        </div>
+                        <div className='text-sm text-muted-foreground'>
+                          Threads
+                        </div>
+                      </div>
+                      <div className='text-center'>
+                        <div className='text-2xl font-bold text-primary'>
+                          {threads.reduce(
+                            (acc, t) => acc + t.replies.length,
+                            0
+                          )}
+                        </div>
+                        <div className='text-sm text-muted-foreground'>
+                          Replies
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+
+                  {/* Top Contributors */}
+                  <Card className='p-4'>
+                    <CardHeader>
+                      <CardTitle>Top Contributors</CardTitle>
+                      <CardDescription>Community stars</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className='space-y-3'>
+                        {topContributors.map((c) => (
+                          <div key={c.id} className='flex items-center gap-3'>
                             <Avatar className='w-8 h-8'>
-                              <AvatarImage src={thread.authorAvatar} />
-                              <AvatarFallback>
-                                {thread.author[0]}
-                              </AvatarFallback>
+                              <AvatarImage src={c.avatar} />
+                              <AvatarFallback>{c.name[0]}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className='font-medium text-sm'>
-                                {thread.author}
+                              <div className='text-sm font-medium'>
+                                {c.name}
                               </div>
                               <div className='text-xs text-muted-foreground'>
-                                {formatTimeAgo(thread.createdAt)}
+                                {c.level}
                               </div>
                             </div>
                           </div>
-                          <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                            <span className='flex items-center gap-1'>
-                              <MessageSquare className='w-4 h-4' />
-                              {thread.replies.length}
-                            </span>
-                            <span className='flex items-center gap-1'>
-                              <Eye className='w-4 h-4' />
-                              {thread.views}
-                            </span>
-                            <span className='flex items-center gap-1'>
-                              <ThumbsUp className='w-4 h-4' />
-                              {thread.likes}
-                            </span>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                {filteredThreads.length === 0 && (
-                  <div className='text-center py-12'>
-                    <MessageSquare className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                    <h3 className='text-xl font-semibold mb-2'>
-                      No threads found
-                    </h3>
-                    <p className='text-muted-foreground mb-4'>
-                      Try adjusting your search or filters, or create a new
-                      thread.
-                    </p>
-                    <Button onClick={() => setIsCreateThreadOpen(true)}>
-                      <Plus className='w-4 h-4 mr-2' />
-                      Create Thread
-                    </Button>
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value='unanswered'>
-                <div
-                  className={`grid gap-4 ${
-                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
-                  }`}
-                >
-                  {threads
-                    .filter(
-                      (thread) => !thread.solved && thread.replies.length === 0
-                    )
-                    .map((thread) => (
-                      <Card
-                        key={thread.id}
-                        className='hover:shadow-lg transition-shadow cursor-pointer border-l-4 border-l-orange-500'
-                        onClick={() => handleViewThread(thread)}
-                      >
-                        <CardHeader>
-                          <CardTitle className='text-lg'>
-                            {thread.title}
-                          </CardTitle>
-                          <div className='flex items-center gap-2'>
-                            <Badge
-                              className={getCategoryColor(thread.category)}
-                            >
-                              {thread.category}
-                            </Badge>
-                            <span className='text-sm text-muted-foreground'>
-                              No replies yet
-                            </span>
-                          </div>
-                        </CardHeader>
-                        <CardContent>
-                          <p className='text-muted-foreground mb-4 line-clamp-3'>
-                            {thread.content}
-                          </p>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <Avatar className='w-8 h-8'>
-                                <AvatarImage src={thread.authorAvatar} />
-                                <AvatarFallback>
-                                  {thread.author[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className='font-medium text-sm'>
-                                  {thread.author}
-                                </div>
-                                <div className='text-xs text-muted-foreground'>
-                                  {formatTimeAgo(thread.createdAt)}
-                                </div>
+                  {/* Recent Activity */}
+                  <Card className='p-4'>
+                    <CardHeader>
+                      <CardTitle>Recent Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className='space-y-2'>
+                        {recentActivity.map((a) => (
+                          <div key={a.id} className='flex items-center gap-3'>
+                            <Avatar className='w-8 h-8'>
+                              <AvatarImage src={a.userAvatar} />
+                              <AvatarFallback>{a.user[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className='text-sm'>
+                                {a.user}{" "}
+                                <span className='text-xs text-muted-foreground'>
+                                  {a.time}
+                                </span>
+                              </div>
+                              <div className='text-xs text-muted-foreground'>
+                                {a.action} {a.target}
                               </div>
                             </div>
-                            <Button
-                              size='sm'
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setIsReplyOpen(thread.id);
-                              }}
-                            >
-                              <Reply className='w-4 h-4 mr-2' />
-                              Reply
-                            </Button>
                           </div>
-                        </CardContent>
-                      </Card>
-                    ))}
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </TabsContent>
-
-              <TabsContent value='bookmarks'>
-                <div
-                  className={`grid gap-4 ${
-                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
-                  }`}
-                >
-                  {threads
-                    .filter((thread) =>
-                      bookmarks.some((b) => b.threadId === thread.id)
-                    )
-                    .map((thread) => (
-                      <Card
-                        key={thread.id}
-                        className='hover:shadow-lg transition-shadow cursor-pointer'
-                        onClick={() => handleViewThread(thread)}
-                      >
-                        <CardHeader>
-                          <CardTitle className='text-lg flex items-center gap-2'>
-                            <Bookmark className='w-4 h-4 text-primary' />
-                            {thread.title}
-                          </CardTitle>
-                          <Badge className={getCategoryColor(thread.category)}>
-                            {thread.category}
-                          </Badge>
-                        </CardHeader>
-                        <CardContent>
-                          <p className='text-muted-foreground mb-4 line-clamp-3'>
-                            {thread.content}
-                          </p>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <Avatar className='w-8 h-8'>
-                                <AvatarImage src={thread.authorAvatar} />
-                                <AvatarFallback>
-                                  {thread.author[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className='font-medium text-sm'>
-                                  {thread.author}
-                                </div>
-                                <div className='text-xs text-muted-foreground'>
-                                  {formatTimeAgo(thread.createdAt)}
-                                </div>
-                              </div>
-                            </div>
-                            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                              <span className='flex items-center gap-1'>
-                                <MessageSquare className='w-4 h-4' />
-                                {thread.replies.length}
-                              </span>
-                              <span className='flex items-center gap-1'>
-                                <Eye className='w-4 h-4' />
-                                {thread.views}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-                {threads.filter((thread) =>
-                  bookmarks.some((b) => b.threadId === thread.id)
-                ).length === 0 && (
-                  <div className='text-center py-12'>
-                    <Bookmark className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                    <h3 className='text-xl font-semibold mb-2'>
-                      No bookmarked threads
-                    </h3>
-                    <p className='text-muted-foreground'>
-                      Bookmark threads to find them easily later.
-                    </p>
-                  </div>
-                )}
-              </TabsContent>
-
-              <TabsContent value='my-posts'>
-                <div
-                  className={`grid gap-4 ${
-                    viewMode === "card" ? "md:grid-cols-2" : "grid-cols-1"
-                  }`}
-                >
-                  {threads
-                    .filter((thread) => thread.author === currentUser?.name)
-                    .map((thread) => (
-                      <Card
-                        key={thread.id}
-                        className='hover:shadow-lg transition-shadow cursor-pointer'
-                        onClick={() => handleViewThread(thread)}
-                      >
-                        <CardHeader>
-                          <CardTitle className='text-lg'>
-                            {thread.title}
-                          </CardTitle>
-                          <Badge className={getCategoryColor(thread.category)}>
-                            {thread.category}
-                          </Badge>
-                        </CardHeader>
-                        <CardContent>
-                          <p className='text-muted-foreground mb-4 line-clamp-3'>
-                            {thread.content}
-                          </p>
-                          <div className='flex items-center justify-between'>
-                            <div className='flex items-center gap-3'>
-                              <Avatar className='w-8 h-8'>
-                                <AvatarImage src={thread.authorAvatar} />
-                                <AvatarFallback>
-                                  {thread.author[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className='font-medium text-sm'>
-                                  {thread.author}
-                                </div>
-                                <div className='text-xs text-muted-foreground'>
-                                  {formatTimeAgo(thread.createdAt)}
-                                </div>
-                              </div>
-                            </div>
-                            <div className='flex items-center gap-4 text-sm text-muted-foreground'>
-                              <span className='flex items-center gap-1'>
-                                <MessageSquare className='w-4 h-4' />
-                                {thread.replies.length}
-                              </span>
-                              <span className='flex items-center gap-1'>
-                                <Eye className='w-4 h-4' />
-                                {thread.views}
-                              </span>
-                              <span className='flex items-center gap-1'>
-                                <ThumbsUp className='w-4 h-4' />
-                                {thread.likes}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-                {threads.filter((thread) => thread.author === currentUser?.name)
-                  .length === 0 && (
-                  <div className='text-center py-12'>
-                    <User className='w-16 h-16 text-muted-foreground mx-auto mb-4' />
-                    <h3 className='text-xl font-semibold mb-2'>No posts yet</h3>
-                    <p className='text-muted-foreground mb-4'>
-                      Start a conversation by creating your first thread.
-                    </p>
-                    <Button onClick={() => setIsCreateThreadOpen(true)}>
-                      <Plus className='w-4 h-4 mr-2' />
-                      Create Thread
-                    </Button>
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
+              </aside>
+            </div>
           </div>
         </section>
 
@@ -1579,7 +1698,7 @@ const Forum = () => {
             open={!!selectedThread}
             onOpenChange={() => setSelectedThread(null)}
           >
-            <DialogContent className='max-w-4xl max-h-[90vh] overflow-y-auto'>
+            <DialogContent className='w-full max-w-full sm:max-w-2xl md:max-w-3xl lg:max-w-4xl max-h-[90vh] overflow-y-auto p-4 sm:p-6'>
               <DialogHeader>
                 <div className='flex items-start justify-between'>
                   <div className='flex-1'>

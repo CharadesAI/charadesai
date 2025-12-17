@@ -173,7 +173,7 @@ const Features = () => {
                   variant='heroOutline'
                   size='lg'
                   className='bg-card/80 backdrop-blur-md border border-border hover:bg-card/90 text-card-foreground hover:text-card-foreground'
-                  onClick={() => navigate("/contact")}
+                  onClick={() => navigate("/api")}
                 >
                   View API Docs
                 </Button>

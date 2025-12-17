@@ -264,13 +264,13 @@ const UseCases = () => {
                   className='group hover:shadow-xl transition-all duration-300 border-border/50 hover:border-primary/30 bg-card/50 backdrop-blur-sm'
                 >
                   <CardHeader className='pb-4'>
-                    <div
+                    {/* <div
                       className={`w-12 h-12 rounded-lg ${useCase.bgColor} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
                     >
                       <useCase.icon
                         className={`w-6 h-6 bg-gradient-to-r ${useCase.color} bg-clip-text text-transparent`}
                       />
-                    </div>
+                    </div> */}
                     <CardTitle className='text-xl mb-2'>
                       {useCase.title}
                     </CardTitle>
@@ -292,14 +292,6 @@ const UseCases = () => {
                         </div>
                       ))}
                     </div>
-                    <Button
-                      variant='ghost'
-                      size='sm'
-                      className='group/btn w-full justify-between hover:bg-primary/5'
-                    >
-                      Learn More
-                      <ArrowRight className='w-4 h-4 group-hover/btn:translate-x-1 transition-transform' />
-                    </Button>
                   </CardContent>
                 </Card>
               ))}

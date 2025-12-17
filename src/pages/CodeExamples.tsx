@@ -390,7 +390,7 @@ const CodeExamples = () => {
         <section className='py-24'>
           <div className='container mx-auto px-4'>
             <div className='text-center mb-16'>
-              <h2 className='text-3xl md:text-4xl font-bold mb-4'>
+              <h2 className='text-xl md:text-3xl font-bold mb-4'>
                 Comprehensive <span className='text-gradient'>Examples</span>
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto'>
@@ -399,12 +399,23 @@ const CodeExamples = () => {
               </p>
             </div>
             <Tabs defaultValue='gettingStarted' className='w-full'>
-              <TabsList className='grid w-full grid-cols-3 mb-8'>
-                <TabsTrigger value='gettingStarted'>
+              <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-8 md:grid md:grid-cols-3'>
+                <TabsTrigger
+                  value='gettingStarted'
+                  className='min-w-max whitespace-nowrap'
+                >
                   Getting Started
                 </TabsTrigger>
-                <TabsTrigger value='advancedUsage'>Advanced Usage</TabsTrigger>
-                <TabsTrigger value='integration'>
+                <TabsTrigger
+                  value='advancedUsage'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Advanced Usage
+                </TabsTrigger>
+                <TabsTrigger
+                  value='integration'
+                  className='min-w-max whitespace-nowrap'
+                >
                   Integration Examples
                 </TabsTrigger>
               </TabsList>
@@ -421,19 +432,34 @@ const CodeExamples = () => {
                   </p>
                 </div>
                 <Tabs defaultValue='javascript' className='w-full'>
-                  <TabsList className='grid w-full grid-cols-3 mb-6'>
-                    <TabsTrigger value='javascript'>JavaScript</TabsTrigger>
-                    <TabsTrigger value='python'>Python</TabsTrigger>
-                    <TabsTrigger value='php'>PHP</TabsTrigger>
+                  <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-6 md:grid md:grid-cols-3'>
+                    <TabsTrigger
+                      value='javascript'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      JavaScript
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='python'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      Python
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='php'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      PHP
+                    </TabsTrigger>
                   </TabsList>
                   {Object.entries(examples.gettingStarted).map(
                     ([lang, example]) => (
                       <TabsContent key={lang} value={lang}>
                         <Card>
                           <CardHeader>
-                            <div className='flex items-center justify-between'>
+                            <div className='flex items-center flex-wrap justify-between'>
                               <div>
-                                <CardTitle className='text-xl'>
+                                <CardTitle className='text-md md:text-xl'>
                                   {example.title}
                                 </CardTitle>
                                 <CardDescription>
@@ -481,10 +507,25 @@ const CodeExamples = () => {
                   </p>
                 </div>
                 <Tabs defaultValue='javascript' className='w-full'>
-                  <TabsList className='grid w-full grid-cols-3 mb-6'>
-                    <TabsTrigger value='javascript'>JavaScript</TabsTrigger>
-                    <TabsTrigger value='python'>Python</TabsTrigger>
-                    <TabsTrigger value='csharp'>C#</TabsTrigger>
+                  <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-6 md:grid md:grid-cols-3'>
+                    <TabsTrigger
+                      value='javascript'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      JavaScript
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='python'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      Python
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='csharp'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      C#
+                    </TabsTrigger>
                   </TabsList>
                   {Object.entries(examples.advancedUsage).map(
                     ([lang, example]) => (
@@ -539,10 +580,25 @@ const CodeExamples = () => {
                   </p>
                 </div>
                 <Tabs defaultValue='javascript' className='w-full'>
-                  <TabsList className='grid w-full grid-cols-3 mb-6'>
-                    <TabsTrigger value='javascript'>React</TabsTrigger>
-                    <TabsTrigger value='python'>Flask</TabsTrigger>
-                    <TabsTrigger value='java'>Spring Boot</TabsTrigger>
+                  <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-6 md:grid md:grid-cols-3'>
+                    <TabsTrigger
+                      value='javascript'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      React
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='python'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      Flask
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value='java'
+                      className='min-w-max whitespace-nowrap'
+                    >
+                      Spring Boot
+                    </TabsTrigger>
                   </TabsList>
                   {Object.entries(examples.integration).map(
                     ([lang, example]) => (
@@ -602,53 +658,86 @@ const CodeExamples = () => {
                 language and get started faster.
               </p>
             </div>
-            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-6'>
-              <Card className='hover:shadow-lg transition-shadow'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
+              <Card className='hover:shadow-lg transition-shadow flex flex-col h-full'>
                 <CardHeader className='text-center'>
-                  <Download className='w-8 h-8 mx-auto mb-2 text-primary' />
-                  <CardTitle className='text-lg'>JavaScript SDK</CardTitle>
-                  <CardDescription>NPM Package</CardDescription>
+                  <Download className='w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 text-primary' />
+                  <CardTitle className='text-lg truncate'>
+                    JavaScript SDK
+                  </CardTitle>
+                  <CardDescription className='leading-relaxed'>
+                    NPM Package
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className='text-center'>
-                  <Button variant='outline' className='w-full'>
-                    npm install @charadesai/js-sdk
-                  </Button>
+                <CardContent className='text-center p-4 sm:p-6 flex-1 flex flex-col'>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto text-xs sm:text-sm whitespace-normal'
+                    >
+                      npm install @charadesai/js-sdk
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
-              <Card className='hover:shadow-lg transition-shadow'>
+
+              <Card className='hover:shadow-lg transition-shadow flex flex-col h-full'>
                 <CardHeader className='text-center'>
-                  <Download className='w-8 h-8 mx-auto mb-2 text-primary' />
-                  <CardTitle className='text-lg'>Python SDK</CardTitle>
-                  <CardDescription>PyPI Package</CardDescription>
+                  <Download className='w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 text-primary' />
+                  <CardTitle className='text-lg truncate'>Python SDK</CardTitle>
+                  <CardDescription className='leading-relaxed'>
+                    PyPI Package
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className='text-center'>
-                  <Button variant='outline' className='w-full'>
-                    pip install charadesai
-                  </Button>
+                <CardContent className='text-center p-4 sm:p-6 flex-1 flex flex-col'>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto text-xs sm:text-sm whitespace-normal'
+                    >
+                      pip install charadesai
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
-              <Card className='hover:shadow-lg transition-shadow'>
+
+              <Card className='hover:shadow-lg transition-shadow flex flex-col h-full'>
                 <CardHeader className='text-center'>
-                  <Download className='w-8 h-8 mx-auto mb-2 text-primary' />
-                  <CardTitle className='text-lg'>PHP SDK</CardTitle>
-                  <CardDescription>Composer Package</CardDescription>
+                  <Download className='w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 text-primary' />
+                  <CardTitle className='text-lg truncate'>PHP SDK</CardTitle>
+                  <CardDescription className='leading-relaxed'>
+                    Composer Package
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className='text-center'>
-                  <Button variant='outline' className='w-full'>
-                    composer require charadesai/php-sdk
-                  </Button>
+                <CardContent className='text-center p-4 sm:p-6 flex-1 flex flex-col'>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto text-xs sm:text-sm whitespace-normal'
+                    >
+                      composer require charadesai/php-sdk
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
-              <Card className='hover:shadow-lg transition-shadow'>
+
+              <Card className='hover:shadow-lg transition-shadow flex flex-col h-full'>
                 <CardHeader className='text-center'>
-                  <Download className='w-8 h-8 mx-auto mb-2 text-primary' />
-                  <CardTitle className='text-lg'>C# SDK</CardTitle>
-                  <CardDescription>NuGet Package</CardDescription>
+                  <Download className='w-10 h-10 md:w-12 md:h-12 mx-auto mb-2 text-primary' />
+                  <CardTitle className='text-lg truncate'>C# SDK</CardTitle>
+                  <CardDescription className='leading-relaxed'>
+                    NuGet Package
+                  </CardDescription>
                 </CardHeader>
-                <CardContent className='text-center'>
-                  <Button variant='outline' className='w-full'>
-                    Install-Package CharadesAI
-                  </Button>
+                <CardContent className='text-center p-4 sm:p-6 flex-1 flex flex-col'>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto text-xs sm:text-sm whitespace-normal'
+                    >
+                      Install-Package CharadesAI
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -667,64 +756,84 @@ const CodeExamples = () => {
                 response formats.
               </p>
             </div>
-            <div className='grid md:grid-cols-3 gap-6'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
               <Card className='hover:shadow-lg transition-shadow'>
                 <CardHeader>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left'>
                     <BookOpen className='w-6 h-6 text-primary' />
-                    <CardTitle className='text-lg'>REST API</CardTitle>
+                    <CardTitle className='text-lg break-words'>
+                      REST API
+                    </CardTitle>
                   </div>
                   <CardDescription>
                     HTTP endpoints for direct API integration
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='text-center sm:text-left'>
                   <Button
                     variant='link'
-                    className='p-0 h-auto'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
                     onClick={() => navigate("/api")}
+                    aria-label='View REST API Docs'
+                    title='View REST API Docs'
                   >
-                    View REST API Docs <ArrowRight className='w-4 h-4 ml-1' />
+                    <span className='hidden sm:inline'>View REST API Docs</span>
+                    <span className='inline sm:hidden'>View Docs</span>
+                    <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
               </Card>
               <Card className='hover:shadow-lg transition-shadow'>
                 <CardHeader>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left'>
                     <Zap className='w-6 h-6 text-primary' />
-                    <CardTitle className='text-lg'>WebSocket API</CardTitle>
+                    <CardTitle className='text-lg break-words'>
+                      WebSocket API
+                    </CardTitle>
                   </div>
                   <CardDescription>
                     Real-time streaming for live video processing
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='text-center sm:text-left'>
                   <Button
                     variant='link'
-                    className='p-0 h-auto'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
                     onClick={() => navigate("/api")}
+                    aria-label='View WebSocket Docs'
+                    title='View WebSocket Docs'
                   >
-                    View WebSocket Docs <ArrowRight className='w-4 h-4 ml-1' />
+                    <span className='hidden sm:inline'>
+                      View WebSocket Docs
+                    </span>
+                    <span className='inline sm:hidden'>View Docs</span>
+                    <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
               </Card>
               <Card className='hover:shadow-lg transition-shadow'>
                 <CardHeader>
-                  <div className='flex items-center gap-3'>
+                  <div className='flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left'>
                     <Code className='w-6 h-6 text-primary' />
-                    <CardTitle className='text-lg'>SDK Reference</CardTitle>
+                    <CardTitle className='text-lg break-words'>
+                      SDK Reference
+                    </CardTitle>
                   </div>
                   <CardDescription>
                     Detailed SDK method documentation and examples
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className='text-center sm:text-left'>
                   <Button
                     variant='link'
-                    className='p-0 h-auto'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
                     onClick={() => navigate("/api")}
+                    aria-label='View SDK Reference'
+                    title='View SDK Reference'
                   >
-                    View SDK Reference <ArrowRight className='w-4 h-4 ml-1' />
+                    <span className='hidden sm:inline'>View SDK Reference</span>
+                    <span className='inline sm:hidden'>View Docs</span>
+                    <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
               </Card>
@@ -744,45 +853,71 @@ const CodeExamples = () => {
                 cases.
               </p>
             </div>
-            <div className='grid md:grid-cols-3 gap-6'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
               <Card className='hover:shadow-lg transition-shadow'>
-                <CardHeader>
+                <CardHeader className='text-center sm:text-left'>
                   <CardTitle className='text-lg'>WebRTC Integration</CardTitle>
                   <CardDescription>
                     Real-time video processing in browser applications with
                     WebRTC streams.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button variant='link' className='p-0 h-auto'>
-                    View WebRTC Example <ArrowRight className='w-4 h-4 ml-1' />
+                <CardContent className='text-center sm:text-left'>
+                  <Button
+                    variant='link'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
+                    aria-label='View WebRTC Example'
+                    title='View WebRTC Example'
+                  >
+                    <span className='hidden sm:inline'>
+                      View WebRTC Example
+                    </span>
+                    <span className='inline sm:hidden'>View Example</span>
+                    <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
               </Card>
               <Card className='hover:shadow-lg transition-shadow'>
-                <CardHeader>
+                <CardHeader className='text-center sm:text-left'>
                   <CardTitle className='text-lg'>Mobile App SDK</CardTitle>
                   <CardDescription>
                     Native iOS and Android integration examples with camera
                     access.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button variant='link' className='p-0 h-auto'>
-                    View Mobile Examples <ArrowRight className='w-4 h-4 ml-1' />
+                <CardContent className='text-center sm:text-left'>
+                  <Button
+                    variant='link'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
+                    aria-label='View Mobile Examples'
+                    title='View Mobile Examples'
+                  >
+                    <span className='hidden sm:inline'>
+                      View Mobile Examples
+                    </span>
+                    <span className='inline sm:hidden'>View Examples</span>
+                    <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
               </Card>
               <Card className='hover:shadow-lg transition-shadow'>
-                <CardHeader>
+                <CardHeader className='text-center sm:text-left'>
                   <CardTitle className='text-lg'>Batch Processing</CardTitle>
                   <CardDescription>
                     Process multiple videos efficiently with queue management.
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button variant='link' className='p-0 h-auto'>
-                    View Batch Processing{" "}
+                <CardContent className='text-center sm:text-left'>
+                  <Button
+                    variant='link'
+                    className='w-full sm:w-auto justify-center p-0 h-auto'
+                    aria-label='View Batch Processing'
+                    title='View Batch Processing'
+                  >
+                    <span className='hidden sm:inline'>
+                      View Batch Processing
+                    </span>
+                    <span className='inline sm:hidden'>View Batch</span>
                     <ArrowRight className='w-4 h-4 ml-1' />
                   </Button>
                 </CardContent>
@@ -801,10 +936,11 @@ const CodeExamples = () => {
               Join thousands of developers building amazing applications with
               CharadesAI. Get your API key and start integrating today.
             </p>
-            <div className='flex justify-center gap-4'>
+            <div className='flex justify-center flex-wrap gap-4'>
               <Button
                 variant='hero'
                 size='lg'
+                className='text-xs md:text-md'
                 onClick={() => navigate("/pricing")}
               >
                 Get Started Free
@@ -812,6 +948,7 @@ const CodeExamples = () => {
               <Button
                 variant='heroOutline'
                 size='lg'
+                className='text-xs md:text-md whitespace-normal'
                 onClick={() => navigate("/community")}
               >
                 Join Developer Community

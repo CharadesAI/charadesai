@@ -359,28 +359,28 @@ const Community = () => {
               future of accessible AI. Connect, learn, and contribute to
               groundbreaking CharadesAI technology.
             </p>
-            <div className='flex flex-wrap justify-center gap-4 mb-8'>
+            <div className='flex flex-col sm:flex-row justify-center items-center gap-4 mb-8'>
               <div className='flex items-center gap-2'>
                 <CheckCircle className='w-6 h-6 text-green-500' />
                 <span className='text-lg font-semibold'>25K+ Members</span>
               </div>
-              <div className='w-px h-8 bg-border' />
+              <div className='hidden sm:block w-px h-8 bg-border' />
               <div className='flex items-center gap-2'>
                 <Trophy className='w-6 h-6 text-yellow-500' />
                 <span className='text-lg font-semibold'>500+ Projects</span>
               </div>
-              <div className='w-px h-8 bg-border' />
+              <div className='hidden sm:block w-px h-8 bg-border' />
               <div className='flex items-center gap-2'>
                 <Globe className='w-6 h-6 text-blue-500' />
                 <span className='text-lg font-semibold'>60+ Countries</span>
               </div>
             </div>
-            <div className='flex flex-wrap justify-center gap-4'>
+            <div className='flex flex-col sm:flex-row justify-center items-center gap-4'>
               <Button
                 variant='heroOutline'
                 size='lg'
                 onClick={() => navigate("/forum")}
-                className='group'
+                className='w-full sm:w-auto group'
               >
                 Explore Forum
                 <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
@@ -393,7 +393,7 @@ const Community = () => {
         <section className='py-24'>
           <div className='container mx-auto px-4'>
             <div className='text-center mb-16'>
-              <h2 className='text-3xl md:text-4xl font-bold mb-4'>
+              <h2 className='text-xl md:text-3xl font-bold mb-4'>
                 Community <span className='text-gradient'>Channels</span>
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
@@ -401,14 +401,14 @@ const Community = () => {
               </p>
             </div>
 
-            <div className='grid lg:grid-cols-3 gap-8 mb-12'>
+            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12'>
               {communityChannels.map((channel, index) => (
                 <Card
                   key={index}
                   className={`hover:shadow-xl transition-all duration-300 hover:border-primary/30 ${channel.gradient} border-2`}
                 >
                   <CardHeader>
-                    <div className='flex items-center justify-between mb-4'>
+                    <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3'>
                       <channel.icon className={`w-10 h-10 ${channel.color}`} />
                       <div className='flex items-center gap-2'>
                         <div className='w-2 h-2 bg-green-500 rounded-full animate-pulse' />
@@ -473,28 +473,31 @@ const Community = () => {
         <section className='py-24 bg-secondary/20'>
           <div className='container mx-auto px-4'>
             <Tabs defaultValue='discussions' className='w-full'>
-              <TabsList className='grid w-full grid-cols-4 mb-12'>
+              <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-8 md:grid md:grid-cols-4'>
                 <TabsTrigger
                   value='discussions'
-                  className='flex items-center gap-2'
+                  className='flex items-center gap-2 min-w-max whitespace-nowrap'
                 >
                   <MessageSquare className='w-4 h-4' />
                   Discussions
                 </TabsTrigger>
-                <TabsTrigger value='events' className='flex items-center gap-2'>
+                <TabsTrigger
+                  value='events'
+                  className='flex items-center gap-2 min-w-max whitespace-nowrap'
+                >
                   <Calendar className='w-4 h-4' />
                   Events
                 </TabsTrigger>
                 <TabsTrigger
                   value='learning'
-                  className='flex items-center gap-2'
+                  className='flex items-center gap-2 min-w-max whitespace-nowrap'
                 >
                   <BookOpen className='w-4 h-4' />
                   Learning
                 </TabsTrigger>
                 <TabsTrigger
                   value='contributors'
-                  className='flex items-center gap-2'
+                  className='flex items-center gap-2 min-w-max whitespace-nowrap'
                 >
                   <Award className='w-4 h-4' />
                   Contributors
@@ -503,7 +506,7 @@ const Community = () => {
 
               {/* Discussions Tab */}
               <TabsContent value='discussions' className='space-y-6'>
-                <div className='flex items-center justify-between mb-8'>
+                <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-3'>
                   <div>
                     <h3 className='text-2xl font-bold mb-2'>
                       Recent Discussions
@@ -512,7 +515,7 @@ const Community = () => {
                       Latest conversations from our community
                     </p>
                   </div>
-                  <div className='flex gap-2'>
+                  <div className='flex gap-2 flex-wrap'>
                     <Button variant='outline' size='sm'>
                       <Filter className='w-4 h-4 mr-2' />
                       Filter
@@ -534,9 +537,9 @@ const Community = () => {
                       key={discussion.id}
                       className='hover:shadow-md transition-shadow'
                     >
-                      <CardContent className='p-6'>
-                        <div className='flex items-start gap-4'>
-                          <Avatar className='w-10 h-10'>
+                      <CardContent className='p-4 sm:p-6'>
+                        <div className='flex flex-col sm:flex-row items-start gap-4'>
+                          <Avatar className='w-10 h-10 flex-shrink-0'>
                             <AvatarImage src={discussion.authorAvatar} />
                             <AvatarFallback>
                               {discussion.author
@@ -547,25 +550,41 @@ const Community = () => {
                           </Avatar>
 
                           <div className='flex-1 min-w-0'>
-                            <div className='flex items-center gap-2 mb-2'>
-                              {discussion.pinned && (
-                                <Pin className='w-4 h-4 text-primary' />
-                              )}
-                              <h4 className='font-semibold text-lg hover:text-primary cursor-pointer line-clamp-2'>
-                                {discussion.title}
-                              </h4>
-                              {discussion.solved && (
-                                <CheckCircle className='w-4 h-4 text-green-500' />
-                              )}
+                            <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2'>
+                              <div className='min-w-0'>
+                                <h4 className='font-semibold text-lg hover:text-primary cursor-pointer line-clamp-3 sm:line-clamp-2 break-words'>
+                                  {discussion.title}
+                                </h4>
+                                <div className='text-sm text-muted-foreground mt-2 sm:mt-1'>
+                                  <span className='inline-block'>
+                                    by {discussion.author}
+                                  </span>
+                                  <span className='mx-1 hidden sm:inline'>
+                                    •
+                                  </span>
+                                  <span className='inline-block'>
+                                    {discussion.category}
+                                  </span>
+                                  <span className='mx-1 hidden sm:inline'>
+                                    •
+                                  </span>
+                                  <span className='inline-block'>
+                                    {discussion.lastActivity}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className='flex items-center gap-2'>
+                                {discussion.pinned && (
+                                  <Pin className='w-4 h-4 text-primary' />
+                                )}
+                                {discussion.solved && (
+                                  <CheckCircle className='w-4 h-4 text-green-500' />
+                                )}
+                              </div>
                             </div>
 
-                            <div className='flex items-center gap-4 text-sm text-muted-foreground mb-3'>
-                              <span>by {discussion.author}</span>
-                              <span>in {discussion.category}</span>
-                              <span>{discussion.lastActivity}</span>
-                            </div>
-
-                            <div className='flex flex-wrap gap-2 mb-4'>
+                            <div className='flex flex-wrap gap-2 mt-3 mb-3'>
                               {discussion.tags.map((tag) => (
                                 <Badge
                                   key={tag}
@@ -577,18 +596,18 @@ const Community = () => {
                               ))}
                             </div>
 
-                            <div className='flex items-center gap-6 text-sm text-muted-foreground'>
+                            <div className='flex flex-wrap gap-4 text-xs sm:text-sm text-muted-foreground'>
                               <div className='flex items-center gap-1'>
                                 <MessageSquare className='w-4 h-4' />
-                                {discussion.replies} replies
+                                <span>{discussion.replies}</span>
                               </div>
                               <div className='flex items-center gap-1'>
                                 <Eye className='w-4 h-4' />
-                                {discussion.views} views
+                                <span>{discussion.views}</span>
                               </div>
                               <div className='flex items-center gap-1'>
                                 <ThumbsUp className='w-4 h-4' />
-                                {discussion.likes} likes
+                                <span>{discussion.likes}</span>
                               </div>
                             </div>
                           </div>
@@ -599,7 +618,11 @@ const Community = () => {
                 </div>
 
                 <div className='text-center pt-8'>
-                  <Button variant='outline' onClick={() => navigate("/forum")}>
+                  <Button
+                    variant='outline'
+                    className='w-full sm:w-auto'
+                    onClick={() => navigate("/forum")}
+                  >
                     View All Discussions
                     <ChevronRight className='w-4 h-4 ml-2' />
                   </Button>
@@ -621,7 +644,7 @@ const Community = () => {
                   </Button>
                 </div>
 
-                <div className='grid lg:grid-cols-2 gap-6'>
+                <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                   {upcomingEvents.map((event, index) => (
                     <Card
                       key={index}
@@ -710,6 +733,7 @@ const Community = () => {
                   </div>
                   <Button
                     variant='outline'
+                    className='w-full sm:w-auto'
                     onClick={() => navigate("/contact")}
                   >
                     <BookOpen className='w-4 h-4 mr-2' />
@@ -717,7 +741,7 @@ const Community = () => {
                   </Button>
                 </div>
 
-                <div className='grid md:grid-cols-2 gap-6'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
                   {learningResources.map((resource, index) => (
                     <Card
                       key={index}
@@ -799,7 +823,7 @@ const Community = () => {
                   </Button>
                 </div>
 
-                <div className='grid lg:grid-cols-3 gap-6'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
                   {contributors.map((contributor, index) => (
                     <Card
                       key={index}
@@ -896,7 +920,7 @@ const Community = () => {
               </p>
             </div>
 
-            <div className='grid lg:grid-cols-3 gap-8'>
+            <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
               {successStories.map((story, index) => (
                 <Card
                   key={index}
@@ -904,39 +928,42 @@ const Community = () => {
                     story.featured
                       ? "ring-2 ring-primary/20 border-primary/30"
                       : ""
-                  }`}
+                  } flex flex-col h-full`}
                 >
                   <CardHeader>
-                    <div className='flex items-center gap-3 mb-2'>
-                      <Avatar className='w-12 h-12'>
+                    <div className='flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-2'>
+                      <Avatar className='w-12 h-12 flex-shrink-0'>
                         <AvatarImage src={story.logo} />
                         <AvatarFallback>
                           {story.company.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
-                      <div>
-                        <CardTitle className='text-lg'>
+                      <div className='min-w-0'>
+                        <CardTitle className='text-lg truncate'>
                           {story.company}
                         </CardTitle>
                         {story.featured && (
-                          <Badge className='bg-primary/10 text-primary text-xs'>
+                          <Badge className='bg-primary/10 text-primary text-xs mt-1 sm:mt-0'>
                             Featured
                           </Badge>
                         )}
                       </div>
                     </div>
-                    <CardTitle className='text-base leading-tight'>
+                    <CardTitle className='text-base leading-tight break-words line-clamp-3 sm:line-clamp-2'>
                       {story.title}
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className='text-muted-foreground mb-4 text-sm leading-relaxed'>
+                  <CardContent className='p-4 sm:p-6 flex-1 flex flex-col'>
+                    <p className='text-muted-foreground mb-3 text-sm leading-relaxed break-words'>
                       {story.description}
                     </p>
 
-                    <div className='grid grid-cols-1 gap-2 mb-4'>
+                    <div className='flex flex-wrap gap-3 mb-4 text-sm'>
                       {story.metrics.map((metric, idx) => (
-                        <div key={idx} className='flex items-center gap-2'>
+                        <div
+                          key={idx}
+                          className='flex items-center gap-2 bg-muted/10 px-3 py-1 rounded'
+                        >
                           <CheckCircle className='w-4 h-4 text-green-500 flex-shrink-0' />
                           <span className='text-sm'>{metric}</span>
                         </div>
@@ -945,7 +972,7 @@ const Community = () => {
 
                     <Button
                       variant='outline'
-                      className='w-full'
+                      className='w-full mt-auto'
                       onClick={() => navigate("/contact")}
                     >
                       Read Full Story
@@ -962,7 +989,7 @@ const Community = () => {
         <section className='py-24 bg-secondary/20'>
           <div className='container mx-auto px-4'>
             <div className='text-center mb-16'>
-              <h2 className='text-3xl md:text-4xl font-bold mb-4'>
+              <h2 className='text-xl md:text-3xl font-bold mb-4'>
                 Community <span className='text-gradient'>Impact</span>
               </h2>
               <p className='text-muted-foreground max-w-2xl mx-auto text-lg'>
@@ -970,15 +997,15 @@ const Community = () => {
               </p>
             </div>
 
-            <div className='grid md:grid-cols-4 gap-8 mb-12'>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-8 mb-12'>
               <div className='text-center'>
-                <div className='text-4xl font-bold text-gradient mb-2'>
+                <div className='text-3xl md:text-4xl font-bold text-gradient mb-2'>
                   25K+
                 </div>
                 <div className='text-muted-foreground'>Community Members</div>
               </div>
               <div className='text-center'>
-                <div className='text-4xl font-bold text-gradient mb-2'>
+                <div className='text-3xl md:text-4xl font-bold text-gradient mb-2'>
                   500+
                 </div>
                 <div className='text-muted-foreground'>
@@ -986,67 +1013,82 @@ const Community = () => {
                 </div>
               </div>
               <div className='text-center'>
-                <div className='text-4xl font-bold text-gradient mb-2'>60+</div>
+                <div className='text-3xl md:text-4xl font-bold text-gradient mb-2'>
+                  60+
+                </div>
                 <div className='text-muted-foreground'>
                   Countries Represented
                 </div>
               </div>
               <div className='text-center'>
-                <div className='text-4xl font-bold text-gradient mb-2'>1M+</div>
+                <div className='text-3xl md:text-4xl font-bold text-gradient mb-2'>
+                  1M+
+                </div>
                 <div className='text-muted-foreground'>API Calls Daily</div>
               </div>
             </div>
 
-            <div className='grid md:grid-cols-3 gap-8'>
-              <Card className='text-center hover:shadow-lg transition-shadow'>
-                <CardContent className='p-6'>
-                  <Code className='w-12 h-12 text-primary mx-auto mb-4' />
-                  <h3 className='text-lg font-semibold mb-2'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+              <Card className='text-center hover:shadow-lg transition-shadow flex flex-col h-full'>
+                <CardContent className='p-4 sm:p-6 flex-1 flex flex-col'>
+                  <Code className='w-10 h-10 md:w-12 md:h-12 text-primary mx-auto mb-3' />
+                  <h3 className='text-lg font-semibold mb-2 truncate'>
                     Developer Resources
                   </h3>
-                  <p className='text-muted-foreground text-sm mb-4'>
+                  <p className='text-muted-foreground text-sm mb-4 leading-relaxed break-words'>
                     Comprehensive documentation, SDKs, and code examples
                   </p>
-                  <Button
-                    variant='outline'
-                    onClick={() => navigate("/contact")}
-                  >
-                    Explore Docs
-                  </Button>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto'
+                      onClick={() => navigate("/contact")}
+                    >
+                      Explore Docs
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
-              <Card className='text-center hover:shadow-lg transition-shadow'>
-                <CardContent className='p-6'>
-                  <Heart className='w-12 h-12 text-red-500 mx-auto mb-4' />
-                  <h3 className='text-lg font-semibold mb-2'>
+              <Card className='text-center hover:shadow-lg transition-shadow flex flex-col h-full'>
+                <CardContent className='p-4 sm:p-6 flex-1 flex flex-col'>
+                  <Heart className='w-10 h-10 md:w-12 md:h-12 text-red-500 mx-auto mb-3' />
+                  <h3 className='text-lg font-semibold mb-2 truncate'>
                     Inclusive Community
                   </h3>
-                  <p className='text-muted-foreground text-sm mb-4'>
+                  <p className='text-muted-foreground text-sm mb-4 leading-relaxed break-words'>
                     Welcoming environment for all skill levels and backgrounds
                   </p>
-                  <Button
-                    variant='outline'
-                    onClick={() => navigate("/contact")}
-                  >
-                    Join Us
-                  </Button>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto'
+                      onClick={() => navigate("/contact")}
+                    >
+                      Join Us
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
-              <Card className='text-center hover:shadow-lg transition-shadow'>
-                <CardContent className='p-6'>
-                  <Sparkles className='w-12 h-12 text-yellow-500 mx-auto mb-4' />
-                  <h3 className='text-lg font-semibold mb-2'>Innovation Hub</h3>
-                  <p className='text-muted-foreground text-sm mb-4'>
+              <Card className='text-center hover:shadow-lg transition-shadow flex flex-col h-full'>
+                <CardContent className='p-4 sm:p-6 flex-1 flex flex-col'>
+                  <Sparkles className='w-10 h-10 md:w-12 md:h-12 text-yellow-500 mx-auto mb-3' />
+                  <h3 className='text-lg font-semibold mb-2 truncate'>
+                    Innovation Hub
+                  </h3>
+                  <p className='text-muted-foreground text-sm mb-4 leading-relaxed break-words'>
                     Cutting-edge AI research and collaborative development
                   </p>
-                  <Button
-                    variant='outline'
-                    onClick={() => navigate("/contact")}
-                  >
-                    Get Inspired
-                  </Button>
+                  <div className='mt-auto'>
+                    <Button
+                      variant='outline'
+                      className='w-full sm:w-auto'
+                      onClick={() => navigate("/contact")}
+                    >
+                      Get Inspired
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -1057,7 +1099,7 @@ const Community = () => {
         <section className='py-24 bg-gradient-to-r from-primary/5 via-secondary/10 to-accent/5'>
           <div className='container mx-auto px-4 text-center'>
             <div className='max-w-4xl mx-auto'>
-              <h2 className='text-3xl md:text-4xl font-bold mb-6'>
+              <h2 className='text-xl md:text-3xl font-bold mb-6'>
                 Ready to Make an <span className='text-gradient'>Impact</span>?
               </h2>
               <p className='text-muted-foreground mb-8 text-lg leading-relaxed'>
@@ -1066,7 +1108,7 @@ const Community = () => {
                 learn, contribute, or collaborate, there's a place for you in
                 our community.
               </p>
-              <div className='grid md:grid-cols-3 gap-4 mb-8'>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mb-8'>
                 <div className='p-4 bg-card/50 rounded-lg border'>
                   <UserPlus className='w-8 h-8 text-primary mx-auto mb-2' />
                   <h3 className='font-semibold mb-1'>Get Started</h3>
@@ -1089,23 +1131,29 @@ const Community = () => {
                   </p>
                 </div>
               </div>
-              <div className='flex flex-wrap justify-center gap-4'>
+              <div className='flex flex-col sm:flex-row justify-center gap-4'>
                 <Button
                   variant='hero'
                   size='lg'
                   onClick={() => navigate("/contact")}
-                  className='group'
+                  className='w-full sm:w-auto flex items-center justify-center gap-2'
+                  aria-label='Join Our Community'
+                  title='Join Our Community'
                 >
-                  Join Our Community
+                  <span className='hidden sm:inline'>Join Our Community</span>
+                  <span className='inline sm:hidden'>Join</span>
                   <Users className='w-4 h-4 ml-2 group-hover:scale-110 transition-transform' />
                 </Button>
                 <Button
                   variant='heroOutline'
                   size='lg'
                   onClick={() => navigate("/contact")}
-                  className='group'
+                  className='w-full sm:w-auto flex items-center justify-center gap-2'
+                  aria-label='Start Contributing'
+                  title='Start Contributing'
                 >
-                  Start Contributing
+                  <span className='hidden sm:inline'>Start Contributing</span>
+                  <span className='inline sm:hidden'>Contribute</span>
                   <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
                 </Button>
               </div>

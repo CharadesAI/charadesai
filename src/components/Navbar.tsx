@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   Menu,
   X,
@@ -27,7 +27,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { a } from "node_modules/framer-motion/dist/types.d-DagZKalS";
@@ -171,6 +170,14 @@ export function Navbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const auth = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    return (
+      location.pathname === href || location.pathname.startsWith(href + "/")
+    );
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -226,7 +233,13 @@ export function Navbar() {
                 <Link
                   key={link.label}
                   to={link.href}
-                  className='px-4 py-2 text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium rounded-lg hover:bg-accent/50'
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  className={cn(
+                    "px-4 py-2 transition-colors duration-200 text-sm font-medium rounded-lg",
+                    isActive(link.href)
+                      ? "text-foreground bg-accent/50 ring-1 ring-inset ring-accent/30 font-semibold"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                  )}
                 >
                   {link.label}
                 </Link>

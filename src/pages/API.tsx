@@ -215,9 +215,12 @@ print(result.transcription)`,
                 variant='hero'
                 size='lg'
                 onClick={() => navigate("/contact")}
-                className='group'
+                className='w-full sm:w-auto flex items-center justify-center'
+                aria-label='Get Started Free'
+                title='Get Started Free'
               >
-                Get Started Free
+                <span className='hidden sm:inline'>Get Started Free</span>
+                <span className='inline sm:hidden'>Get Started</span>
                 <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
               </Button>
             </div>
@@ -225,9 +228,9 @@ print(result.transcription)`,
         </section>
 
         {/* API Endpoints */}
-        <section className='py-24'>
+        <section className='py-16 md:py-24'>
           <div className='container mx-auto px-4'>
-            <div className='text-center mb-16'>
+            <div className='text-center mb-12 md:mb-16'>
               <h2 className='text-3xl md:text-4xl font-bold mb-4'>
                 Core <span className='text-gradient'>API Endpoints</span>
               </h2>
@@ -244,8 +247,8 @@ print(result.transcription)`,
                   className='hover:shadow-lg transition-shadow border-border/50'
                 >
                   <CardHeader>
-                    <div className='flex items-center justify-between'>
-                      <CardTitle className='flex items-center gap-3'>
+                    <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+                      <CardTitle className='flex items-center gap-3 flex-wrap'>
                         <Badge
                           variant={
                             endpoint.method === "GET" ? "secondary" : "default"
@@ -254,27 +257,31 @@ print(result.transcription)`,
                         >
                           {endpoint.method}
                         </Badge>
-                        <code className='text-lg bg-secondary px-2 py-1 rounded'>
+                        <code className='text-sm md:text-lg bg-secondary px-2 py-1 rounded break-words'>
                           {endpoint.path}
                         </code>
                       </CardTitle>
-                      <Button
-                        variant='ghost'
-                        size='sm'
-                        onClick={() =>
-                          copyToClipboard(
-                            `https://api.charadesai.com${endpoint.path}`
-                          )
-                        }
-                        className='shrink-0'
-                      >
-                        {copiedEndpoint ===
-                        `https://api.charadesai.com${endpoint.path}` ? (
-                          <CheckCircle className='w-4 h-4 text-green-500' />
-                        ) : (
-                          <Copy className='w-4 h-4' />
-                        )}
-                      </Button>
+                      <div className='flex items-center gap-2'>
+                        <Button
+                          variant='ghost'
+                          size='sm'
+                          onClick={() =>
+                            copyToClipboard(
+                              `https://api.charadesai.com${endpoint.path}`
+                            )
+                          }
+                          className='shrink-0'
+                          aria-label={`Copy endpoint ${endpoint.path}`}
+                          title={`Copy endpoint ${endpoint.path}`}
+                        >
+                          {copiedEndpoint ===
+                          `https://api.charadesai.com${endpoint.path}` ? (
+                            <CheckCircle className='w-4 h-4 text-green-500' />
+                          ) : (
+                            <Copy className='w-4 h-4' />
+                          )}
+                        </Button>
+                      </div>
                     </div>
                     <CardDescription className='text-base mt-2'>
                       {endpoint.description}
@@ -296,9 +303,9 @@ print(result.transcription)`,
                           ))}
                         </ul>
                       </div>
-                      <div>
+                      <div className='overflow-x-scroll'>
                         <h4 className='font-semibold mb-3'>Example Request</h4>
-                        <pre className='text-xs bg-secondary p-3 rounded-lg overflow-x-auto text-muted-foreground'>
+                        <pre className='text-xs bg-secondary p-3 overflow-x-auto rounded-lg text-muted-foreground'>
                           {endpoint.example}
                         </pre>
                       </div>
@@ -323,10 +330,25 @@ print(result.transcription)`,
             </div>
 
             <Tabs defaultValue='javascript' className='w-full'>
-              <TabsList className='grid w-full grid-cols-3 mb-8'>
-                <TabsTrigger value='javascript'>JavaScript</TabsTrigger>
-                <TabsTrigger value='python'>Python</TabsTrigger>
-                <TabsTrigger value='curl'>cURL</TabsTrigger>
+              <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden pb-1 mb-8 md:grid md:grid-cols-3'>
+                <TabsTrigger
+                  value='javascript'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  JavaScript
+                </TabsTrigger>
+                <TabsTrigger
+                  value='python'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Python
+                </TabsTrigger>
+                <TabsTrigger
+                  value='curl'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  cURL
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value='javascript'>

@@ -207,7 +207,7 @@ const Profile = () => {
             </div>
 
             {/* Info & Actions */}
-            <div className='ml-40 pt-4 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4'>
+            <div className='pt-4 md:ml-40 md:pt-0 mt-6 md:mt-0 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4'>
               <div>
                 {isLoading ? (
                   <>
@@ -456,6 +456,46 @@ const Profile = () => {
             </AlertDialog>
           </CardContent>
         </Card>
+
+        {/* Mobile avatar (in-flow, centered) */}
+        <div className='md:hidden flex justify-center mt-4'>
+          <div className='relative group'>
+            {isLoading ? (
+              <Skeleton className='w-24 h-24 rounded-full' />
+            ) : (
+              <>
+                <Avatar className='w-24 h-24 border-4 border-background shadow-lg'>
+                  <AvatarImage src={displayProfile.avatar || ""} />
+                  <AvatarFallback className='bg-neon-cyan/20 text-neon-cyan text-2xl font-bold'>
+                    {userInitials}
+                  </AvatarFallback>
+                </Avatar>
+                <button
+                  onClick={handleAvatarClick}
+                  disabled={uploadAvatar.isPending}
+                  className={cn(
+                    "absolute bottom-0 right-0 w-9 h-9 rounded-full bg-neon-cyan text-black flex items-center justify-center",
+                    "opacity-0 group-hover:opacity-100 transition-opacity",
+                    "hover:bg-neon-cyan/80 disabled:opacity-50"
+                  )}
+                >
+                  {uploadAvatar.isPending ? (
+                    <Loader2 className='w-4 h-4 animate-spin' />
+                  ) : (
+                    <Camera className='w-4 h-4' />
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type='file'
+                  accept='image/*'
+                  className='hidden'
+                  onChange={handleAvatarChange}
+                />
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   );

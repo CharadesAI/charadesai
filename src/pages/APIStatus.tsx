@@ -191,15 +191,17 @@ const APIStatus = () => {
               metrics, track upcoming launches, and stay informed about system
               health.
             </p>
-            <div className='flex items-center justify-center gap-4 mb-8'>
+            <div className='flex items-center flex-wrap space-y-2 justify-center gap-4 mb-8'>
               <div className='flex items-center gap-2'>
                 <CheckCircle className='w-6 h-6 text-green-500' />
-                <span className='text-lg font-semibold'>Services Live</span>
+                <span className='text-sm md:text-lg font-semibold'>
+                  Services Live
+                </span>
               </div>
               <div className='w-px h-8 bg-border' />
               <div className='flex items-center gap-2'>
                 <Clock className='w-6 h-6 text-blue-500' />
-                <span className='text-lg font-semibold'>
+                <span className='text-sm md:text-lg font-semibold'>
                   API Launching Soon
                 </span>
               </div>
@@ -208,7 +210,7 @@ const APIStatus = () => {
               variant='hero'
               size='lg'
               onClick={() => navigate("/contact")}
-              className='group'
+              className='group text-sm md:text-xl'
             >
               Get API Access
               <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
@@ -228,13 +230,13 @@ const APIStatus = () => {
               </p>
             </div>
 
-            <div className='grid grid-cols-2 md:grid-cols-4 gap-6 mb-12'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mb-12'>
               {metrics.map((metric, index) => (
                 <Card
                   key={index}
                   className='hover:shadow-lg transition-all duration-300 hover:border-primary/30'
                 >
-                  <CardContent className='p-6'>
+                  <CardContent className='p-2 md:p-6'>
                     <div className='flex items-center justify-between mb-4'>
                       <metric.icon className='w-8 h-8 text-primary' />
                       <Badge
@@ -247,7 +249,9 @@ const APIStatus = () => {
                       </Badge>
                     </div>
                     <div className='space-y-1'>
-                      <p className='text-2xl font-bold'>{metric.value}</p>
+                      <p className='text-md md:text-2xl font-bold'>
+                        {metric.value}
+                      </p>
                       <p className='text-sm text-muted-foreground'>
                         {metric.title}
                       </p>
@@ -266,7 +270,7 @@ const APIStatus = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className='grid md:grid-cols-3 gap-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'>
                   <div className='text-center'>
                     <div className='text-3xl font-bold text-green-600 mb-2'>
                       99.9%
@@ -309,19 +313,19 @@ const APIStatus = () => {
               </p>
             </div>
 
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
               {services.map((service, index) => (
                 <Card
                   key={index}
-                  className={`hover:shadow-lg transition-all duration-300 hover:border-primary/30 ${
+                  className={`flex flex-col h-full hover:shadow-lg transition-all duration-300 hover:border-primary/30 ${
                     service.status === "launching-soon"
                       ? "bg-gradient-to-br from-blue-500/5 to-purple-500/5 border-blue-500/20"
                       : "bg-card/50"
                   }`}
                 >
                   <CardHeader>
-                    <div className='flex items-center justify-between mb-2'>
-                      <CardTitle className='flex items-center gap-3 text-lg'>
+                    <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between mb-2 gap-2 text-center sm:text-left'>
+                      <CardTitle className='flex items-center gap-3 text-lg justify-center sm:justify-start'>
                         {getStatusIcon(service.status)}
                         {service.name}
                       </CardTitle>
@@ -334,7 +338,7 @@ const APIStatus = () => {
                   <CardContent>
                     {service.status === "live" ? (
                       <div className='space-y-3'>
-                        <div className='flex justify-between items-center'>
+                        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2'>
                           <span className='text-sm text-muted-foreground'>
                             Uptime (30d)
                           </span>
@@ -342,7 +346,7 @@ const APIStatus = () => {
                             {service.uptime}
                           </span>
                         </div>
-                        <div className='flex justify-between items-center'>
+                        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2'>
                           <span className='text-sm text-muted-foreground'>
                             Response Time
                           </span>
@@ -353,7 +357,7 @@ const APIStatus = () => {
                       </div>
                     ) : (
                       <div className='space-y-3'>
-                        <div className='flex justify-between items-center'>
+                        <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2'>
                           <span className='text-sm text-muted-foreground'>
                             Launch Date
                           </span>
@@ -362,7 +366,7 @@ const APIStatus = () => {
                           </span>
                         </div>
                         <div className='space-y-2'>
-                          <div className='flex justify-between items-center'>
+                          <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2'>
                             <span className='text-sm text-muted-foreground'>
                               Progress
                             </span>
@@ -395,11 +399,11 @@ const APIStatus = () => {
 
             <div className='max-w-4xl mx-auto'>
               <div className='space-y-8'>
-                <div className='flex items-center gap-6'>
-                  <div className='flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center'>
+                <div className='flex flex-col sm:flex-row items-center sm:items-center gap-6'>
+                  <div className='flex-shrink-0 w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto sm:mx-0'>
                     <PlayCircle className='w-6 h-6 text-white' />
                   </div>
-                  <div className='flex-1'>
+                  <div className='flex-1 text-center sm:text-left'>
                     <h3 className='text-xl font-semibold mb-2'>
                       Lip-Reading API Launch
                     </h3>
@@ -408,22 +412,22 @@ const APIStatus = () => {
                     </p>
                     <Badge
                       variant='secondary'
-                      className='bg-blue-500/10 text-blue-600'
+                      className='bg-blue-500/10 text-blue-600 mx-auto sm:mx-0'
                     >
                       Q1 2026
                     </Badge>
                   </div>
-                  <div className='text-right'>
+                  <div className='mt-3 sm:mt-0 sm:text-right text-center'>
                     <div className='text-2xl font-bold text-blue-600'>85%</div>
                     <p className='text-sm text-muted-foreground'>Complete</p>
                   </div>
                 </div>
 
-                <div className='flex items-center gap-6'>
-                  <div className='flex-shrink-0 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center'>
+                <div className='flex flex-col sm:flex-row items-center sm:items-center gap-6'>
+                  <div className='flex-shrink-0 w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto sm:mx-0'>
                     <PlayCircle className='w-6 h-6 text-white' />
                   </div>
-                  <div className='flex-1'>
+                  <div className='flex-1 text-center sm:text-left'>
                     <h3 className='text-xl font-semibold mb-2'>
                       Gesture Recognition API
                     </h3>
@@ -432,12 +436,12 @@ const APIStatus = () => {
                     </p>
                     <Badge
                       variant='secondary'
-                      className='bg-purple-500/10 text-purple-600'
+                      className='bg-purple-500/10 text-purple-600 mx-auto sm:mx-0'
                     >
                       Q1 2026
                     </Badge>
                   </div>
-                  <div className='text-right'>
+                  <div className='mt-3 sm:mt-0 sm:text-right text-center'>
                     <div className='text-2xl font-bold text-purple-600'>
                       75%
                     </div>
@@ -445,20 +449,22 @@ const APIStatus = () => {
                   </div>
                 </div>
 
-                <div className='flex items-center gap-6'>
-                  <div className='flex-shrink-0 w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center'>
+                <div className='flex flex-col sm:flex-row items-center sm:items-center gap-6'>
+                  <div className='flex-shrink-0 w-12 h-12 bg-gray-400 rounded-full flex items-center justify-center mx-auto sm:mx-0'>
                     <PauseCircle className='w-6 h-6 text-white' />
                   </div>
-                  <div className='flex-1'>
+                  <div className='flex-1 text-center sm:text-left'>
                     <h3 className='text-xl font-semibold mb-2'>
                       Advanced Analytics Dashboard
                     </h3>
                     <p className='text-muted-foreground mb-2'>
                       Comprehensive API usage analytics and insights
                     </p>
-                    <Badge variant='outline'>Q2 2026</Badge>
+                    <Badge variant='outline' className='mx-auto sm:mx-0'>
+                      Q2 2026
+                    </Badge>
                   </div>
-                  <div className='text-right'>
+                  <div className='mt-3 sm:mt-0 sm:text-right text-center'>
                     <div className='text-2xl font-bold text-gray-400'>25%</div>
                     <p className='text-sm text-muted-foreground'>Planning</p>
                   </div>
@@ -484,7 +490,7 @@ const APIStatus = () => {
               {incidents.map((incident, index) => (
                 <Card key={index} className='hover:shadow-md transition-shadow'>
                   <CardHeader>
-                    <div className='flex items-center justify-between'>
+                    <div className='flex items-center flex-wrap justify-between'>
                       <CardTitle className='text-lg'>
                         {incident.title}
                       </CardTitle>
@@ -531,7 +537,7 @@ const APIStatus = () => {
                   variant='hero'
                   size='lg'
                   onClick={() => navigate("/community")}
-                  className='group'
+                  className='group w-full sm:w-auto'
                 >
                   Join Community
                   <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />
@@ -540,7 +546,7 @@ const APIStatus = () => {
                   variant='heroOutline'
                   size='lg'
                   onClick={() => navigate("/contact")}
-                  className='group'
+                  className='group w-full sm:w-auto'
                 >
                   Contact Us
                   <ArrowRight className='w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform' />

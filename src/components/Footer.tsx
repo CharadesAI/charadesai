@@ -81,7 +81,7 @@ const platformLinks = [
     href: "https://www.crunchbase.com/organization/charadesai",
     label: "Crunchbase",
   },
-  { icon: F6SIcon, href: "hhttps://www.f6s.com/charadesai", label: "F6S" },
+  { icon: F6SIcon, href: "https://www.f6s.com/charadesai", label: "F6S" },
 ];
 
 export function Footer() {
@@ -183,7 +183,7 @@ export function Footer() {
           </p>
 
           {/* Social & Platform Links */}
-          <div className='flex items-center gap-3'>
+          <div className='flex items-center justify-center flex-wrap gap-3'>
             {/* Social Icons */}
             {socialLinks.map((social) => (
               <a

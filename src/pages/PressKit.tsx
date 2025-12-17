@@ -582,8 +582,7 @@ Generated on ${new Date().toLocaleDateString()}
       },
       {
         name: "press-contacts.md",
-        content:
-          "# Press Contacts\n\nMedia Inquiries: hello@charadesai.com",
+        content: "# Press Contacts\n\nMedia Inquiries: hello@charadesai.com",
       },
     ];
 
@@ -707,6 +706,7 @@ Generated on ${new Date().toLocaleDateString()}
                 variant='heroOutline'
                 size='lg'
                 onClick={() => navigate("/contact")}
+                className='w-full sm:w-auto'
               >
                 Contact Press Team <Mail className='w-4 h-4' />
               </Button>
@@ -722,12 +722,38 @@ Generated on ${new Date().toLocaleDateString()}
               onValueChange={setActiveTab}
               className='w-full'
             >
-              <TabsList className='grid w-full grid-cols-5 mb-12'>
-                <TabsTrigger value='overview'>Overview</TabsTrigger>
-                <TabsTrigger value='assets'>Brand Assets</TabsTrigger>
-                <TabsTrigger value='colors'>Colors</TabsTrigger>
-                <TabsTrigger value='typography'>Typography</TabsTrigger>
-                <TabsTrigger value='news'>News</TabsTrigger>
+              {/* Tabs: scroll on small, grid on md+ */}
+              <TabsList className='flex gap-2 overflow-x-auto overflow-y-hidden md:grid md:grid-cols-5 mb-12 py-1'>
+                <TabsTrigger
+                  value='overview'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Overview
+                </TabsTrigger>
+                <TabsTrigger
+                  value='assets'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Brand Assets
+                </TabsTrigger>
+                <TabsTrigger
+                  value='colors'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Colors
+                </TabsTrigger>
+                <TabsTrigger
+                  value='typography'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  Typography
+                </TabsTrigger>
+                <TabsTrigger
+                  value='news'
+                  className='min-w-max whitespace-nowrap'
+                >
+                  News
+                </TabsTrigger>
               </TabsList>
 
               {/* Overview Tab */}
@@ -861,9 +887,18 @@ Generated on ${new Date().toLocaleDateString()}
                     </div>
                   </div>
                   <div className='text-center'>
-                    <Button onClick={generateCompletePressKit} size='lg'>
+                    <Button
+                      onClick={generateCompletePressKit}
+                      size='lg'
+                      className='w-full sm:w-auto flex items-center justify-center'
+                      aria-label='Download Complete Press Kit'
+                      title='Download Complete Press Kit'
+                    >
                       <Download className='w-4 h-4 mr-2' />
-                      Download Complete Press Kit
+                      <span className='hidden sm:inline'>
+                        Download Complete Press Kit
+                      </span>
+                      <span className='inline sm:hidden'>Download Kit</span>
                     </Button>
                   </div>
                 </div>
@@ -1506,7 +1541,7 @@ Generated on ${new Date().toLocaleDateString()}
               Our press team is available to answer questions and provide
               additional materials.
             </p>
-            <div className='flex justify-center gap-4'>
+            <div className='flex justify-center flex-wrap gap-4'>
               <Button
                 variant='hero'
                 size='lg'
@@ -1534,7 +1569,7 @@ Generated on ${new Date().toLocaleDateString()}
           open={!!selectedAsset}
           onOpenChange={() => setSelectedAsset(null)}
         >
-          <DialogContent className='max-w-2xl'>
+          <DialogContent className='w-full max-w-full sm:max-w-xl md:max-w-2xl p-4 sm:p-6'>
             <DialogHeader>
               <DialogTitle className='flex items-center gap-2'>
                 <FileImage className='w-5 h-5' />
@@ -1550,7 +1585,7 @@ Generated on ${new Date().toLocaleDateString()}
                   <img
                     src={selectedAsset.preview}
                     alt={selectedAsset.name}
-                    className='max-h-96 mx-auto mb-4'
+                    className='max-h-[60vh] w-full object-contain mx-auto mb-4'
                   />
                   {/* <FileImage className='w-16 h-16 text-muted-foreground mx-auto mb-4' /> */}
                   {/* <p className='text-sm text-muted-foreground'>Asset Preview</p>

@@ -127,9 +127,9 @@ export function APISection() {
               <Button
                 variant='hero'
                 size='lg'
-                onClick={() => (window.location.href = "/docs")}
+                onClick={() => (window.location.href = "/api")}
               >
-                View Full Documentation
+                Check API Docs
               </Button>
             </div>
           </div>
