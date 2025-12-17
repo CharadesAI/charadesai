@@ -10,6 +10,8 @@ import { FaGithub } from "react-icons/fa";
 import { useAuth } from "@/lib/AuthContext";
 import { toast } from "sonner";
 import { useNavigate, Link } from "react-router-dom";
+import { useEffect } from "react";
+import { loadRecaptchaScript, executeRecaptcha } from "@/lib/recaptcha";
 
 const schema = z
   .object({
@@ -32,6 +34,16 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>;
 
+type RegisterPayload = {
+  username: string;
+  first_name: string;
+  last_name?: string;
+  email: string;
+  password_hash: string;
+  password_hash_confirmation: string;
+  recaptcha_token?: string;
+};
+
 async function hashPassword(password: string) {
   const buf = await crypto.subtle.digest(
     "SHA-256",
@@ -51,11 +63,19 @@ export default function Signup() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
 
+  // Load reCAPTCHA script on mount
+  useEffect(() => {
+    loadRecaptchaScript();
+  }, []);
+
   const onSubmit = async (data: FormValues) => {
     try {
+      // Get reCAPTCHA token
+      const recaptchaToken = await executeRecaptcha("signup");
+
       const passHash = await hashPassword(data.password);
       const passHashConfirm = await hashPassword(data.confirmPassword);
-      const payload = {
+      const payload: RegisterPayload = {
         username: data.username,
         first_name: data.firstName,
         last_name: data.lastName,
@@ -63,6 +83,8 @@ export default function Signup() {
         password_hash: passHash,
         password_hash_confirmation: passHashConfirm,
       };
+      if (recaptchaToken) payload.recaptcha_token = recaptchaToken;
+
       type UserData = Record<string, unknown>;
       type RegisterResp = {
         data?: { user?: UserData; token?: string };

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -12,44 +12,21 @@ import {
   MapPin,
   Clock,
   Send,
-  MessageSquare,
-  FileText,
-  Headphones,
-  ArrowRight,
   Check,
   Map,
+  ArrowRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
-import { useEffect } from "react";
 import { getApiBase } from "@/lib/api";
+import { loadRecaptchaScript, executeRecaptcha } from "@/lib/recaptcha";
 
 const contactSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Name is required")
-    .max(100, "Name must be less than 100 characters"),
-  email: z
-    .string()
-    .trim()
-    .email("Invalid email address")
-    .max(255, "Email must be less than 255 characters"),
-  company: z
-    .string()
-    .trim()
-    .max(100, "Company name must be less than 100 characters")
-    .optional(),
-  subject: z
-    .string()
-    .trim()
-    .min(1, "Subject is required")
-    .max(200, "Subject must be less than 200 characters"),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message must be at least 10 characters")
-    .max(2000, "Message must be less than 2000 characters"),
+  name: z.string().trim().min(1).max(100),
+  email: z.string().trim().email().max(255),
+  company: z.string().trim().max(100).optional(),
+  subject: z.string().trim().min(1).max(200),
+  message: z.string().trim().min(10).max(2000),
 });
 
 const contactOptions = [
@@ -90,17 +67,25 @@ const Contact = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mapData, setMapData] = useState<{
-    embed_url?: string;
+
+  type MapData = {
     maps_link?: string;
     iframe?: string;
-    address?: string;
-    zoom?: number;
-  } | null>(null);
+    embed_url?: string;
+  };
+
+  type MapApiResponse = {
+    status?: string;
+    message?: string;
+    data?: MapData | null;
+  } | null;
+
+  const [mapData, setMapData] = useState<MapData | null>(null);
   const [mapLoading, setMapLoading] = useState(true);
 
   useEffect(() => {
     fetchMapData();
+    loadRecaptchaScript();
   }, []);
 
   const fetchMapData = async () => {
@@ -108,38 +93,19 @@ const Contact = () => {
       const payload = {
         address: "100 Market Street, Suite 300, San Francisco, CA 94105",
       };
-
       const base = getApiBase();
       const response = await fetch(`${base}/maps/pin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      const res = await response.json().catch(() => null);
+      const res = (await response.json().catch(() => null)) as MapApiResponse;
       if (!response.ok) {
-        const msg =
-          (res && (res as unknown as { message?: string }).message) ||
-          "Failed to generate map";
-        toast.error(msg);
+        toast.error((res && res.message) || "Failed to generate map");
         setMapData(null);
         return;
       }
-
-      // API returns { status: 'success', data: { embed_url, maps_link, iframe, address, zoom } }
-      type MapResp = {
-        embed_url?: string;
-        maps_link?: string;
-        iframe?: string;
-        address?: string;
-        zoom?: number;
-      };
-      const mapObj = (res as unknown as { data?: MapResp }).data ?? null;
-      if (mapObj && typeof mapObj === "object") {
-        setMapData(mapObj);
-      } else {
-        console.error("Unexpected map response", mapObj);
-        setMapData(null);
-      }
+      setMapData(res?.data ?? null);
     } catch (error) {
       console.error("Error fetching map data:", error);
     } finally {
@@ -152,9 +118,7 @@ const Contact = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -162,68 +126,61 @@ const Contact = () => {
     setErrors({});
 
     const result = contactSchema.safeParse(formData);
-
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((error) => {
-        if (error.path[0]) {
-          fieldErrors[error.path[0] as string] = error.message;
-        }
+        if (error.path[0]) fieldErrors[error.path[0] as string] = error.message;
       });
       setErrors(fieldErrors);
       return;
     }
 
     setIsSubmitting(true);
-
     try {
-      try {
-        const payload = {
-          name: formData.name,
-          email: formData.email,
-          company: formData.company || undefined,
-          subject: formData.subject,
-          message: formData.message,
-        };
+      const recaptchaToken = await executeRecaptcha("contact");
 
-        const base = getApiBase();
-        const response = await fetch(`${base}/mail/contact`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const res = await response.json().catch(() => null);
-        const status = (res as unknown as { status?: string }).status;
-        const message = (res as unknown as { message?: string }).message;
-        if (!response.ok) {
-          toast.error(message || "Failed to send message. Please try again.");
-          return;
-        }
-        if (status === "success") {
-          setIsSubmitted(true);
-          toast.success(
-            "Message sent successfully! We'll get back to you soon."
-          );
-          setFormData({
-            name: "",
-            email: "",
-            company: "",
-            subject: "",
-            message: "",
-          });
-        } else {
-          toast.error(message || "Failed to send message. Please try again.");
-        }
-      } catch (err: unknown) {
-        const msg =
-          err instanceof Error
-            ? err.message
-            : String(err ?? "Failed to send message. Please try again.");
-        toast.error(msg);
+      const payload: Record<string, unknown> = {
+        name: formData.name,
+        email: formData.email,
+        company: formData.company || undefined,
+        subject: formData.subject,
+        message: formData.message,
+      };
+      if (recaptchaToken) payload.recaptcha_token = recaptchaToken;
+
+      const base = getApiBase();
+      const response = await fetch(`${base}/mail/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      type MailApiResponse = {
+        status?: string;
+        message?: string;
+      } | null;
+      const res = (await response.json().catch(() => null)) as MailApiResponse;
+      const status = res?.status;
+      const message = res?.message;
+      if (!response.ok) {
+        toast.error(message || "Failed to send message. Please try again.");
+        return;
       }
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Network error. Please check your connection and try again.");
+      if (status === "success") {
+        setIsSubmitted(true);
+        toast.success("Message sent successfully! We'll get back to you soon.");
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        toast.error(message || "Failed to send message. Please try again.");
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(msg || "Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
